@@ -1,0 +1,19 @@
+<ns:jbosspdp xmlns:ns="urn:jboss:xacml:2.0">
+	<ns:Policies>
+		<ns:PolicySet>
+			<ns:Location>/xacml/policies/xacml-policyset.xml</ns:Location>
+			<ns:Policy>
+				<ns:Location>/xacml/policies/xacml-policy-time.xml</ns:Location>
+			</ns:Policy>
+			<ns:Policy>
+				<ns:Location>/xacml/policies/xacml-policy1.xml</ns:Location>
+			</ns:Policy>
+			<ns:Policy>
+				<ns:Location>/xacml/policies/xacml-policy2.xml</ns:Location>
+			</ns:Policy>
+		</ns:PolicySet>
+	</ns:Policies>
+	<ns:Locators>
+		<ns:Locator Name="org.jboss.security.xacml.locators.JBossPolicySetLocator"/>
+	</ns:Locators>
+</ns:jbosspdp>

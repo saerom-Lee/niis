@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_rest">
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<resultMap id="searchAreaVO" class="org.nii.niis.niim.service.SearchAreaVO">
+		<result property="ctprvn_nm"   		column="ctprvn_nm"/>
+		<result property="signgu_nm"   		column="signgu_nm"/>
+		<result property="dong_nm"   		column="dong_nm"/>
+		<result property="admcd"       		column="admcd"/>
+		<result property="wkb_geometry"		column="wkb_geometry" jdbcType="BLOB"/>
+		<result property="annox" 			column="annox"/>
+		<result property="annoy"       		column="annoy"/>
+		<result property="xmin"       		column="xmin"/>
+		<result property="ymin"       		column="ymin"/>
+		<result property="xmax"       		column="xmax"/>
+		<result property="ymax"       		column="ymax"/>
+	</resultMap>
+	
+	<select id="searchPOIDAO.selectAreaGeometry" resultMap="searchAreaVO">
+			<![CDATA[
+	 		SELECT ctprvn_nm, 
+					signgu_nm,
+					TO_CHAR(admcd) as admcd, 
+					xmin, 
+					ymin, 
+					xmax, 
+					ymax, 
+					wkb_geometry, 
+					annox, 
+					annoy    
+			 FROM TC_NEWEST_BNDRY@LK_NGIAIR 
+			 WHERE wkb_geometry IS NOT NULL
+			 AND TO_CHAR(ADMCD)  = #areaCode# 
+			 ]]>
+	</select>
+	
+	<select id="searchPOIDAO.selectAreaList" resultMap="searchAreaVO">
+		<![CDATA[
+ 		SELECT 
+			SUBSTR(DONG.BJCD,1,8) AS ADMCD, 
+			SIDO.NAME AS CTPRVN_NM, 
+			CASE WHEN SUBSTR(SIGUNGU.BJCD,5,1) <> 0 
+			THEN 
+			    LTRIM((SELECT NAME FROM UFMAP_S2.N3A_G0100000 S WHERE SUBSTR(S.BJCD,5,1) = 0 AND SUBSTR(S.BJCD,1,4) = SUBSTR(SIGUNGU.BJCD,1,4)) || ' ' || SIGUNGU.NAME) 
+			ELSE 
+			    SIGUNGU.NAME 
+			END AS SIGNGU_NM,
+			DONG.NAME AS DONG_NM,
+			SDE.ST_X(SDE.ST_CENTROID(DONG.SHAPE)) ANNOX,
+			SDE.ST_Y(SDE.ST_CENTROID(DONG.SHAPE)) ANNOY,
+			SDE.ST_MINX(DONG.SHAPE) XMIN,
+			SDE.ST_MINY(DONG.SHAPE) YMIN,
+			SDE.ST_MAXX(DONG.SHAPE) XMAX,
+			SDE.ST_MAXY(DONG.SHAPE) YMAX,
+			SDE.ST_ASBINARY(DONG.SHAPE) WKB_GEOMETRY
+		FROM 
+			UFMAP_S2.N3A_G0110000 DONG, 
+			UFMAP_S2.N3A_G0010000 SIDO, 
+			UFMAP_S2.N3A_G0100000 SIGUNGU
+		WHERE SUBSTR(DONG.BJCD,1,2) = SUBSTR(SIDO.BJCD,1,2)
+			AND SUBSTR(DONG.BJCD,1,5) = SUBSTR(SIGUNGU.BJCD,1,5)
+		 ]]>
+	</select>
+  <!--   
+	<select id="searchPOIDAO.selectAreaList" resultMap="searchAreaVO">
+			<![CDATA[
+	 		SELECT 
+				DONG_CDE as admcd,
+				SIDO_NAM as ctprvn_nm,
+        		SIGUNGU_NA as signgu_nm,
+        		DONG_NAM as dong_nm,
+				COOR_X as annox,
+				COOR_Y as annoy,
+        		XMIN as xmin,
+        		YMIN as ymin,
+        		XMAX as xmax,
+        		YMAX as ymax,
+				SDO_UTIL.To_WKBGEOMETRY(SHAPE) as wkb_geometry
+			 FROM NGII_AIR_DONG_AS@LK_NGIAIR 
+			 WHERE SHAPE IS NOT NULL
+			 AND DONG_CDE IS NOT NULL
+			 ]]>
+	</select> -->
+	
+	<!-- <select id="searchPOIDAO.selectAreaOfPointList" resultMap="searchAreaVO">
+	 		<![CDATA[	
+	 		SELECT 
+				SUBSTR(DONG.BJCD,1,8) AS ADMCD, 
+				SIDO.NAME AS CTPRVN_NM, 
+        		CASE WHEN SUBSTR(SIGUNGU.BJCD,5,1) <> 0 
+				THEN 
+				    LTRIM((SELECT NAME FROM UFMAP_S2.N3A_G0100000 S WHERE SUBSTR(S.BJCD,5,1) = 0 AND SUBSTR(S.BJCD,1,4) = SUBSTR(SIGUNGU.BJCD,1,4)) || ' ' || SIGUNGU.NAME) 
+				ELSE 
+				    SIGUNGU.NAME 
+				END AS SIGNGU_NM,
+        		DONG.NAME AS DONG_NM,
+				SDE.ST_X(SDE.ST_CENTROID(DONG.SHAPE)) ANNOX,
+				SDE.ST_Y(SDE.ST_CENTROID(DONG.SHAPE)) ANNOY,
+        		SDE.ST_MINX(DONG.SHAPE) XMIN,
+				SDE.ST_MINY(DONG.SHAPE) YMIN,
+				SDE.ST_MAXX(DONG.SHAPE) XMAX,
+				SDE.ST_MAXY(DONG.SHAPE) YMAX,
+				SDE.ST_ASBINARY(DONG.SHAPE) WKB_GEOMETRY
+				FROM 
+				UFMAP_S2.N3A_G0110000 DONG, 
+				UFMAP_S2.N3A_G0010000 SIDO, 
+				UFMAP_S2.N3A_G0100000 SIGUNGU
+			 WHERE SHAPE IS NOT NULL
+			 AND SUBSTR(DONG.BJCD,1,2) = SUBSTR(SIDO.BJCD,1,2)
+				AND SUBSTR(DONG.BJCD,1,5) = SUBSTR(SIGUNGU.BJCD,1,5)
+				]]>
+	</select> -->
+	
+	<select id="searchPOIDAO.selectAreaOfPointList" resultMap="searchAreaVO">
+		<![CDATA[
+		SELECT 
+			SUBSTR(DONG.BJCD,1,8) AS ADMCD, 
+			SIDO.NAME AS CTPRVN_NM, 
+			CASE WHEN SUBSTR(SIGUNGU.BJCD,5,1) <> 0 
+			THEN 
+			    LTRIM((SELECT NAME FROM UFMAP_S2.N3A_G0100000 S WHERE SUBSTR(S.BJCD,5,1) = 0 AND SUBSTR(S.BJCD,1,4) = SUBSTR(SIGUNGU.BJCD,1,4)) || ' ' || SIGUNGU.NAME) 
+			ELSE 
+			    SIGUNGU.NAME 
+			END AS SIGNGU_NM,
+			DONG.NAME AS DONG_NM,
+			SDE.ST_X(SDE.ST_CENTROID(DONG.SHAPE)) ANNOX,
+			SDE.ST_Y(SDE.ST_CENTROID(DONG.SHAPE)) ANNOY,
+			SDE.ST_MINX(DONG.SHAPE) XMIN,
+			SDE.ST_MINY(DONG.SHAPE) YMIN,
+			SDE.ST_MAXX(DONG.SHAPE) XMAX,
+			SDE.ST_MAXY(DONG.SHAPE) YMAX,
+			SDE.ST_ASBINARY(DONG.SHAPE) WKB_GEOMETRY
+		FROM 
+			UFMAP_S2.N3A_G0110000 DONG, 
+			UFMAP_S2.N3A_G0010000 SIDO, 
+			UFMAP_S2.N3A_G0100000 SIGUNGU
+		WHERE SUBSTR(DONG.BJCD,1,2) = SUBSTR(SIDO.BJCD,1,2)
+			AND SUBSTR(DONG.BJCD,1,5) = SUBSTR(SIGUNGU.BJCD,1,5)
+			AND SDE.ST_INTERSECTS(DONG.SHAPE, SDE.ST_Point(#x#, #y#, (SELECT SRID FROM SDE.ST_GEOMETRY_COLUMNS WHERE TABLE_NAME = 'N3A_G0110000' AND COLUMN_NAME = 'SHAPE' AND OWNER = 'UFMAP_S2' AND ROWNUM = 1))) = 1
+		]]>
+	</select>
+</sqlMap>

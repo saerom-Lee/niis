@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_disaster">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	
+	<sql id="Paging_head">
+		SELECT * 
+		  FROM (
+		        SELECT (ROW_NUMBER() OVER()) RN
+		             , con1.* 
+		          FROM (
+	</sql>
+	<sql id="Paging_tail">
+					   ) con1
+		       ) con2
+		<isNotEmpty property="_sPage_">
+			<isNotEmpty property="_ePage_">
+				<isNotEqual property="_sPage_" compareValue="0">
+					<isNotEqual property="_ePage_" compareValue="0">
+		 WHERE RN BETWEEN #_sPage_# AND #_ePage_#
+		 			</isNotEqual>
+		 		</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	
+	<!-- 긴급공간정보 재난 목록 수 -->	
+	<select id="disasterDAO.getDisasterListCnt" parameterClass="java.util.Map" resultClass="int">
+		SELECT COUNT(b."MSFRTN_ID") AS totalCount
+		FROM (
+				SELECT (ROW_NUMBER() OVER()) AS NUM, a.*
+				FROM (
+						SELECT "MSFRTN_ID"
+						     , "DATASET_NM"
+						     , "ADDR"
+						     , "MSFRTN_TY_NM"
+						     , TO_CHAR("UPLOAD_DT",'YYYY-MM-DD') AS UPLOAD_DT
+						     , "MSFRTN_TY_CD"
+						FROM public."TN_DATASET_INFO"
+						WHERE "RLS_TY" IN ('1','2')					
+						GROUP BY "MSFRTN_ID", "DATASET_NM", "ADDR", "MSFRTN_TY_NM", "UPLOAD_DT", "MSFRTN_TY_CD"
+				) a
+				ORDER BY NUM
+		) b
+		WHERE 1=1
+        <isNotEmpty property="searchCof">
+			AND "MSFRTN_TY_CD" = #searchCof#
+		</isNotEmpty>
+		<isNotEmpty property="searchRegion">
+			AND "ADDR" LIKE #searchRegion# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="searchKeyword">
+			AND "DATASET_NM" LIKE '%' || #searchKeyword# || '%' 
+		</isNotEmpty>
+	</select>
+	
+	<!-- 긴급공간정보 재난 목록  -->	
+	<select id="disasterDAO.getDisasterList" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		<include refid="Paging_head" />
+			SELECT b.*
+			FROM
+			(
+				SELECT (ROW_NUMBER() OVER()) AS NUM, a.*
+				FROM (
+						SELECT "MSFRTN_ID"
+						     , "DATASET_NM"
+						     , "ADDR"
+						     , "MSFRTN_TY_NM"
+						     , TO_CHAR("UPLOAD_DT",'YYYY-MM-DD') AS UPLOAD_DT
+						     , "MSFRTN_TY_CD"
+						FROM public."TN_DATASET_INFO"
+						WHERE "RLS_TY" IN ('1','2')				
+						GROUP BY "MSFRTN_ID", "DATASET_NM", "ADDR", "MSFRTN_TY_NM", "UPLOAD_DT", "MSFRTN_TY_CD"
+						ORDER BY "UPLOAD_DT" DESC, "DATASET_NM"
+				) a
+				ORDER BY NUM
+			) b
+			WHERE 1=1
+			<isNotEmpty property="searchCof">
+				AND "MSFRTN_TY_CD" = #searchCof#
+			</isNotEmpty>
+			<isNotEmpty property="searchRegion">
+				AND "ADDR" LIKE #searchRegion# || '%'
+			</isNotEmpty>
+			<isNotEmpty property="searchKeyword">
+				AND "DATASET_NM" LIKE '%' || #searchKeyword# || '%' 
+			</isNotEmpty>
+		<include refid="Paging_tail" />
+	
+	</select>
+	
+	<!-- 재난 정보 -->
+	<select id="disasterDAO.getDisasterDetail" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT b.*
+		FROM (
+				SELECT (ROW_NUMBER() OVER()) AS ROWNUMS, a.*
+				FROM (
+					SELECT "MSFRTN_ID"
+					     , "DATASET_NM"
+					     , "ADDR"
+					     , "MSFRTN_TY_NM"
+					     , TO_CHAR("UPLOAD_DT",'YYYY-MM-DD') AS UPLOAD_DT
+					     , "MSFRTN_TY_CD"
+					FROM public."TN_DATASET_INFO"
+					WHERE "MSFRTN_ID" = #msfrtnId#
+					AND "RLS_TY" IN ('1','2')
+					GROUP BY "MSFRTN_ID", "DATASET_NM", "ADDR", "MSFRTN_TY_NM", "UPLOAD_DT", "MSFRTN_TY_CD"
+					ORDER BY "UPLOAD_DT" DESC
+				) a
+		ORDER BY ROWNUMS) b	
+	</select>
+	
+	<!-- 재난 자료 목록 -->
+	<select id="disasterDAO.getDisasterVideoList" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT b.*
+		FROM (
+				SELECT (ROW_NUMBER() OVER()) AS ROWNUMS
+				     , a.*
+				FROM (
+						SELECT a."DATASET_ID"
+						     , a."MSFRTN_ID"
+						     , a."DATASET_NM"
+						     , a."ADDR"
+						     , a."MSFRTN_TY_NM"
+						     , TO_CHAR(a."UPLOAD_DT", 'YYYY-MM-DD') AS UPLOAD_DT
+						     , a."MSFRTN_TY_CD"
+						     , a."DATASET_COURS_NM"
+						     , a."DATA_CD"
+						     , COALESCE(a."FILE_KOR_NM", a."FILE_NM") AS FILE_NM
+						     , a."FILE_TY"
+						     , a."FILE_NM" AS FILE_ENG_NM
+						     , CASE WHEN a."DATA_CD" LIKE 'DSCD1%' THEN '영상'
+						     		WHEN a."DATA_CD" LIKE 'DSCD2%' THEN '수치지도'
+						     		WHEN a."DATA_CD" LIKE 'DSCD3%' THEN '통계정보'
+						     		WHEN a."DATA_CD" LIKE 'DSCD4%' THEN '분석정보'
+						       END DATA_CD_a
+						     , CASE WHEN a."DATA_CD" LIKE 'DSCD11%' THEN '위성영상'
+						     		WHEN a."DATA_CD" LIKE 'DSCD12%' THEN '항공영상'
+						     		WHEN a."DATA_CD" LIKE 'DSCD41%' THEN '객체추출'
+						     		WHEN a."DATA_CD" LIKE 'DSCD42%' THEN '변화탐지'
+						     		ELSE b."CODE_NM"
+						       END DATA_CD_b
+						     , CASE WHEN a."DATA_CD" LIKE 'DSCD13%' THEN ''
+						     		WHEN a."DATA_CD" LIKE 'DSCD2%' THEN ''
+						     		WHEN a."DATA_CD" LIKE 'DSCD3%' THEN ''
+						     		ELSE b."CODE_NM"
+						       END DATA_CD_c
+						     , a."MAP_NM"
+						     , a."ROI_YN"
+						FROM public."TN_DATASET_INFO" a, (SELECT * FROM public."TN_CMMN_CODE" WHERE "GROUP_CODE" = '60') b
+						WHERE 1=1
+						AND "RLS_TY" IN ('1','2')
+						<isNotEmpty property="msfrtnId">
+							AND "MSFRTN_ID" = #msfrtnId#
+						</isNotEmpty>
+						<isNotEmpty property="datasetId">
+							AND "DATASET_ID" = CAST(#datasetId# AS numeric)
+						</isNotEmpty>
+						AND a."DATA_CD" = b."CMMN_CODE"
+						ORDER BY a."DATA_CD"
+				) a
+				ORDER BY ROWNUMS
+		) b
+	</select>
+	
+	<!-- 재난 유형 코드 -->
+	<select id="disasterDAO.getDisasterCodeList" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT "MSFRTN_TY_CD" AS CDE_ALL
+		     , "MSFRTN_TY_NM" AS CDE_NAM
+		FROM public."TC_MSFRTN_TY_INFO";
+		ORDER BY "MSFRTN_TY_CD"
+	</select>
+	
+	<!-- 행정구역(시도) -->
+	<select id="disasterDAO.getDisasterRegion1List" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT SUBSTR("bjcd",1,2) AS code
+		     , "name" AS codeNm
+		FROM public."n3a_g0010000"
+		ORDER BY "bjcd" ASC
+	</select>
+	
+	<!-- 행정구역(시군구) -->
+	<select id="disasterDAO.getDisasterRegion2List" parameterClass="java.util.Map" resultClass="egovMap">	
+		SELECT SUBSTR(gu."bjcd",1,5) AS code
+		     , "name" AS codeNm
+		FROM public."n3a_g0100000" gu
+		WHERE gu.bjcd LIKE #bjcd# || '%'
+		ORDER BY code ASC
+	</select>
+	
+</sqlMap>

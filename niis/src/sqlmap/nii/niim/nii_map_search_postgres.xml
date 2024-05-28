@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_search_postgres">
+
+	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+
+	<!-- 통합검색(지번) 검색 결과 -->
+	<select id="mapSearchDAO.selectJibunList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT PNU, JIBUN, ST_X(ST_CENTROID(GEOM)) POINT_X, ST_Y(ST_CENTROID(GEOM)) POINT_Y 
+		FROM NGI.LSMD_CONT_LDREG_$sido$
+		WHERE PNU = #liCd# || #mntnYn# || LPAD(#lnbrMnnm#,4,'0') || LPAD(#lnbrSlno#, 4,'0')
+	</select>
+	
+	<!-- 통합검색 (도로명) 검색 결과 -->
+	<select id="mapSearchDAO.selectJusoList" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		SELECT MAP.BD_MGT_SN,
+			MAP.BULD_NM,
+			EMD.EMD_KOR_NM AS EMD_NM,
+			MAP.BULD_MNNM,
+		    MAP.BULD_SLNO,
+			ST_X(ST_CENTROID(MAP.GEOM)) POINT_X,
+			ST_Y(ST_CENTROID(MAP.GEOM)) POINT_Y
+		FROM NGI.TL_SPBD_BULD_41 AS MAP,
+			NGI.ROAD_ADDR_INFO AS RN,
+			NGI.TL_SCCO_EMD EMD
+		WHERE 
+			MAP.BD_MGT_SN = RN.MNGNO
+			AND RN.RN_CD=#rnCd# 
+			AND RN.BULD_MNNM = #buldMnnm#
+			<isNotEmpty property="buldSlno">
+				AND RN.BULD_SLNO=#buldSlno#
+			</isNotEmpty>
+			<isEmpty property="buldSlno">
+				AND RN.BULD_SLNO='0'
+			</isEmpty>  
+			AND ST_INTERSECTS(MAP.GEOM, EMD.GEOM) = true
+	</select>
+	
+
+	
+</sqlMap>

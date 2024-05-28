@@ -1,0 +1,100 @@
+pageUnit=10
+pageSize=10
+
+Globals.airZoneCode=PDT001
+Globals.demZoneCode=PDT002
+Globals.ortZoneCode=PDT004
+Globals.lidZoneCode=PDT005
+Globals.nirZoneCode=PDT009
+Globals.tdsZoneCode=PDT010
+Globals.mapZoneCode=PDT008
+
+#uploadfilepath
+Globals.uploadFilePath=/upload
+Globals.uploadPath=/upload
+Globals.board=/board
+Globals.pop=/pop
+
+#\uba54\uc778\ud654\uba74 \uacf5\uc9c0\uc0ac\ud56d \uac1c\uc218
+Globals.mainNoticeCnt=3
+
+Globals.niisAcsKey=D320FB12ZRE9WMLG
+
+#niis local
+Globals.niimUrl=http://10.98.25.47:8081/niis/niim/
+#1000 = 1\ucd08
+Globals.connectTimeout=100000
+#1000 = 1\ucd08
+Globals.readTimeout=100000
+
+#\ub2e4\uc6b4\ub85c\ub4dc \uc194\ub8e8\uc158 \uc694\uccad\ud398\uc774\uc9c0 \uc815\ubcf4
+Globals.innorixUrl=/innorix/common/download.jsp
+
+#SMS \uc124\uc815
+Globals.adminTel=031-210-2674
+Globals.applyReqMsg=[\uACF5\uAC04\uC815\uBCF4\uD589\uC815\uB9DD\uC11C\uBE44\uC2A4]__apPost__ __apDepartment__ __apName__ \ub2d8\uaed8\uc11c \uC2E0\uCCAD\uC11C\uB97C \uB4F1\uB85D \uD558\uC168\uC2B5\uB2C8\uB2E4
+Globals.applyCnfmMsg=[\uACF5\uAC04\uC815\uBCF4\uD589\uC815\uB9DD\uC11C\uBE44\uC2A4]__apName__ \ub2d8\uc758 \uc601\uc0c1\uc2e0\uccad \uc2b9\uc778\uc774 \uc644\ub8cc \ub418\uc5c8\uc2b5\ub2c8\ub2e4.
+Globals.applyRtrnMsg=[\uACF5\uAC04\uC815\uBCF4\uD589\uC815\uB9DD\uC11C\uBE44\uC2A4]__apName__ \ub2d8\uc758 \uc601\uc0c1\uc2e0\uccad\uc774 \ubc18\ub824 \ub418\uc5c8\uc2b5\ub2c8\ub2e4. \ubc18\ub824\uc0ac\uc720 \ud655\uc778 \ubc14\ub78d\ub2c8\ub2e4.
+Globals.userReqMsg=[\uACF5\uAC04\uC815\uBCF4\uD589\uC815\uB9DD\uC11C\uBE44\uC2A4]__post__ __department__ __usrNm__ \ub2d8\uaed8\uc11c \ud68c\uc6d0\uac00\uc785\uc744 \uc694\uccad \ud558\uc168\uc2b5\ub2c8\ub2e4.
+Globals.userCnfmMsg=[\uACF5\uAC04\uC815\uBCF4\uD589\uC815\uB9DD\uC11C\uBE44\uC2A4]__usrNm__ \ub2d8\uc758 \ud68c\uc6d0\uac00\uc785 \uc2b9\uc778\uc774 \uc644\ub8cc \ub418\uc5c8\uc2b5\ub2c8\ub2e4.
+Globals.userRtrnMsg=[\uACF5\uAC04\uC815\uBCF4\uD589\uC815\uB9DD\uC11C\uBE44\uC2A4]__usrNm__ \ub2d8\uc758 \ud68c\uc6d0\uac00\uc785\uc774 \ubc18\ub824 \ub418\uc5c8\uc2b5\ub2c8\ub2e4. \ubc18\ub824\uc0ac\uc720 \ud655\uc778 \ubc14\ub78d\ub2c8\ub2e4.
+
+Globals.airImageCode = PDT001
+Globals.demImageCode = PDT002
+Globals.ortImageCode = PDT004
+Globals.lidImageCode = PDT005
+Globals.mapImageCode = PDT008
+Globals.nirImageCode = PDT009
+Globals.tdsImageCode = PDT010
+Globals.airLibImageCode = PDT011
+Globals.atLibImageCode = atCde
+
+
+Globals.airImageFormat = .tif 
+Globals.demImageFormat = .txt 
+Globals.ortImageFormat = .tif 
+Globals.lidImageFormat = .las 
+Globals.nirImageFormat = .tif 
+Globals.tdsImageFormat = .jpg 
+Globals.tdsImageFormat2 = .3ds 
+
+Globals.downloadLimitDay = 10
+
+Globals.supplyAirImgLimit = 3
+Globals.supplyDemImgLimit = 100
+Globals.supplyOrtImgLimit = 100
+Globals.supplyAtImgLimit = 100
+Globals.supplyMapImgLimit = 100
+				
+Globals.airMetaPath = /AIR/META/META_IMAGE
+Globals.airLibMetaPath = /AIR/META/META_IMAGE
+Globals.demMetaPath = /DEM/META/IMAGE
+Globals.ortMetaPath = /ORT/META
+Globals.lidMetaPath = /DEM/META/DTD
+Globals.nirMetaPath = /AIR/META/META_NIR
+Globals.tdsMetaPath = /3D/META
+
+Globals.stoImgPath = D:/SUPPLY
+Globals.supplyImgPath = D:
+#Globals.uploadedImgPath = D:/upload/SUPPLY
+Globals.uploadedImgPath = D:/WATERMARK/SUPPLY
+
+#\uc6cc\ud130\ub9c8\ud06c \uc194\ub8e8\uc158 DLL \uc704\uce58
+#Globals.CKNBLibraryPth = D:/water/
+Globals.CKNBLibraryPth = D:/NII/
+
+Globals.niimIp = 127.0.0.1
+
+Globals.policyPath = C:/egc/workspace_niis/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/niis/WEB-INF/classes/xacml/policies
+Globals.fileKeepDay = 3
+
+
+Globals.boardFilePath = D:/BOARD
+
+#G119 Setting
+Globals.g119SendUrl = http://10.98.25.124:8085/common/fileDown.do?
+Globals.g119TempPath = D:/g119/
+#1000 = 1초
+Globals.g119ConnectTimeout=300000
+#1000 = 1초
+Globals.g119ReadTimeout=300000

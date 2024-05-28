@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_user">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="UserVO" type="org.nii.niis.niim.service.UserVO"/>
+	
+	<!-- 로그인 처리를 위한 resultMap -->
+	<resultMap id="login" class="UserVO">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="password" column="password"/>
+		<result property="email" column="email"/>
+<!-- 		<result property="orgnztId" column="orgnztId"/> -->
+<!-- 		<result property="orgnztNm" column="orgnztNm"/> -->
+<!-- 		<result property="posCd" column="posCd"/> -->
+		<result property="uniqId" column="uniqId"/>						
+		<result property="st" column="st"/>
+		<result property="lastModMonth" column="lastModMonth"/>		
+		<result property="usrTel" column="usrTel"/>
+<!-- 		<result property="pdtdataAuthYn" column="pdtdataAuthYn"/> -->
+<!-- 		<result property="shAuthYn" column="shAuthYn"/> -->
+<!-- 		<result property="mdAuthYn" column="mdAuthYn"/> -->
+<!-- 		<result property="sysAuthYn" column="sysAuthYn"/> -->
+		<result property="useAt" column="useAt"/>
+<!-- 		<result property="pkindAt" column="pkindAt"/> -->
+<!-- 		<result property="applyAt" column="applyAt"/> -->
+<!-- 		<result property="usrRnum1" column="usrRnum1"/> -->
+		<result property="post" column="post"/>
+		<result property="department" column="department"/>
+		<result property="position" column="position"/>
+		<result property="cause" column="cause"/>
+		<result property="helpYn" column="helpYn"/>
+	</resultMap>
+	
+	<!-- 일반 로그인 -->
+	<select id="loginDAO.loginCheck" resultMap="login">
+	
+		SELECT USR_ID AS id
+		     , USR_NM AS name
+		     , USR_PW AS password
+		     , decrypt(USR_EML) AS email
+		     , POST AS post
+<!-- 		     , DEP_CD AS orgnztId -->
+<!-- 		     , (SELECT A.CDE_NAM -->
+<!-- 		          FROM CMT_DETAIL_CODE_NIIM A -->
+<!-- 		         WHERE A.CDE_CDE = M.DEP_CD and FLE_IDN = 'DEPT_CDE') orgnztNm -->
+<!-- 		     , POS_CD AS posCd -->
+		     , USR_MGNO AS uniqId
+		     , ST AS st
+		     , ROUND(MONTHS_BETWEEN(SYSDATE,MD_DT),3) AS lastModMonth
+		     , decrypt(USR_TEL) as usrTel
+<!-- 		     , PDTDATA_AUTH_YN AS pdtdataAuthYn -->
+<!-- 		     , SH_AUTH_YN AS shAuthYn -->
+<!-- 		     , MD_AUTH_YN AS mdAuthYn -->
+<!-- 		     , SYS_AUTH_YN AS sysAuthYn -->
+		     , USE_AT as useAt
+<!-- 		     , PKIND_AT as pkindAt -->
+<!-- 		     , APPLY_AT as applyAt -->
+		     , DEPARTMENT as department
+		     , POSITION as position
+		     , CAUSE as cause
+		     , HELP_YN as helpYn
+		 FROM ITR_USR_INFO_NIIM M
+		WHERE M.USR_ID = #userID#
+		  AND M.ST != 'D'
+		  
+	</select>
+	
+	<!-- Gpki 로그인 -->
+	<select id="loginDAO.loginCheckGpki" resultMap="login">
+	
+		SELECT USR_ID AS id
+		     , USR_NM AS name
+		     , USR_PW AS password
+		     , decrypt(USR_EML) AS email
+		     , POST AS post
+<!-- 		     , DEP_CD AS orgnztId -->
+<!-- 		     , (SELECT A.CDE_NAM -->
+<!-- 		          FROM CMT_DETAIL_CODE_NIIM A -->
+<!-- 		         WHERE A.CDE_CDE = M.DEP_CD and FLE_IDN = 'DEPT_CDE') orgnztNm -->
+<!-- 		     , POS_CD AS posCd -->
+		     , USR_MGNO AS uniqId
+		     , ST AS st
+		     , ROUND(MONTHS_BETWEEN(SYSDATE,MD_DT),3) AS lastModMonth
+		     , decrypt(USR_TEL) as usrTel
+<!-- 		     , PDTDATA_AUTH_YN AS pdtdataAuthYn -->
+<!-- 		     , SH_AUTH_YN AS shAuthYn -->
+<!-- 		     , MD_AUTH_YN AS mdAuthYn -->
+<!-- 		     , SYS_AUTH_YN AS sysAuthYn -->
+		     , USE_AT as useAt
+<!-- 		     , PKIND_AT as pkindAt -->
+<!-- 		     , APPLY_AT as applyAt -->
+		     , DEPARTMENT as department
+		     , POSITION as position
+		     , CAUSE as cause
+		     , HELP_YN as helpYn
+		 FROM ITR_USR_INFO_NIIM M
+		WHERE M.USR_PW = #userPW#
+		  AND M.ST != 'D'
+		  
+	</select>
+	
+	
+	<insert id="loginDAO.insertLoginLog" parameterClass="java.util.Map">
+	
+		INSERT 
+		  INTO ITR_USR_LOG_NIIM 
+		  (
+		  	   USR_MGNO
+		  	 , LOG_MGNO
+		  	 , ST
+		  	 , ACS_IP
+			<isNotEmpty property="reqMgno">
+		  	 , REQ_MGNO
+			</isNotEmpty>
+		  	 , SYSTEM_CDE
+		  	 , ACS_CRDT
+		  ) 
+		VALUES 
+		  ( 
+		       #usrMgno#
+		     , (
+		        SELECT NVL(MAX(TO_NUMBER(LOG_MGNO)), 0) + 1
+		          FROM ITR_USR_LOG_NIIM
+		         WHERE USR_MGNO = #usrMgno#
+		       )
+		     , #st#
+		     , #acsIp#
+			<isNotEmpty property="reqMgno">
+		     , #reqMgno#
+			</isNotEmpty>
+		     , #systemCde#
+		     , SYSDATE
+		  )
+		
+	</insert>
+	
+	<select id="userinfoDAO.getUserInfoListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+		
+		SELECT COUNT(*) ROWCOUNT
+		  FROM ITR_USR_INFO_NIIM U
+		 WHERE ST != 'D'
+		<isEqual prepend="AND" property="srchGbn" compareValue="0">
+			<![CDATA[
+		       USR_NM LIKE '%'||#srchWrd#||'%'
+			]]>
+		</isEqual>
+		<isEqual prepend="AND" property="srchGbn" compareValue="1">
+			<![CDATA[
+			   USR_ID LIKE '%'||#srchWrd#||'%'
+			]]>
+		</isEqual>
+		<isNotEmpty property="useAt">
+		   AND USE_AT = #useAt#
+		</isNotEmpty>
+		<isNotEmpty property="st">
+		   AND ST = #st#
+		</isNotEmpty>
+	
+	</select>
+	<select id="userinfoDAO.getUserInfoList" parameterClass="java.util.Map" resultClass="egovMap">
+		
+		<include refid="Paging_head"/>
+		SELECT USR_MGNO
+			 , USR_NM
+			 , USR_ID
+			 , decrypt(USR_TEL) USR_TEL
+			 , decrypt(USR_EML) USR_EML
+			 , POST
+		     , DEPARTMENT
+		     , POSITION
+			 , USE_AT
+			 , (
+			    SELECT CDE_NAM
+                  FROM CMT_DETAIL_CODE_NIIM
+                 WHERE FLE_IDN = 'USER_AUTH'
+                   AND CDE_CDE = U.USE_AT 
+               ) USER_AUTH
+             , (
+                SELECT NVL(TO_CHAR(MAX(ACS_CRDT) KEEP (DENSE_RANK LAST ORDER BY TO_NUMBER(LOG_MGNO)), 'YYYY-MM-DD HH24:MI:SS'), '접속정보 없음')
+                       || (CASE WHEN MAX(ST) KEEP (DENSE_RANK LAST ORDER BY TO_NUMBER(LOG_MGNO)) = 'I' 
+                                THEN ' 접속'
+                                WHEN MAX(ST) KEEP (DENSE_RANK LAST ORDER BY TO_NUMBER(LOG_MGNO)) = 'O'
+                                THEN ' 종료'
+                            END)
+                  FROM ITR_USR_LOG_NIIM
+                 WHERE USR_MGNO = U.USR_MGNO
+                   AND ST IN ('I', 'O')
+               ) LAST_ST
+             , ST
+             , (
+                SELECT CDE_NAM
+                  FROM CMT_DETAIL_CODE_NIIM
+                 WHERE FLE_IDN = 'USER_ST'
+                   AND CDE_CDE = U.ST 
+               ) ST_NAM
+		  FROM ITR_USR_INFO_NIIM U
+		 WHERE ST != 'D'
+		<isEqual prepend="AND" property="srchGbn" compareValue="0">
+			<![CDATA[
+		       USR_NM LIKE '%'||#srchWrd#||'%'
+			]]>
+		</isEqual>
+		<isEqual prepend="AND" property="srchGbn" compareValue="1">
+			<![CDATA[
+			   USR_ID LIKE '%'||#srchWrd#||'%'
+			]]>
+		</isEqual>
+		<isNotEmpty property="useAt">
+		   AND USE_AT = #useAt#
+		</isNotEmpty>
+		<isNotEmpty property="st">
+		   AND ST = #st#
+		</isNotEmpty>
+		 ORDER BY USR_NM, USR_MGNO DESC
+		<include refid="Paging_tail"/>
+	
+	</select>
+	
+	
+	<select id="userinfoDAO.getUserInfoDetail" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT T.*
+		     , (
+		        SELECT MAX(USR_NM)
+		          FROM ITR_USR_INFO_NIIM
+		         WHERE USR_MGNO = T.ST_MOD_MGNO
+		       ) ST_MOD_NM
+		  FROM (
+		        SELECT U.USR_MGNO
+		             , U.USR_NM
+		             , U.USR_ID
+		             , U.USR_PW
+		             , decrypt(U.USR_TEL) USR_TEL
+		             , decrypt(U.USR_EML) USR_EML
+		             , U.POST
+		             , U.DEPARTMENT
+		             , U.POSITION
+		        	 , U.USE_AT
+		        	 , (
+		        	    SELECT CDE_NAM
+                          FROM CMT_DETAIL_CODE_NIIM
+                         WHERE FLE_IDN = 'USER_AUTH'
+                           AND CDE_CDE = U.USE_AT 
+                       ) USER_AUTH
+		        	 , U.ST
+                     , (
+                        SELECT CDE_NAM
+                          FROM CMT_DETAIL_CODE_NIIM
+                         WHERE FLE_IDN = 'USER_ST'
+                           AND CDE_CDE = U.ST 
+                       ) ST_NAM
+		        	 , U.CAUSE
+		        	 , MAX(L.REQ_MGNO) KEEP (DENSE_RANK LAST ORDER BY TO_NUMBER(LOG_MGNO)) ST_MOD_MGNO
+		        	 , TO_CHAR(MAX(L.ACS_CRDT) KEEP (DENSE_RANK LAST ORDER BY TO_NUMBER(LOG_MGNO)), 'YYYY-MM-DD HH24:MI:SS') ST_MOD_DT
+		          FROM ITR_USR_INFO_NIIM U
+		             , ITR_USR_LOG_NIIM L
+		         WHERE U.USR_MGNO = L.USR_MGNO(+)
+		           AND U.ST = DECODE(L.ST(+), 'F', 'C', L.ST(+))
+		           AND U.ST != 'D'
+		           AND U.USR_MGNO = #usrMgno#
+		         GROUP BY U.USR_MGNO
+		        	    , U.USR_NM
+		        	    , U.USR_ID
+		        	    , U.USR_PW
+		        	    , U.USR_TEL
+		        	    , U.USR_EML
+		        	    , U.POST
+		        	    , U.DEPARTMENT
+		        	    , U.POSITION
+		        	    , U.USE_AT
+		        	    , U.ST
+		        	    , U.CAUSE
+		       ) T
+		
+	
+	</select>
+	
+	
+	<select id="userinfoDAO.chkUserId" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	
+		SELECT COUNT(*)
+		  FROM ITR_USR_INFO_NIIM
+		 WHERE USR_ID = #usrId#
+		<isNotEmpty property="st">
+		   AND ST     = #st#
+		</isNotEmpty>
+	
+	</select>
+	
+	
+	<select id="userinfoDAO.chkUserInfo" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+		SELECT COUNT(*)
+		  FROM ITR_USR_INFO_NIIM
+		 WHERE USR_ID = #usrId#
+		 	AND USR_NM = #usrNm#
+		 	AND USR_TEL = encrypt(#usrTel#)
+		 	AND POST = #post#	
+	</select>
+	
+	
+	
+	<insert id="userinfoDAO.regUserInfo" parameterClass="java.util.Map">
+		<selectKey type="pre" keyProperty="usrMgno" resultClass="java.lang.String">
+			SELECT NVL(MAX(TO_NUMBER(USR_MGNO)), 0) + 1 AS USR_MGNO
+			  FROM ITR_USR_INFO_NIIM
+		</selectKey>
+	
+		INSERT 
+		  INTO ITR_USR_INFO_NIIM
+		  (
+		       USR_MGNO
+			 , USR_NM
+			 , USR_ID
+			 , USR_PW
+			 , USR_TEL
+			 , USR_EML
+			 , POST
+			 , DEPARTMENT
+			 , POSITION
+			 , ST
+			 , MD_DT
+			 , USE_AT
+			 , STPLAT_AGRE1
+			 , STPLAT_AGRE2
+			 , STPLAT_AGRE3
+		  )
+		VALUES
+		  (
+		       #usrMgno#
+			 , #usrNm#
+			 , #usrId#
+			 , #usrPw#
+			 , encrypt(#usrTel#)
+			 , encrypt(#usrEml#)
+			 , #post#
+			 , #department#
+			 , #position#
+			 , #st#
+			 , SYSDATE
+			 , #useAt#
+			 , #stplatAgre1#
+			 , #stplatAgre2#
+			 , #stplatAgre3#
+		  )
+	
+	</insert>
+	
+	
+	<insert id="userinfoDAO.updateUserInfoForGPKI" parameterClass="java.util.Map">
+		<selectKey type="pre" keyProperty="usrMgno" resultClass="java.lang.String">
+			SELECT USR_MGNO
+			  FROM ITR_USR_INFO_NIIM
+			  WHERE USR_ID   = #usrId#
+		</selectKey>
+		UPDATE ITR_USR_INFO_NIIM
+		   SET USR_PW    = #usrPw#
+		 WHERE USR_ID   = #usrId#
+		   AND USR_NM   = #usrNm#
+		   AND USR_TEL   = encrypt(#usrTel#)
+		   AND POST   = #post#   
+	</insert>
+	
+	
+	<update id="userinfoDAO.reRegUserInfo" parameterClass="java.util.Map">
+	
+		UPDATE ITR_USR_INFO_NIIM
+		   SET USR_TEL     = encrypt(#usrTel#)
+			 , USR_EML     = encrypt(#usrEml#)
+			 , POST        = #post#
+			 , DEPARTMENT  = #department#
+			 , POSITION    = #position#
+			 , ST          = #st#
+			 , MD_DT       = SYSDATE
+			 , USE_AT      = #useAt#
+			 , CAUSE       = ''
+			 , STPLAT_AGRE1 = #stplatAgre1#
+			 , STPLAT_AGRE2 = #stplatAgre2#
+			 , STPLAT_AGRE3 = #stplatAgre3#
+		 WHERE USR_MGNO   = #usrMgno#
+		   AND ST         = 'B'
+	
+	</update>
+	
+	
+	<update id="userinfoDAO.uptUserInfo" parameterClass="java.util.Map">
+	
+		UPDATE ITR_USR_INFO_NIIM
+		   SET USR_TEL    = encrypt(#usrTel#)
+			 , USR_EML    = encrypt(#usrEml#)
+			 , POST       = #post#
+			 , DEPARTMENT = #department#
+			 , POSITION   = #position#
+			 , MD_DT      = SYSDATE
+		<isNotEmpty property="usrPw">
+			 , USR_PW     = #usrPw#
+		</isNotEmpty>
+		<isNotEmpty property="useAt">
+			 , USE_AT     = #useAt#
+		</isNotEmpty>
+		 WHERE USR_MGNO   = #usrMgno#
+	
+	</update>
+	
+	
+	<update id="userinfoDAO.uptUserSt" parameterClass="java.util.Map">
+	
+		UPDATE ITR_USR_INFO_NIIM
+		   SET ST     = #st#
+		<isNotEmpty property="useAt">
+		     , USE_AT = #useAt#
+		</isNotEmpty>
+		<isNotEmpty property="cause">
+		     , CAUSE  = #cause#
+		</isNotEmpty>
+			 , MD_DT  = SYSDATE
+		 WHERE USR_MGNO = #usrMgno#
+	
+	</update>
+	
+	
+	<select id="userinfoDAO.getCurrPass" parameterClass="java.lang.String" resultClass="java.lang.String">
+	
+		SELECT USR_PW
+		  FROM ITR_USR_INFO_NIIM
+		 WHERE USR_MGNO = #usrMgno#
+	
+	</select>
+	
+	
+	<update id="userinfoDAO.cfrmInitGuide" parameterClass="java.util.Map">
+	
+		UPDATE ITR_USR_INFO_NIIM
+		   SET HELP_YN  = #helpYn#
+		 WHERE USR_MGNO = #usrMgno#
+	
+	</update>
+	
+	<select id="userinfoDAO.getMgr" resultClass="egovMap">
+		SELECT /* userinfoDAO.getMgr */
+			  decrypt(USR_TEL) USR_TEL
+		FROM ITR_USR_INFO_NIIM U
+		WHERE U.USE_AT = '00' 
+	</select>
+	
+	<select id="userinfoDAO.getManagerNumberList" resultClass="java.lang.String">
+		SELECT PHONE 
+		FROM NIIS_USR_INFO@DL_SMART
+		WHERE MG_CD='MG0001' AND PHONE IS NOT NULL
+	</select>
+	
+	<select id="userinfoDAO.getIimManagerNumberList" resultClass="java.lang.String">
+		SELECT PHONE 
+		FROM NIIS_USR_INFO@DL_SMART
+		WHERE MG_CD='MG0001' 
+			AND PHONE IS NOT NULL
+			AND DEPT IN ('ALL','IIM')
+	</select>
+	
+	<select id="userinfoDAO.getMapManagerNumberList" resultClass="java.lang.String">
+		SELECT PHONE 
+		FROM NIIS_USR_INFO@DL_SMART
+		WHERE MG_CD='MG0001' 
+			AND PHONE IS NOT NULL
+			AND DEPT IN ('ALL','MAP')
+	</select>
+	
+</sqlMap>

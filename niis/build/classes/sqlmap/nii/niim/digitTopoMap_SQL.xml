@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="digitTopoMap_SQL">
+
+	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias alias="digitVO" type="org.nii.niis.originList.service.DigitTopoMapVO"/>
+	
+	<resultMap class="digitVO" id="selectNewDigitList">
+		<result property="imageCde"			column="IMAGE_CDE"/>
+		<result property="mapSerNo"			column="MAP_SER_NO"/>
+		<result property="mapShtNo"			column="MAP_SHT_NO"/>
+		<result property="mapShtNm"			column="MAP_SHT_NM"/>
+		<result property="mapFormDvsnNm"	column="MAP_FORM_DVSN_NM"/>
+		<result property="mapFormDvsnCd"	column="MAP_FORM_DVSN_CD"/>
+		<result property="mapKindNm"		column="MAP_KIND_NM"/>
+		<result property="mapKindCd"		column="MAP_KIND_CD"/>
+		<result property="scaleNm"			column="SCALE_NM"/>
+		<result property="scaleCd"			column="SCALE_CD"/>
+		<result property="coordDvsnNm"		column="COORD_DVSN_NM"/>
+		<result property="coordDvsnCd"		column="COORD_DVSN_CD"/>
+		<result property="openDvsnNm"		column="OPEN_DVSN_NM"/>
+		<result property="openDvsnCd"		column="OPEN_DVSN_CD"/>
+		<result property="projectNo"		column="PROJECT_NO"/>
+		<result property="productDvsn"		column="PRODUCT_DVSN"/>
+		<result property="noticeNo"			column="NOTICE_NO"/>
+		<result property="noticeDate"		column="NOTICE_DATE"/>
+		<result property="mapHistoryNo"		column="MAP_HISTORY_NO"/>
+		<result property="productYear"		column="PRODUCT_YEAR"/>
+	</resultMap>
+	
+	<resultMap class="digitVO" id="selectNewDigitDetail">
+		<result property="mapSerNo"			column="MAP_SER_NO"/>
+		<result property="mapShtNo"			column="MAP_SHT_NO"/>
+		<result property="mapShtNm"			column="MAP_SHT_NM"/>
+		<result property="mapHistoryNo"		column="MAP_HISTORY_NO"/>
+		<result property="mapFormDvsnNm"	column="MAP_FORM_DVSN_NM"/>
+		<result property="mapFormDvsnCd"	column="MAP_FORM_DVSN_CD"/>
+		<result property="mapKindNm"		column="MAP_KIND_NM"/>
+		<result property="mapKindCd"		column="MAP_KIND_CD"/>
+		<result property="scaleNm"			column="SCALE_NM"/>
+		<result property="scaleCd"			column="SCALE_CD"/>
+		<result property="coordDvsnNm"		column="COORD_DVSN_NM"/>
+		<result property="coordDvsnCd"		column="COORD_DVSN_CD"/>
+		<result property="openDvsnNm"		column="OPEN_DVSN_NM"/>
+		<result property="openDvsnCd"		column="OPEN_DVSN_CD"/>
+		<result property="noticeNo"			column="NOTICE_NO"/>
+		<result property="noticeDate"		column="NOTICE_DATE"/>
+		<result property="surveyYear"		column="SURVEY_YEAR"/>
+		<result property="productYear"		column="PRODUCT_YEAR"/>
+		<result property="photoYear"		column="PHOTO_YEAR"/>
+		<result property="mediaNo"			column="MEDIA_NO"/>
+		<result property="updateUserId"		column="UPDATE_USER_ID"/>
+		<result property="regDate"			column="REG_DATE"/>
+	</resultMap>
+	
+	<resultMap class="digitVO" id="selectHistoryDigitList">
+		<result property="imageCde"			column="IMAGE_CDE"/>
+		<result property="mapSerNo"			column="MAP_SER_NO"/>
+		<result property="mapShtNo"			column="MAP_SHT_NO"/>
+		<result property="mapHistoryNo"		column="MAP_HISTORY_NO"/>
+		<result property="noticeNo"			column="NOTICE_NO"/>
+		<result property="mapKindNm"		column="MAP_KIND_NM"/>
+		<result property="mapKindCd"		column="MAP_KIND_CD"/>
+		<result property="scaleNm"			column="SCALE_NM"/>
+		<result property="scaleCd"			column="SCALE_CD"/>
+		<result property="noticeDate"		column="NOTICE_DATE"/>
+		<result property="productYear"		column="PRODUCT_YEAR"/>
+		<result property="checkInUserId"	column="CHECK_IN_USER_ID"/>
+		<result property="checkInDate"		column="CHECK_IN_DATE"/>
+		<result property="checkInReason"	column="CHECK_IN_REASON"/>
+	</resultMap>
+	
+		<resultMap class="digitVO" id="selectHistoryDigitDetail">
+		<result property="mapSerNo"			column="MAP_SER_NO"/>
+		<result property="mapShtNo"			column="MAP_SHT_NO"/>
+		<result property="mapShtNm"			column="MAP_SHT_NM"/>
+		<result property="mapHistoryNo"		column="MAP_HISTORY_NO"/>
+		<result property="mapFormDvsnNm"	column="MAP_FORM_DVSN_NM"/>
+		<result property="mapFormDvsnCd"	column="MAP_FORM_DVSN_CD"/>
+		<result property="mapKindNm"		column="MAP_KIND_NM"/>
+		<result property="mapKindCd"		column="MAP_KIND_CD"/>
+		<result property="scaleNm"			column="SCALE_NM"/>
+		<result property="scaleCd"			column="SCALE_CD"/>
+		<result property="coordDvsnNm"		column="COORD_DVSN_NM"/>
+		<result property="coordDvsnCd"		column="COORD_DVSN_CD"/>
+		<result property="openDvsnNm"		column="OPEN_DVSN_NM"/>
+		<result property="openDvsnCd"		column="OPEN_DVSN_CD"/>
+		<result property="noticeNo"			column="NOTICE_NO"/>
+		<result property="noticeDate"		column="NOTICE_DATE"/>
+		<result property="surveyYear"		column="SURVEY_YEAR"/>
+		<result property="productYear"		column="PRODUCT_YEAR"/>
+		<result property="photoYear"		column="PHOTO_YEAR"/>
+		<result property="mediaNo"			column="MEDIA_NO"/>
+		<result property="checkInUserId"	column="CHECK_IN_USER_ID"/>
+		<result property="checkInDate"		column="CHECK_IN_DATE"/>
+	</resultMap>
+	
+	<!-- 수치지형도 최신 지도성과 목록 cnt-->
+	<select id="digitTopoMap_SQL.selectNewDigitListCnt" parameterClass="digitVO" resultClass="java.lang.Integer">
+	
+			  SELECT 		COUNT(*)  
+				FROM 		MAP_INFO_TBL@LK_MMS
+			   WHERE 		MAP_HISTORY_NO  	=  0
+                 AND        MAP_FORM_DVSN_CD 	=  01
+				 AND 		DELETE_YN 			=  'N' 
+			<isNotEmpty property="mapKindCd">
+				 AND 		MAP_KIND_CD  		=  #mapKindCd#
+			</isNotEmpty>
+			<isNotEmpty property="scaleCd">
+				 AND 		SCALE_CD  			=  #scaleCd#
+			</isNotEmpty>       
+			<isNotEmpty property="coordDvsnCd">
+				 AND 		COORD_DVSN_CD 		=  #coordDvsnCd#
+			</isNotEmpty>     	 	 
+			<isNotEmpty property="openDvsnCd">
+				 AND 		OPEN_DVSN_CD  		=  #openDvsnCd#
+			</isNotEmpty>     
+			<isNotEmpty property="mapShtNo">     
+ 	<![CDATA[	 AND		MAP_SHT_NO LIKE 	'%'||#mapShtNo#|| '%' 		]]>
+			</isNotEmpty>
+			<isNotEmpty property="mapShtNm"> 			 
+	<![CDATA[	 AND		MAP_SHT_NM LIKE 	'%'||#mapShtNm#|| '%' 		]]>
+			</isNotEmpty>
+			ORDER BY 		REG_DATE   DESC
+	</select>
+	
+	
+	<!-- 수치지형도 최신 지도성과 목록 -->
+	<select id="digitTopoMap_SQL.selectNewDigitList" parameterClass="digitVO" resultMap="selectNewDigitList">
+	 SELECT
+ 		*
+	  FROM(
+			 SELECT 
+			 	FLOOR((ROWNUM-1)/ #pageUnit# + 1) PAGE, 
+			 	ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM,
+			 	PG.*
+		 	   FROM (	
+	
+	
+							SELECT 		  'PDT008'									AS IMAGE_CDE
+										, MAP_SER_NO
+								        , MAP_SHT_NO
+								        , MAP_SHT_NM
+						                , ( SELECT CD_TYPE_NM
+								              FROM COMMON_CD_TBL@LK_MMS 
+								             WHERE CD_KIND    = '00'
+								               AND CD_TYPE    = MAP_FORM_DVSN_CD
+								               AND CD_KIND_NM = 'data_kind_cd')      AS MAP_FORM_DVSN_NM
+								        , MAP_FORM_DVSN_CD
+								        , ( SELECT CD_TYPE_NM
+								              FROM COMMON_CD_TBL@LK_MMS 
+								             WHERE CD_KIND    = '11'
+								               AND CD_TYPE    =  MAP_KIND_CD
+								               AND CD_KIND_NM = 'map_kind_cd')       AS MAP_KIND_NM
+								        , MAP_KIND_CD
+								        , ( SELECT CD_TYPE_NM
+								              FROM COMMON_CD_TBL@LK_MMS 
+								             WHERE CD_KIND    = '21'
+								               AND CD_TYPE    =  SCALE_CD
+								               AND CD_KIND_NM = 'map_scale')         AS SCALE_NM
+								        , SCALE_CD
+								        , ( SELECT CD_TYPE_NM
+								              FROM COMMON_CD_TBL@LK_MMS 
+								             WHERE CD_KIND    = '31'
+								               AND CD_TYPE    =  COORD_DVSN_CD
+								               AND CD_KIND_NM = 'coord_dvsn_cd')     AS COORD_DVSN_NM
+								        , COORD_DVSN_CD
+<!-- 								        , ( SELECT CD_TYPE_NM -->
+<!-- 								              FROM COMMON_CD_TBL@LK_MMS  -->
+<!-- 								             WHERE CD_KIND    = '41' -->
+<!-- 								               AND CD_TYPE    =  OPEN_DVSN_CD -->
+<!-- 								               AND CD_KIND_NM = 'open_dvsn_cd')     AS OPEN_DVSN_NM -->
+								        , ( CASE
+				                                WHEN OPEN_DVSN_CD = '01' THEN '공개'
+				                                WHEN OPEN_DVSN_CD = '02' THEN 
+				                                    CASE
+				                                    	WHEN SCALE_CD NOT IN ('01', '09') THEN '공개' 
+				                                    	ELSE '공개제한'
+				                            		END
+									        END
+								         ) 											AS OPEN_DVSN_NM       
+								        , OPEN_DVSN_CD
+								        , PROJECT_NO
+								        , PRODUCT_DVSN
+								        , NOTICE_NO
+								        , TO_CHAR(NOTICE_DATE, 'yyyy-mm-dd') 		AS NOTICE_DATE
+								        , MAP_HISTORY_NO
+								        , PRODUCT_YEAR
+							FROM 		MAP_INFO_TBL@LK_MMS
+						   WHERE 		MAP_HISTORY_NO  	=  0
+			                 AND        MAP_FORM_DVSN_CD 	=  01
+							 AND 		DELETE_YN 			=  'N' 
+						<isNotEmpty property="mapKindCd">
+							 AND 		MAP_KIND_CD  		=  #mapKindCd#
+						</isNotEmpty>     
+						<isNotEmpty property="scaleCd">
+							 AND 		SCALE_CD  			=  #scaleCd#
+						</isNotEmpty>     
+						<isNotEmpty property="coordDvsnCd">
+							 AND 		COORD_DVSN_CD 		=  #coordDvsnCd#
+						</isNotEmpty>     	 	 
+						<isNotEmpty property="openDvsnCd">
+							 AND 		OPEN_DVSN_CD  		=  #openDvsnCd#
+						</isNotEmpty>
+						<isNotEmpty property="mapShtNo">     
+			 	<![CDATA[	 AND		MAP_SHT_NO LIKE 	'%'||#mapShtNo#|| '%' 		]]>
+						</isNotEmpty>
+						<isNotEmpty property="mapShtNm"> 			 
+				<![CDATA[	 AND		MAP_SHT_NM LIKE 	'%'||#mapShtNm#|| '%' 		]]>
+						</isNotEmpty>	
+						 ORDER BY 		REG_DATE   DESC
+		
+		
+				 	) PG
+					ORDER BY 	RNUM DESC	
+				)
+				WHERE PAGE = #pageIndex#
+       
+         
+	</select>
+	
+	
+	<!-- 수치지형도 과거 지도성과이력 목록 리스트 cnt 출력 -->
+	<select id="digitTopoMap_SQL.selectHistoryDigitListCnt" parameterClass="digitVO" resultClass="java.lang.Integer">
+	
+	                SELECT  	COUNT(*)
+	                  FROM  	MAP_HISTORY_TBL@LK_MMS 
+	                 WHERE 	 	MAP_SER_NO 		= #mapSerNo#
+	                   AND  	MAP_SHT_NO 		= #mapShtNo#
+	             ORDER  BY  	MAP_HISTORY_NO 	DESC
+	             
+	</select>
+	
+	
+	<!-- 수치지형도 과거 지도성과이력 목록 리스트 출력 -->
+	<select id="digitTopoMap_SQL.selectHistoryDigitList" parameterClass="digitVO" resultMap="selectHistoryDigitList">
+	
+	 SELECT
+ 		*
+	  FROM(
+			 SELECT 
+			 	FLOOR((ROWNUM-1)/ #pageUnit# + 1) PAGE, 
+			 	ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM,
+			 	PG.*
+		 	   FROM (	
+			
+			
+			
+	                SELECT  	 'PDT008'										AS IMAGE_CDE			 <!-- 수치지형도 코드 -->
+	                			, MAP_SER_NO
+					            , MAP_SHT_NO
+					            , MAP_HISTORY_NO
+	                			, NOTICE_NO
+	                			, ( SELECT CD_TYPE_NM
+						              FROM COMMON_CD_TBL@LK_MMS 
+						             WHERE CD_KIND    = '11'
+						               AND CD_TYPE    =  MAP_KIND_CD
+						               AND CD_KIND_NM = 'map_kind_cd')       	AS MAP_KIND_NM
+						        , MAP_KIND_CD
+						        , ( SELECT CD_TYPE_NM
+						              FROM COMMON_CD_TBL@LK_MMS 
+						             WHERE CD_KIND    = '21'
+						               AND CD_TYPE    =  SCALE_CD
+						               AND CD_KIND_NM = 'map_scale')         	AS SCALE_NM
+						        , SCALE_CD
+	                       	 	, TO_CHAR(NOTICE_DATE, 'YYYY-MM-DD') 			AS NOTICE_DATE
+		                        , PRODUCT_YEAR
+		                        , CHECK_IN_USER_ID
+		                        , TO_CHAR(CHECK_IN_DATE, 'YYYY-MM-DD') 			AS CHECK_IN_DATE
+		                        , CHECK_IN_REASON
+	                  FROM  	MAP_HISTORY_TBL@LK_MMS 
+	                 WHERE 	 	MAP_SER_NO 		= #mapSerNo#
+	                   AND  	MAP_SHT_NO 		= #mapShtNo#
+	             ORDER  BY  	MAP_HISTORY_NO 	DESC
+	             
+	             
+            ) PG
+			ORDER BY 	RNUM DESC	
+		)
+		WHERE PAGE = #pageIndex#
+             
+	</select>
+	
+	
+	<!-- 수치지형도 최신 지도성과이력 상세조회 출력 -->
+	<select id="digitTopoMap_SQL.selectNewDigitDetail" parameterClass="digitVO" resultMap="selectNewDigitDetail">
+		 		SELECT 		  MAP_SER_NO
+					        , MAP_SHT_NO
+					        , MAP_SHT_NM
+                            , MAP_HISTORY_NO
+			                , ( SELECT CD_TYPE_NM
+					              FROM COMMON_CD_TBL@LK_MMS 
+					             WHERE CD_KIND    = '00'
+					               AND CD_TYPE    = MAP_FORM_DVSN_CD
+					               AND CD_KIND_NM = 'data_kind_cd')       	AS MAP_FORM_DVSN_NM
+					        , MAP_FORM_DVSN_CD
+					        , ( SELECT CD_TYPE_NM
+					              FROM COMMON_CD_TBL@LK_MMS 
+					             WHERE CD_KIND    = '11'
+					               AND CD_TYPE    =  MAP_KIND_CD
+					               AND CD_KIND_NM = 'map_kind_cd')       	AS MAP_KIND_NM
+					        , MAP_KIND_CD
+					        , ( SELECT CD_TYPE_NM
+					              FROM COMMON_CD_TBL@LK_MMS 
+					             WHERE CD_KIND    = '21'
+					               AND CD_TYPE    =  SCALE_CD
+					               AND CD_KIND_NM = 'map_scale')        	AS SCALE_NM
+					        , SCALE_CD
+					        , ( SELECT CD_TYPE_NM
+					              FROM COMMON_CD_TBL@LK_MMS 
+					             WHERE CD_KIND    = '31'
+					               AND CD_TYPE    =  COORD_DVSN_CD
+					               AND CD_KIND_NM = 'coord_dvsn_cd')     	AS COORD_DVSN_NM
+					        , COORD_DVSN_CD       
+<!-- 					        , ( SELECT CD_TYPE_NM -->
+<!-- 					              FROM COMMON_CD_TBL@LK_MMS  -->
+<!-- 					             WHERE CD_KIND    = '41' -->
+<!-- 					               AND CD_TYPE    =  OPEN_DVSN_CD -->
+<!-- 					               AND CD_KIND_NM = 'open_dvsn_cd')      	AS OPEN_DVSN_NM -->
+					        , ( CASE
+	                                WHEN OPEN_DVSN_CD = '01' THEN '공개'
+	                                WHEN OPEN_DVSN_CD = '02' THEN 
+	                                    CASE
+	                                    	WHEN SCALE_CD NOT IN ('01', '09') THEN '공개' 
+	                                    	ELSE '공개제한'
+	                            		END
+						        END
+					         )  											AS OPEN_DVSN_NM
+					        , OPEN_DVSN_CD
+					        , NOTICE_NO
+					        , TO_CHAR(NOTICE_DATE, 'YYYY-MM-DD') 		 	AS NOTICE_DATE
+                            , SURVEY_YEAR
+                            , PRODUCT_YEAR
+                            , PHOTO_YEAR
+                            , MEDIA_NO                         	
+                            , UPDATE_USER_ID		
+                            , TO_CHAR(REG_DATE, 'YYYY-MM-DD')           	AS REG_DATE			        
+				 FROM 		MAP_INFO_TBL@LK_MMS
+				WHERE 		MAP_SER_NO 				= 	#mapSerNo#
+				  AND 		MAP_SHT_NO 				= 	#mapShtNo#
+				  AND 		MAP_HISTORY_NO 			= 	#mapHistoryNo#
+	</select>
+	
+	<!-- 수치지형도 과거 지도성과이력 상세조회 출력 -->
+	<select id="digitTopoMap_SQL.selectHistoryDigitDetail" parameterClass="digitVO" resultMap="selectHistoryDigitDetail">
+				SELECT 		   MAP_SER_NO
+				             , MAP_HISTORY_NO
+				             , MAP_SHT_NO
+				             , MAP_SHT_NM
+					         , ( SELECT CD_TYPE_NM
+					              FROM COMMON_CD_TBL@LK_MMS 
+					             WHERE CD_KIND    = '00'
+					               AND CD_TYPE    = MAP_FORM_DVSN_CD
+					               AND CD_KIND_NM = 'data_kind_cd')      	AS MAP_FORM_DVSN_NM
+					        , MAP_FORM_DVSN_CD
+					        , ( SELECT CD_TYPE_NM
+					              FROM COMMON_CD_TBL@LK_MMS 
+					             WHERE CD_KIND    = '11'
+					               AND CD_TYPE    =  MAP_KIND_CD
+					               AND CD_KIND_NM = 'map_kind_cd')       	AS MAP_KIND_NM
+					        , MAP_KIND_CD
+					        , ( SELECT CD_TYPE_NM
+					              FROM COMMON_CD_TBL@LK_MMS 
+					             WHERE CD_KIND    = '21'
+					               AND CD_TYPE    =  SCALE_CD
+					               AND CD_KIND_NM = 'map_scale')         	AS SCALE_NM
+					        , SCALE_CD
+					        , ( SELECT CD_TYPE_NM
+					              FROM COMMON_CD_TBL@LK_MMS 
+					             WHERE CD_KIND    = '31'
+					               AND CD_TYPE    =  COORD_DVSN_CD
+					               AND CD_KIND_NM = 'coord_dvsn_cd')     	AS COORD_DVSN_NM
+					        , COORD_DVSN_CD       
+<!-- 					        , ( SELECT CD_TYPE_NM -->
+<!-- 					              FROM COMMON_CD_TBL@LK_MMS  -->
+<!-- 					             WHERE CD_KIND    = '41' -->
+<!-- 					               AND CD_TYPE    =  OPEN_DVSN_CD -->
+<!-- 					               AND CD_KIND_NM = 'open_dvsn_cd')     	AS OPEN_DVSN_NM -->
+							, ( CASE
+	                                WHEN OPEN_DVSN_CD = '01' THEN '공개'
+	                                WHEN OPEN_DVSN_CD = '02' THEN 
+	                                    CASE
+	                                    	WHEN SCALE_CD NOT IN ('01', '09') THEN '공개' 
+	                                    	ELSE '공개제한'
+	                            		END
+						        END
+					         ) 												AS OPEN_DVSN_NM
+					        , OPEN_DVSN_CD
+					        , NOTICE_NO
+					        , TO_CHAR(NOTICE_DATE, 'YYYY-MM-DD') 			AS NOTICE_DATE
+                            , SURVEY_YEAR
+                            , PRODUCT_YEAR
+                            , PHOTO_YEAR
+                            , MEDIA_NO                                  	AS MEDIA_NO
+                            , CHECK_IN_USER_ID
+                            , TO_CHAR(CHECK_IN_DATE, 'YYYY-MM-DD')      	AS CHECK_IN_DATE
+				 FROM 		MAP_HISTORY_TBL@LK_MMS
+				WHERE 		MAP_SER_NO 			= 	#mapSerNo#
+				  AND 		MAP_SHT_NO   		= 	#mapShtNo#
+				  AND 		MAP_HISTORY_NO 		= 	#mapHistoryNo#
+	</select>
+
+
+	
+	
+	
+	
+	
+	
+	
+</sqlMap>

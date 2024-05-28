@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_disaster">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	
+	<!-- 긴급공간정보 재난 목록  -->	
+	<select id="disasterDAO.getDisasterListCnt" parameterClass="java.util.Map" resultClass="int">
+
+		SELECT COUNT(b.msfrtn_id) AS totalCount
+		FROM (
+				SELECT ROWNUM AS ROWNUMS, a.*
+				FROM (
+						SELECT msfrtn_id
+						     , dataset_nm
+						     , addr
+						     , msfrtn_ty_nm
+						     , TO_CHAR(upload_dt,'YYYY-MM-DD') AS upload_dt
+						     , msfrtn_ty_cd
+						FROM TN_DATASET_INFO@DL_G119
+						GROUP BY msfrtn_id, dataset_nm, addr, msfrtn_ty_nm, upload_dt, msfrtn_ty_cd
+				) a
+				ORDER BY ROWNUMS
+		) b
+		WHERE 1=1
+        <isNotEmpty property="searchCof">
+			AND msfrtn_ty_cd = #searchCof#
+		</isNotEmpty>
+		<isNotEmpty property="searchRegion">
+			AND addr LIKE #searchRegion# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="searchKeyword">
+			AND dataset_nm LIKE '%' || #searchKeyword# || '%' 
+		</isNotEmpty>
+	</select>
+	
+	<!-- 긴급공간정보 재난 목록 수 -->	
+	<select id="disasterDAO.getDisasterList" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		<include refid="Paging_head" />
+			SELECT b.*
+			FROM
+			(
+				SELECT ROWNUM AS NUM, a.*
+				FROM
+				(
+					SELECT msfrtn_id
+					     , dataset_nm
+					     , addr
+					     , msfrtn_ty_nm
+					     , TO_CHAR(upload_dt, 'YYYY-MM-DD') AS upload_dt
+					     , msfrtn_ty_cd
+					FROM TN_DATASET_INFO@DL_G119 
+					WHERE 1=1
+					GROUP BY msfrtn_id, dataset_nm, addr, msfrtn_ty_nm, upload_dt, msfrtn_ty_cd
+					ORDER BY upload_dt DESC, dataset_nm
+				) a
+			ORDER BY NUM
+			) b
+			WHERE 1=1
+			<isNotEmpty property="searchCof">
+				AND msfrtn_ty_cd = #searchCof#
+			</isNotEmpty>
+			<isNotEmpty property="searchRegion">
+				AND addr LIKE #searchRegion# || '%'
+			</isNotEmpty>
+			<isNotEmpty property="searchKeyword">
+				AND dataset_nm LIKE '%' || #searchKeyword# || '%' 
+			</isNotEmpty>
+		<include refid="Paging_tail" />
+	
+	</select>
+	
+	<!-- 재난 정보 -->
+	<select id="disasterDAO.getDisasterDetail" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT b.*
+		FROM (
+				SELECT ROWNUM AS ROWNUMS, a.*
+				FROM (
+					SELECT msfrtn_id
+					     , dataset_nm
+					     , addr
+					     , msfrtn_ty_nm
+					     , TO_CHAR(upload_dt,'YYYY-MM-DD') AS upload_dt
+					     , msfrtn_ty_cd
+					FROM TN_DATASET_INFO@DL_G119
+					WHERE msfrtn_id = #msfrtnId#
+					GROUP BY msfrtn_id, dataset_nm, addr, msfrtn_ty_nm, upload_dt, msfrtn_ty_cd
+					ORDER BY upload_dt desc
+				) a
+		ORDER BY ROWNUMS) b	
+	</select>
+	
+	<!-- 재난 자료 목록 -->
+	<select id="disasterDAO.getDisasterVideoList" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT
+			b.*
+		FROM
+			(
+			SELECT
+				ROWNUM AS ROWNUMS,
+				a.*
+			FROM
+				(
+				SELECT  
+					a.dataset_id,
+					a.msfrtn_id,
+					a.dataset_nm,
+					a.ADDR,
+					a.msfrtn_ty_nm,
+					TO_CHAR(a.upload_dt, 'YYYY-MM-DD') AS upload_dt,
+					a.msfrtn_ty_cd,
+					a.dataset_cours_nm,
+					a.data_cd,
+					NVL(a.file_kor_nm, a.file_nm) as file_nm,
+					a.file_ty,
+					a.FILE_NM AS file_eng_nm,
+				CASE WHEN a.DATA_CD like 'DSCD1%' THEN '영상'
+				 WHEN a.DATA_CD like 'DSCD2%' THEN '수치지도'
+				 WHEN a.DATA_CD like 'DSCD3%' THEN '통계정보'
+				 WHEN a.DATA_CD like 'DSCD4%' THEN '분석정보'
+				END DATA_CD_a,
+				CASE WHEN a.DATA_CD like 'DSCD11%' THEN '위성영상'
+				WHEN a.DATA_CD like 'DSCD12%' THEN '항공영상'
+				WHEN a.DATA_CD like 'DSCD41%' THEN '객체추출'
+				WHEN a.DATA_CD like 'DSCD42%' THEN '변화탐지'
+				ELSE b.CDE_NAM 
+				END DATA_CD_b,
+				CASE WHEN a.DATA_CD like 'DSCD13%' THEN ''
+				 WHEN a.DATA_CD like 'DSCD2%' THEN ''
+				 WHEN a.DATA_CD like 'DSCD3%' THEN ''
+				 ELSE b.CDE_NAM 
+				END DATA_CD_c,
+				a.map_nm,
+				a.roi_yn
+		FROM TN_DATASET_INFO@DL_G119 a, TN_G119_CODE_MT@DL_G119 b
+		WHERE 1=1
+		<isNotEmpty property="msfrtnId">
+			AND msfrtn_id = #msfrtnId#
+		</isNotEmpty>
+		<isNotEmpty property="datasetId">
+			AND dataset_id = CAST(#datasetId# AS NUMBER) 
+		</isNotEmpty>
+		AND a.DATA_CD = b.CDE_ALL 
+		ORDER BY a.DATA_CD  ) a
+			ORDER BY
+				ROWNUMS) b
+	</select>
+	
+	<!-- 재난 유형 코드 -->
+	<select id="disasterDAO.getDisasterCodeList" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT *
+		FROM TN_G119_CODE_MT@DL_G119
+		WHERE cde_knd = #cdeKnd#
+		ORDER BY CDE_ALL
+	</select>
+	
+	<!-- 행정구역(시도) -->
+	<select id="disasterDAO.getDisasterRegion1List" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT CTPRVN_CD AS code, CTP_KOR_NM AS codeNm
+		FROM TL_SCCO_CTPRVN@DL_NLIP
+		ORDER BY code ASC
+	</select>
+	
+	<!-- 행정구역(시군구) -->
+	<select id="disasterDAO.getDisasterRegion2List" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT SUBSTR(gu.BJCD,1,5) AS code
+		, case when substr(gu.bjcd, 5, 1) = '0' then si.name
+		       when gu.bjcd = '4374500000' then gu.name
+		  else si.name || ' ' || gu.name end AS codeNm
+		FROM N3A_G0100000@DL_NLIP gu
+		LEFT JOIN N3A_G0100000@DL_NLIP si ON SUBSTR(gu.bjcd, 1, 4) || '0' = substr(si.bjcd, 1, 5)
+		WHERE gu.BJCD LIKE #bjcd# || '%'
+		ORDER BY code ASC
+	</select>
+
+	<!-- 재난자료 다운로드 이력 등록 -->
+	<insert id="disasterDAO.insertDisasterDownloadHist" parameterClass="Map">
+		INSERT INTO	th_dwld_log@DL_G119 (
+			dwld_log_sn,
+			api_manage_sn, 
+			dta_reqst_sn, 
+			user_id, 
+			dwld_dta_se, 
+			dwld_dta_se_sn, 
+			dwld_dt,
+			dwld_file_nm,
+			dwld_titl_nm
+		)VALUES(
+			tn_dwld_log_seq.nextval@DL_G119,
+			#apiManageSn#, 
+			#dtaReqstSn#, 
+			#userId#, 
+			#dwldDtaSe#,
+			CAST(#datasetId# AS NUMBER),
+			SYSDATE,
+			#fileNm#,
+			#datasetNm#
+		)
+	</insert>
+</sqlMap>

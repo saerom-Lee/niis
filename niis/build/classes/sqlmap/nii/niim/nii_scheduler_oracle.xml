@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_scheduler">
+
+	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap" />
+	
+	<select id="schedulerDAO.getExpiredList" parameterClass="java.util.Map" resultClass="egovMap">
+	<![CDATA[
+	
+		SELECT B.USR_MGNO
+		     , B.SUP_IDN
+		     , B.APPROVAL_CDE
+		     , B.META_YN
+		     , B.LAST_CHANGE_USR
+		  FROM IMG_SUPPLY_APP_NIIM A
+		     , USR_IMG_SUPPLY_APP_NIIM B 
+		 WHERE A.SUP_IDN = B.SUP_IDN
+		   AND B.APPROVAL_CDE IN ('2', '3')
+		   AND B.EXPIRED_DATE < TO_CHAR(SYSDATE, 'YYYYMMDD')
+		
+	]]>
+	</select>
+	
+	<!-- 기간 지난것중 한달치 가져와 삭제 -->
+	<select id="schedulerDAO.getExpiredFileList" parameterClass="java.util.Map" resultClass="egovMap">
+	<![CDATA[
+	
+		SELECT B.USR_MGNO
+		     , B.SUP_IDN
+		     , B.APPROVAL_CDE
+		     , B.META_YN
+		     , B.LAST_CHANGE_USR
+		  FROM IMG_SUPPLY_APP_NIIM A
+		     , USR_IMG_SUPPLY_APP_NIIM B 
+		 WHERE A.SUP_IDN = B.SUP_IDN
+		   AND B.APPROVAL_CDE IN ('4', '7')
+		   AND B.LAST_CHANGE_DT < TO_DATE(TO_CHAR(SYSDATE - (#fileLimitDay# - 1), 'YYYYMMDD'))
+		   AND B.LAST_CHANGE_DT > TO_DATE(TO_CHAR(SYSDATE - (#fileLimitDay# + 30 - 1), 'YYYYMMDD'))
+		
+	]]>
+	</select>
+	
+</sqlMap>

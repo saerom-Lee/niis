@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>INNORIX InnoEX(Enterprise eXchange) - Download Multi Object 2</title>
+    </head>
+<body>
+
+    <div id="downloadControl1"></div><br />
+    
+    <div id="downloadControl2"></div><br />
+    
+    <input type="button" value="바로열기" onclick="innorix.api.downloadAndOpen('downloadControl2');" />
+    <input type="button" value="선택파일 받기" onclick="innorix.api.downloadSelectedFiles('downloadControl2');" />
+    <input type="button" value="전체파일 받기" onclick="innorix.api.download('downloadControl2');" />    
+
+    <script type="text/javascript" src="../../common/innorix.config.js"></script>
+    <script type="text/javascript">
+        // 컨트롤 설치확인
+        if (innorix.api.isPluginInstalled() == false) {
+            innorix.api.goToInstallPage("../../common/install/install.html"); // 컨트롤 설치안내 웹 페이지로 전환
+        }
+
+        // 컨트롤 이벤트 리스너
+        innorix.event = {
+            loadComplete        : function(controlId, param) { // 컨트롤 로딩 완료
+                var urlBase = location.href.substring(0, location.href.lastIndexOf("/") + 1);
+                var obj = {};
+                
+                if (controlId == "downloadControl1") {
+                    // 스트림 다운로드 목록 생성, ex) http://your.server.com/download.jsp?fileID=1234
+                    obj[controlId] = [
+                        {
+                            downloadUrl: urlBase + "download.jsp?fileID=111",
+                            fileSize: 3524930,
+                            printFileName: "2015 이노릭스 솔루션 통합 소개자료(r2).pdf"
+                        }
+                    ];
+                }
+
+                if (controlId == "downloadControl2") {
+                    obj[controlId] = [
+                        {
+                            downloadUrl: urlBase + "download.jsp?fileID=222",
+                            fileSize: 3524930,
+                            printFileName: "2015 INNORIX Solution Brochure(r2).pdf"
+                        },
+                        {
+                            downloadUrl: urlBase + "download.jsp?fileID=333",
+                            fileSize: 3524930,
+                            printFileName: "2015 INNORIX ソリューションパンフレット(r2).pdf"
+                        }
+                    ];
+                }
+
+                innorix.api.presetDownloadFiles(obj); // 컨트롤에 다운로드 목록 갱신
+            },
+            downloadCancel      : function(controlId, param) { // 다운로드 취소
+
+            },
+            downloadError       : function(controlId, param) { // 다운로드 에러
+            
+            },
+            downloadComplete    : function(controlId, param) { // 다운로드 완료
+
+            }
+        }
+
+        // 컨트롤 생성
+        innorix.api.create({
+            downloadControl1: {                 // 컨트롤 id
+                product         : "innoexd",    // innoex 다운로드
+                downloadType    : "stream",     // 다운로드 타입 선택, direct | stream
+                controlType     : "htmlAlike",  // 컨트롤 타입, default | bigFile1 | bigFile2 | htmlAlike
+                width           : 400,          // 컨트롤 너비(pixel)
+                height          : 25            // 컨트롤 높이(pixel)
+            },
+            downloadControl2: {                 // 컨트롤 id
+                product         : "innoexd",    // innoex 다운로드
+                downloadType    : "stream",     // 다운로드 타입 선택, direct | stream
+            /* --- 추가 속성 ---
+                charset         : "utf-8",      // 케릭터셋 설정, utf-8 | euc-kr
+                controlType     : "default",    // 컨트롤 타입, default | bigFile1 | bigFile2 | htmlAlike
+                contextMenu     : true          // 마우스 오른쪽 버튼 클릭 컨텍스트 메뉴 활성
+            */
+            }
+        });
+    </script>
+
+</body>
+</html>

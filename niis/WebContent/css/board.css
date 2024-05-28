@@ -1,0 +1,128 @@
+@charset "utf-8";
+
+.boardStyle_1 th, .boardStyle_1 td {height:34px; padding:4px 0;}
+.boardStyle_1 th {padding-left:0; color:#132a4b; font-weight:600;}
+.boardStyle_1 th.essential {color:#e45e29;}
+.boardStyle_1 thead th {}
+.boardStyle_1 a.btnStyle {position:relative; top:1px;}
+.boardStyle_1 .idcheck th {vertical-align:top; padding-top:13px;}
+.boardStyle_1 .idcheck td input {border-color:#e99177; background:#f2e0db; color:#e45e29;}
+.boardStyle_1 .idcheck td p {background:#e45e29 url(/niis/images/login/bg_id_check.png) no-repeat 13px center; color:#fff; font-size:12px; margin-top:6px; border-radius:99px; padding:8px 27px;}
+.boardStyle_1 .idcheckOk th {vertical-align:top; padding-top:13px;}
+.boardStyle_1 .idcheckOk td input {border-color:#2a8095; background:#fff; color:#2a8095;}
+.boardStyle_1 .idcheckOk td p {background:#2a8095 url(/niis/images/login/bg_id_check.png) no-repeat 13px center; color:#fff; font-size:12px; margin-top:6px; border-radius:99px; padding:8px 27px;}
+.announcement {text-align:center; padding-top:25px; font-size:12px; color:#132a4b; line-height:1.6;}
+.thead {margin:0px 20px 0 20px; border:1px solid #b3cbd0; border-bottom:none; overflow:hidden; border-radius:5px 5px 0 0; box-shadow:0px 2px 2px rgba(0,0,0,0.2);}
+.thead th {background:#cfdfe2;  height:45px; text-align:center; border-right:1px solid #b3cbd0; color:#306a7e; font-weight:600;}
+.thead th:last-child {border-right:none;}
+.tbody {border:1px solid #b3cbd0; border-top:none; margin:0 20px; border-radius:0 0 5px 5px; box-shadow:0px 2px 2px rgba(0,0,0,0.3);}
+.tbody td {border-right:1px solid #e5eaf0; border-bottom:1px solid #e5eaf0; height:43px; text-align:center;  transition:all 0.3s;}
+.tbody td.last {border-right:none;}
+.tbody tr:hover td {background:#f1f9fa;}
+.tbody tr.active td {background:#dbe6f3; color:#333;  transition:all 0.3s;}
+a.result {display:inline-block; width:121px; height:32px; line-height:31px; font-weight:600; text-align:center; color:#fff;}
+a.result.result_1 {background:#2a8095;}
+a.result.result_2 {background:#bccbcf;}
+a.result.result_3 {background:#d85742;}
+.tableStyle th {background:#d1dde1; border:1px solid #366674; padding:5px 7px; text-align:center; height:21px; color:#154a5a; font-size:13px;}
+.tableStyle td {border:1px solid #366674; padding:5px 7px; height:21px; color:#666; font-size:13px;}
+.tableStyle th.tit {font-size:15px; background:#678a95; color:#fff;}
+.tableStyle td.empty {border:none; padding:0; height:15px;}
+
+/*상세보기*/
+.boardView th {color:#132a4b; font-size:15px; font-weight:600; height:34px; padding:11px 0;}
+.boardView td {height:34px; padding:11px 0;}
+.boardView p {font-size:13px; padding-top:5px;}
+.boardView .middle {position:relative; top:4px; padding-right:5px;}
+.boardView th.alignTop {padding-top:15px;}
+
+/* 페이징 */
+.paging {height:56px; padding-top:28px; border-top:1px solid #2a8095; margin-top:20px; text-align:center; position:relative; background:#f8fafb;}
+.paging li {display:inline;}
+.paging li {padding:0 1px;}
+.paging li a {display:inline-block; width:30px; text-align:center; height:30px; line-height:29px; border:1px solid #cccccc; background:#fff;}
+.paging li strong {display:inline-block; width:30px; text-align:center; height:30px; line-height:29px; border:1px solid #2a8095; background:#2a8095; color:#fff;}
+.paging li a:hover {border:1px solid #2a8095; color:#2a8095;}
+.paging li.btnPaging a {text-indent:-9999px;;}
+.paging li.btnPagingPrev {padding-right:8px;}
+.paging li.btnPagingNext {padding-left:8px;}
+.paging li.btnPagingFirst a {background:url(/niis/images/board/btn_paging_first.gif) 0 0 no-repeat;}
+.paging li.btnPagingPrev a {background:url(/niis/images/board/btn_paging_prev.gif) 0 0 no-repeat;}
+.paging li.btnPagingNext a {background:url(/niis/images/board/btn_paging_next.gif) 0 0 no-repeat;}
+.paging li.btnPagingLast a {background:url(/niis/images/board/btn_paging_last.gif) 0 0 no-repeat;}
+.paging li.btnPagingFirst a:hover {background:url(/niis/images/board/btn_paging_first_on.gif) 0 0 no-repeat;}
+.paging li.btnPagingPrev a:hover {background:url(/niis/images/board/btn_paging_prev_on.gif) 0 0 no-repeat;}
+.paging li.btnPagingNext a:hover {background:url(/niis/images/board/btn_paging_next_on.gif) 0 0 no-repeat;}
+.paging li.btnPagingLast a:hover {background:url(/niis/images/board/btn_paging_last_on.gif) 0 0 no-repeat;}
+.paging .btn {position:absolute; top:15px; right:20px;}
+.paging .btn a {display:inline-block; width:147px; height:53px; line-height:50px; background:#2a8095; text-align:center; color:#fff; font-size:18px; margin-left:5px;}
+.paging .btn a.gray {background:#545c5e;}
+
+/* 버튼 스타일 */
+a.btnStyle {display:inline-block; padding:0 20px; height:34px; line-height:30px; box-sizing:border-box; border:1px solid #2a8095; color:#fff; background:#2a8095; border-radius:3px; text-align:center; font-weight:600;box-shadow: 0px 3px 0px rgba(0,0,0,0.15); transition:all 0.3s;}
+a.btnStyle:hover {box-shadow: 0px 3px 3px rgba(0,0,0,0.3); transition:all 0.3s;}
+.btnArea {text-align:center; padding-top:30px;}
+.btnArea a {display:inline-block; height:45px; line-height:44px; background:#545c5e; color:#fff; width:148px; font-size:16px; font-weight:600; margin:0 2px; transition:all 0.3s;}
+.btnArea a:hover {box-shadow: 0px 2px 5px rgba(0,0,0,0.5); text-shadow: 0px 0px 3px rgba(255,255,255,0.4); transition:all 0.3s;}
+.btnArea a.active {background:#2a8095;}
+
+/* 공지관련 */
+.noticeView .tit {height:50px; background:#366674; position:relative; color:#fff; position:relative;}
+.noticeView .tit h3 {font-weight:600; font-size:17px; padding-top:13px; padding-left:28px;}
+.noticeView .tit div {position:absolute; top:18px; right:28px; color:#cde6ed;}
+.noticeView .tit .date {float:left;}
+.noticeView .view {float:left; background:url(/niis/images/board/bg_notice_view.gif) 0 2px no-repeat; padding-left:31px; margin-left:21px;}
+.noticeView .con .inner {padding:20px 30px; font-size:15px; line-height:1.5;}
+.noticeView .bottom {padding:15px 20px 16px 20px; border-top:1px solid #2a8095; /* margin-top:20px; */ position:relative; /* background:#f8fafb; */}
+.noticeView .bottom .file {background:#d6e3e9; margin-bottom:15px; border-radius:5px; height:50px; padding:0 20px; position:relative;}
+.noticeView .bottom .file .btnDown {position:absolute; top:9px; right:10px;}
+.noticeView .bottom .file dt {float:left; color:#717c7f; font-weight:600; padding:16px 16px 0 0;}
+.noticeView .bottom .file dd {text-decoration:underline; padding-top:14px; font-size:15px; font-style:italic;}
+.noticeView .bottom .file.popInfo dd {font-style:normal;}
+.noticeRegist {position:absolute; top:0; left:0; background:#fff; z-index:10; display:none;}
+.noticeRegist .tit {height:50px; background:#366674; position:relative; color:#fff; position:relative;}
+.noticeRegist .tit h3 {font-weight:600; font-size:17px; padding-top:13px; padding-left:28px;}
+.noticeRegist .tit div {position:absolute; top:18px; right:28px; color:#cde6ed;}
+.noticeRegist .tit .date {float:left;}
+.noticeRegist .view {float:left; background:url(/niis/images/board/bg_notice_view.gif) 0 2px no-repeat; padding-left:31px; margin-left:21px;}
+.noticeRegist .con .inner {padding:20px 30px; font-size:15px; line-height:1.5;}
+.noticeRegist .bottom {padding:15px 20px 16px 20px; border-top:1px solid #2a8095; /* margin-top:20px; */ position:relative; /* background:#f8fafb; */}
+.btnBoard {}
+.btnBoard {text-align:right;}
+.btnBoard a {display:inline-block; width:145px; height:51px; line-height:50px; background:#2a8095; text-align:center; color:#fff; font-size:18px; margin-left:5px; border:1px solid #2a8095;}
+.btnBoard a.gray {background:#545c5e;}
+.btnBoard a.white {background:#fff;color:#2a8095; border:1px solid #2a8095;}
+.btnBoardViewTab a {display:inline-block; height:34px; line-height:30px; border:1px solid #c2ccd9; box-sizing:border-box; width:90px; text-align:center; background:#fff;}
+.btnBoardViewTab a.active {border:1px solid #133f4a; background:#133f4a; color:#fff;}
+.bgSelect {margin-bottom:20px;}
+.bgSelect:after {content:""; display:block; clear:both; height:0;}
+.bgSelect li {float:left; margin-right:10px; width:118px; height:118px; overflow:hidden; border:1px solid #c2ccd9; border-radius:5px; margin-right:10px; position:relative; cursor:pointer;}
+.bgSelect li.active {border-color:#2a8095;}
+.bgSelect li.active:after {content:""; display:block; width:118px; height:118px; position:absolute; top:0; left:0; border-radius:5px; background:url(/niis/images/board/bg_bg_select_active.png) 0 0 no-repeat; z-index:2;}
+.bgSelect li span {position:absolute; bottom:10px; left:0; width:100%; text-align:center; color:#333; z-index:3;}
+.bgSelect li.active span {color:#2a8095;}
+
+
+/* 달력 스타일 */
+input.date {width:120px; padding-left:8px; /* margin-left:-6px; */}
+.ui-datepicker-trigger {cursor:pointer; margin:9px 10px 0 -21px;}
+.ui-datepicker {border:1px solid #5b84ac; background:#fff; width:280px; padding:3px;/*  border-radius:3px; */ margin-top:5px; display:none;}
+.ui-datepicker .ui-datepicker-header {text-align:center; background:#f2f2f2; border:1px solid #5b84ac; height:30px; padding-top:3px; position:relative; margin-bottom:5px; border-radius:3px;}
+.ui-datepicker .ui-datepicker-header select {font-family:NanumGothic,"나눔고딕"; margin:2px; border:solid 1px #abadb3; height:22px; width:80px; border-radius:3px;}
+.ui-datepicker .ui-datepicker-header .ui-icon-circle-triangle-w {position:absolute; top:6px; left:10px; cursor:pointer; overflow: hidden; text-indent: -99999px; width:20px; height:20px; background:url(/niis/images/board/btn_dat_prev.gif) 0 0 no-repeat;}
+.ui-datepicker .ui-datepicker-header .ui-icon-circle-triangle-e {position:absolute; top:6px; right:10px; cursor:pointer; overflow: hidden; text-indent: -99999px; width:20px; height:20px; background:url(/niis/images/board/btn_dat_next.gif) 0 0 no-repeat;}
+.ui-datepicker .ui-datepicker-header .ui-icon-circle-triangle-w:hover {background:url(..//niis/images/board/btn_dat_prev_hover.gif) 0 0 no-repeat;}
+.ui-datepicker .ui-datepicker-header .ui-icon-circle-triangle-e:hover {background:url(..//niis/images/board/btn_dat_next_hover.gif) 0 0 no-repeat;}
+.ui-datepicker .ui-datepicker-header select {min-width:20px; padding:0; margin:0; padding-left:13px; height:24px; line-height:24px; margin-top:1px;}
+.ui-datepicker .ui-datepicker-header select.ui-datepicker-month {float:right; margin-right:55px;}
+.ui-datepicker .ui-datepicker-header select.ui-datepicker-year {float:left; margin-left:55px;}
+.ui-datepicker .ui-datepicker-calendar {width:100%;}
+.ui-datepicker .ui-datepicker-calendar th {text-align:center; font-weight:600; color:#555; padding:3px;}
+.ui-datepicker .ui-datepicker-calendar th:first-child {color:#e40000;}
+.ui-datepicker .ui-datepicker-calendar .ui-datepicker-week-end {color:#297588;}
+.ui-datepicker .ui-datepicker-calendar td {text-align:center;}
+.ui-datepicker .ui-datepicker-calendar td a {display:block; margin:1px; padding:3px; background:#f2f2f2; border:1px solid #c2c9d2; font-size:11px; border-radius:2px;}
+.ui-datepicker .ui-datepicker-calendar td a:hover {background:#97b6d3; border:1px solid #e7ecf1; color:#fff; font-weight:600;}
+.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today a {background:#fff; border:1px solid #5b84ac; font-weight:900; color:#5b84ac;}
+.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today a:hover {color:#555;}
+.ui-datepicker .ui-datepicker-calendar td a.ui-state-active {background:#46586b; border:1px solid #46586b; color:#fff; font-weight:600;}

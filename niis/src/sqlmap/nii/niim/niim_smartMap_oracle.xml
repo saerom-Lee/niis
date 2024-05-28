@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_smartMap">
+
+	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+
+	<select id="smartMapDAO.getAirYearCode" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT /* smartMapDAO.getAirYearCode */
+				DISTINCT (T.ZONE_YY) ZONE_YY
+		FROM AIR_ZONE_DTS T
+	    ORDER BY ZONE_YY DESC
+	</select>
+	
+	<select id="smartMapDAO.getZoneType" resultClass="egovMap">
+		SELECT
+		  DISTINCT B.CDE_NAM PROJECTTYPE_CDE
+		FROM AIR_ZONE_DTS A
+		INNER JOIN CMT_DETAIL_CODE_NIIM B
+		ON A.IMAGE_CDE = B.CDE_CDE
+		AND A.IMAGE_CDE IN ('PDT001', 'PDT002', 'PDT004')
+	</select>
+	
+	<select id="smartMapDAO.getZoneListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+
+		SELECT /* smartMapDAO.getZoneListCnt */
+				COUNT(*) ROWCOUNT
+		FROM AIR_ZONE_DTS T
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneType" prepend="AND">
+					<![CDATA[  T.IMAGE_CDE = (SELECT A.CDE_CDE
+                                  FROM CMT_DETAIL_CODE_NIIM A
+                                 WHERE A.CDE_NAM = #zoneType#
+                                   AND A.FLE_IDN = 'IMAGE_CDE') ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+                  <![CDATA[ T.ZONE_YY >= #sYear# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+                  <![CDATA[ T.ZONE_YY <= #eYear#]]>
+			</isNotEmpty>
+			<isNotEmpty property="zoneList" prepend="AND">
+				<iterate property="zoneList"  prepend=" T.ZONE_CODE NOT IN " open="(" close=")" conjunction=",">
+					#zoneList[]#
+					</iterate>
+		    </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 통합관리(사업지구 검색) -->
+	<select id="smartMapDAO.getZoneList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		/* smartMapDAO.getZoneList */
+		<include refid="Paging_head"/>
+		SELECT T.ZONE_CODE,
+		T.ZONE_NAM,
+		T.PRJ_NAM,
+		T.ZONE_YY,
+		T.SCALE,
+		T.GSD_VAL,
+		(SELECT A.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'PROJECTTYPE_CDE'
+		AND A.CDE_CDE = T.PROJECTTYPE_CDE) PROJECT_CDE,
+		(SELECT A.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'CAMERA_CDE'
+		AND A.CDE_CDE = T.CAMERA_CDE) CAMERA_CDE,
+		(SELECT A.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'IMAGE_CDE'
+		AND A.CDE_CDE = T.IMAGE_CDE) IMAGE_CDE,
+		T.DEM_GRID,
+		T.REMARK,
+		T.PRJ_INFO_MGNO
+		FROM AIR_ZONE_DTS T
+		WHERE 1=1
+		AND T.IMAGE_CDE IN ('PDT001','PDT002','PDT004')
+			<isNotEmpty property="zoneType" prepend="AND">
+					<![CDATA[  T.IMAGE_CDE = (SELECT A.CDE_CDE
+                                  FROM CMT_DETAIL_CODE_NIIM A
+                                 WHERE A.CDE_NAM = #zoneType#
+                                   AND A.FLE_IDN = 'IMAGE_CDE') ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+                  <![CDATA[ T.ZONE_YY >= #sYear# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+                  <![CDATA[ T.ZONE_YY <= #eYear#]]>
+			</isNotEmpty>
+			<isNotEmpty property="zoneList" prepend="AND">
+				<iterate property="zoneList" prepend=" T.ZONE_CODE NOT IN " open="(" close=")" conjunction=",">
+					#zoneList[]#
+					</iterate>
+		    </isNotEmpty>
+		ORDER BY T.ZONE_YY DESC,
+		T.ZONE_NAM
+		<include refid="Paging_tail"/>
+		
+	</select>
+	
+	<!-- 통합관리(사업지구 상세 검색) -->
+	<select id="smartMapDAO.getsubResultZoneList" parameterClass="String"
+		resultClass="egovMap">
+		SELECT /* smartMapDAO.getsubResultZoneList */ 
+		T.ZONE_CODE,
+		T.ZONE_NAM,
+		T.PRJ_NAM,
+		T.ZONE_YY,
+		T.SCALE,
+		T.GSD_VAL,
+		(SELECT A.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'PROJECTTYPE_CDE'
+		AND A.CDE_CDE = T.PROJECTTYPE_CDE) PROJECT_CDE,
+		(SELECT A.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'CAMERA_CDE'
+		AND A.CDE_CDE = T.CAMERA_CDE) CAMERA_CDE,
+		(SELECT A.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'IMAGE_CDE'
+		AND A.CDE_CDE = T.IMAGE_CDE) IMAGE_CDE,
+		T.DEM_GRID,
+		T.REMARK,
+		T.PRJ_INFO_MGNO
+		FROM AIR_ZONE_DTS T
+		WHERE 1=1
+		AND T.ZONE_CODE = #zoneCode#
+	</select>
+	
+<!-- 	
+		항공사진
+		AIR_BASEMETA_DTS 
+		AIR_CRS_DTS
+		NGII_AIR_ORIENTMAP_AS
+		AIR_ORIENTMAP_DTS
+		AIR_PRODUCT_DTS
+		AIR_PRODUCTEO_DTS
+		AIR_ZONE_DTS
+		
+		수치표고
+		DEM_BASEMETA_DTS
+		NGII_DEM_ORIENTMAP_AS
+		DEM_PRODUCT_DTS
+		
+		정사영상
+		ORT_BASEMETA_DTS
+		ORT_ORIENTMAP_AS
+		ORT_PRODUCT_DTS
+		
+		스토리지현황
+		STO_AIRLOC_DTS
+		STO_DEMLOC_DTS
+		STO_ORTLOC_DTS
+-->
+	
+	<select id="smartMapDAO.get_air_basemeta_dts" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT B.* 
+				, M.FILE_IDENTIFIER
+				, M.TARGET_NAME
+				, M.LANGUAGE
+				, M.RES_POSTNAME
+				, M.RES_PHONE
+				, M.RES_FAX
+				, M.RES_ADDRESS
+				, M.RES_POSTAL_CODE
+				, M.RESOLUTION
+		FROM AIR_BASEMETA_DTS B
+		INNER JOIN META_AIRMAP_IDENT M
+		ON 1=1
+		AND B.ZONE_CODE = M.ZONE_CODE
+		AND B.PH_COURSE = M.PH_COURSE
+		AND B.PH_NUM = M.PH_NUM
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="zoneList">
+				<iterate prepend=" B.ZONE_CODE IN " property="zoneList" open="(" close=")" conjunction=",">
+					#zoneList[]#
+					</iterate>
+		    </isNotEmpty>
+	   	</dynamic>
+	</select>
+	
+<!-- 	<select id="smartMapDAO.get_air_crs_dts" parameterClass="java.util.Map" resultClass="egovMap"> -->
+<!-- 		SELECT C.*  -->
+<!-- 		FROM AIR_CRS_DTS C -->
+<!-- 		<dynamic prepend="WHERE"> -->
+<!-- 			<isNotEmpty prepend="AND" property="zoneList"> -->
+<!-- 				<iterate prepend=" ZONE_CODE IN " property="zoneList" open="(" close=")" conjunction=","> -->
+<!-- 					#zoneList[]# -->
+<!-- 					</iterate> -->
+<!-- 		    </isNotEmpty> -->
+<!-- 	   	</dynamic> -->
+<!-- 	</select> -->
+	
+	<select id="smartMapDAO.get_air_orientmap_as" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT O.* 
+		FROM NGII_AIR_ORIENTMAP_AS O
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="zoneList">
+				<iterate prepend=" O.ZONE_CODE IN " property="zoneList" open="(" close=")" conjunction=",">
+					#zoneList[]#
+					</iterate>
+		    </isNotEmpty>
+	   	</dynamic>
+	</select>
+	
+	<select id="smartMapDAO.get_air_orientmap_dts" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT O.* 
+				, M.CRS_IDN
+		FROM AIR_ORIENTMAP_DTS O
+		INNER JOIN META_AIRMAP_REFRC M
+		ON 1=1
+		AND O.ZONE_CODE = M.ZONE_CODE
+		AND O.PH_COURSE = M.PH_COURSE
+		AND O.PH_NUM = M.PH_NUM
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="zoneList">
+				<iterate prepend=" O.ZONE_CODE IN " property="zoneList" open="(" close=")" conjunction=",">
+					#zoneList[]#
+					</iterate>
+		    </isNotEmpty>
+	   	</dynamic>
+	</select>
+	
+	<select id="smartMapDAO.get_air_product_dts" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT P.ZONE_CODE, P.PH_COURSE, P.PH_NUM, P.APH_NUM, P.APH_NOW, P.FILM_NUM, P.FILM_NOW, P.RPH_NUM, P.RPH_NOW, P.MD1_NUM, P.MD2_NUM, P.NIX_OX, P.SCUR_OX, P.SERV_OX, P.REMARK
+				, REPLACE( REPLACE ( TRIM(NIX_A_OX), CHR(13), '' ), CHR(10), '' ) AS NIX_A_OX
+				, REPLACE( REPLACE ( TRIM(NIX_B_OX), CHR(13), '' ), CHR(10), '' ) AS NIX_B_OX
+				, M.SECURITY_CDE
+	      		, M.MASK_OX
+		FROM AIR_PRODUCT_DTS P
+		INNER JOIN AIR_PRODUCT_DTS M
+		ON 1=1
+		AND P.ZONE_CODE = M.ZONE_CODE
+		AND P.PH_COURSE = M.PH_COURSE
+		AND P.PH_NUM = M.PH_NUM
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="zoneList">
+				<iterate prepend=" P.ZONE_CODE IN " property="zoneList" open="(" close=")" conjunction=",">
+					#zoneList[]#
+					</iterate>
+		    </isNotEmpty>
+	   	</dynamic>
+	</select>
+	
+	<select id="smartMapDAO.get_air_producteo_dts" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT P.ZONE_CODE, P.PH_COURSE, P.PH_NUM, P.EO_X, P.EO_Y, P.EO_Z, P.EO_OMEGA, EO_PHI, P.EO_KAPPA
+				, REPLACE( REPLACE ( TRIM(P.CRS_IDN), CHR(13), '' ), CHR(10), '' ) AS CRS_IDN
+		FROM AIR_PRODUCTEO_DTS P
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="zoneList">
+				<iterate prepend=" P.ZONE_CODE IN " property="zoneList" open="(" close=")" conjunction=",">
+					#zoneList[]#
+					</iterate>
+		    </isNotEmpty>
+	   	</dynamic>
+	</select>
+	
+	<select id="smartMapDAO.get_air_zone_dts" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT Z.* 
+		FROM AIR_ZONE_DTS Z
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="zoneList">
+				<iterate prepend=" Z.ZONE_CODE IN " property="zoneList" open="(" close=")" conjunction=",">
+					#zoneList[]#
+					</iterate>
+		    </isNotEmpty>
+	   	</dynamic>
+	</select>
+	
+	<select id="smartMapDAO.get_dem_basemeta_dts" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT B.* 
+		FROM DEM_BASEMETA_DTS B
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="zoneList">
+				<iterate prepend=" B.ZONE_CODE IN " property="zoneList" open="(" close=")" conjunction=",">
+					#zoneList[]#
+					</iterate>
+		    </isNotEmpty>
+	   	</dynamic>
+	</select>
+	
+	<select id="smartMapDAO.get_dem_orientmap_as" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT O.* 
+		FROM NGII_DEM_ORIENTMAP_AS O
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="zoneList">
+				<iterate prepend=" O.ZONE_CODE IN " property="zoneList" open="(" close=")" conjunction=",">
+					#zoneList[]#
+					</iterate>
+		    </isNotEmpty>
+	   	</dynamic>
+	</select>
+	
+	<select id="smartMapDAO.get_dem_product_dts" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT P.ZONE_CODE, P.MAP5000_NUM, P.NAME, P.MAP5000_NAM, P.ORIGIN_DATA, P.ACQ_ORIGIN, P.ORIGIN_FORM, P.ORIGIN_YEAR, P.GRID_INT, P.UNIT, P.INTERPOL_METHOD, P.LB_X, P.LB_Y, P.RT_X, P.RT_Y, P.CRS_IDN, P.COORDINATE, P.ORIGIN, P.ELEV_NORM, P.HEIVAR_KIND, P.MAX_ELEV, P.MIN_ELEV, P.DATA_FORM, P.ACCURACY, P.PRODUCER, P.PUBLISHER, P.REFERENCE, P.PRP, P.SECURITY_CDE, P.DTD_OX, P.SHADED_IMG_OX, P.OBS_RGS_OX, P.FLIGHT_PLAN_OX, P.GPSINS_OX, P.GPS_BP_OX, P.P_LB_X, P.P_LB_Y, P.P_RT_X, P.P_RT_Y, P.P_CRS_IDN
+				, REPLACE( REPLACE ( TRIM(P.IMAGE_CDE), CHR(13), '' ), CHR(10), '' ) AS IMAGE_CDE
+		FROM DEM_PRODUCT_DTS P
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="zoneList">
+				<iterate prepend=" P.ZONE_CODE IN " property="zoneList" open="(" close=")" conjunction=",">
+					#zoneList[]#
+					</iterate>
+		    </isNotEmpty>
+	   	</dynamic>
+	</select>
+	
+	<select id="smartMapDAO.get_ort_basemeta_dts" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT B.* 
+		    , REPLACE( REPLACE ( TRIM(I.FILE_IDENTIFIER), CHR(13), '' ), CHR(10), '' ) AS FILE_IDENTIFIER
+		    , I.LANGUAGE
+		    , M.RES_POSTNAME
+		    , M.RES_PHONE
+		    , M.RES_FAX
+		    , M.RES_ADDRESS
+		    , M.RES_POSTAL_CODE
+		    , NVL(M.META_DATE, SYSDATE) as META_DATE
+		    , D.DIST_FORMAT_NAME
+		    , D.DIST_FORMAT_VERSION
+		    , I.TARGET_NAME
+		FROM ORT_BASEMETA_DTS B
+		INNER JOIN META_ORT_MAIT M
+		ON 1=1 
+		AND B.ZONE_CODE = M.ZONE_CODE
+		AND B.MAP5000_NUM = M.MAP5000_NUM
+		INNER JOIN META_ORT_DISTR D
+		ON 1=1
+		AND M.ZONE_CODE = D.ZONE_CODE
+		AND M.MAP5000_NUM = D.MAP5000_NUM
+		INNER JOIN META_ORT_IDENT I
+		ON 1=1
+		AND D.ZONE_CODE = I.ZONE_CODE
+		AND D.MAP5000_NUM = I.MAP5000_NUM
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="zoneList">
+				<iterate prepend=" B.ZONE_CODE IN " property="zoneList" open="(" close=")" conjunction=",">
+					#zoneList[]#
+					</iterate>
+		    </isNotEmpty>
+	   	</dynamic>
+	</select>
+	
+	<select id="smartMapDAO.get_ort_orientmap_as" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT O.* 
+		FROM ORT_ORIENTMAP_AS O
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="zoneList">
+				<iterate prepend=" O.ZONE_CODE IN " property="zoneList" open="(" close=")" conjunction=",">
+					#zoneList[]#
+					</iterate>
+		    </isNotEmpty>
+	   	</dynamic>
+	</select>
+	
+	<select id="smartMapDAO.get_ort_product_dts" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT P.ZONE_CODE, P.MAP5000_NUM, P.MAP5000_NAM, P.CONST_CO, P.ORIGIN, P.WORK_YMD, P.ORIGIN_IMG, P.REFERENCE, P.PRP, P.COLOR_GBN, P.USED_DEM, P.CMR_TYPE, P.SAT_NAM, P.P_CRS_IDN, P.IMAGE_CDE
+				, REPLACE( REPLACE ( TRIM(P.SCALE_RELAC), CHR(13), '' ), CHR(10), '' ) AS SCALE_RELAC
+				, I.SCALE
+			    , I.GTYP_DST
+			    , I.INPUT_CO
+			    , C.MASK_OX
+			    , C.SECURITY_CDE
+			    , R.CRS_IDN
+		FROM ORT_PRODUCT_DTS P
+		INNER JOIN META_ORT_IDENT I
+		ON 1=1
+		AND P.ZONE_CODE = I.ZONE_CODE
+		AND P.MAP5000_NUM = I.MAP5000_NUM
+		INNER JOIN META_ORT_CONTR C
+		ON 1=1
+		AND I.ZONE_CODE = C.ZONE_CODE
+		AND I.MAP5000_NUM = C.MAP5000_NUM
+		INNER JOIN META_ORT_REFRC R
+		ON 1=1
+		AND C.ZONE_CODE = R.ZONE_CODE
+		AND C.MAP5000_NUM = R.MAP5000_NUM
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="zoneList">
+				<iterate prepend=" P.ZONE_CODE IN " property="zoneList" open="(" close=")" conjunction=",">
+					#zoneList[]#
+					</iterate>
+		    </isNotEmpty>
+	   	</dynamic>
+	</select>
+	
+	
+<!-- 	영상전송 -->
+	<select id="smartMapDAO.getAirImgDataList" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT /* smartMapDAO.getAirImgDataList */
+			 A.ZONE_CODE
+		     , A.PH_COURSE
+		     , A.PH_NUM
+		     , E.ZONE_YY
+		     , B.FILE_NAM
+		     , B.FILE_SIZE
+		     , B.FILE_FORMAT
+		     , B.STO_IDN
+		     <include refid="Air_file_path"/>
+		FROM AIR_BASEMETA_DTS A
+		     , STO_AIRLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		     , META_AIRMAP_IDENT F
+		     , AIR_PRODUCT_DTS G
+		WHERE A.ZONE_CODE   = B.ZONE_CODE
+		   AND A.PH_COURSE   = B.PH_COURSE
+		   AND A.PH_NUM      = B.PH_NUM
+		   AND A.ZONE_CODE   = E.ZONE_CODE
+		   AND A.ZONE_CODE   = F.ZONE_CODE
+		   AND A.PH_COURSE   = F.PH_COURSE
+		   AND A.PH_NUM      = F.PH_NUM
+		   AND A.ZONE_CODE   = G.ZONE_CODE
+		   AND A.PH_COURSE   = G.PH_COURSE
+		   AND A.PH_NUM      = G.PH_NUM
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN     = D.STO_IDN
+		   AND NVL(E.IMAGE_CDE, 'PDT001') = 'PDT001'
+		   AND F.XMIN IS NOT NULL
+		   <isNotEmpty property="zoneList" prepend="AND">
+			<iterate property="zoneList" prepend=" A.ZONE_CODE IN " open="(" close=")" conjunction=",">
+				#zoneList[]#
+				</iterate>
+		    </isNotEmpty>
+	</select>
+	
+		<select id="smartMapDAO.getAirLibImgDataList" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT /* smartMapDAO.getAirLibImgDataList */
+		     A.ZONE_CODE
+		     , A.PH_COURSE
+		     , A.PH_NUM
+		     <include refid="AirLib_file_path"/>
+		FROM AIR_BASEMETA_DTS A
+		     , STO_AIRLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		     , META_AIRMAP_IDENT F
+		     , AIR_PRODUCT_DTS G
+		WHERE A.ZONE_CODE   = B.ZONE_CODE
+		   AND A.PH_COURSE   = B.PH_COURSE
+		   AND A.PH_NUM      = B.PH_NUM
+		   AND A.ZONE_CODE   = E.ZONE_CODE
+		   AND A.ZONE_CODE   = F.ZONE_CODE
+		   AND A.PH_COURSE   = F.PH_COURSE
+		   AND A.PH_NUM      = F.PH_NUM
+		   AND A.ZONE_CODE   = G.ZONE_CODE
+		   AND A.PH_COURSE   = G.PH_COURSE
+		   AND A.PH_NUM      = G.PH_NUM
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN     = D.STO_IDN
+		   AND NVL(E.IMAGE_CDE, 'PDT011') = 'PDT011'
+		   AND F.XMIN IS NOT NULL
+		   <isNotEmpty property="zoneList" prepend="AND">
+			<iterate property="zoneList" prepend=" A.ZONE_CODE IN " open="(" close=")" conjunction=",">
+				#zoneList[]#
+				</iterate>
+		    </isNotEmpty>
+	</select>
+	
+	<select id="smartMapDAO.getDemImgDataList" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT /* smartMapDAO.getDemImgDataList */
+			  A.ZONE_CODE
+		     , E.ZONE_NAM
+		     , A.MAP5000_NUM
+		     , F.MAP5000_NAM
+		     <include refid="Dem_file_path"/>
+		FROM DEM_BASEMETA_DTS A
+		     , STO_DEMLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		     , DEM_PRODUCT_DTS F
+		WHERE A.ZONE_CODE   = B.ZONE_CODE
+		   AND A.MAP5000_NUM = B.MAP5000_NUM
+		   AND A.ZONE_CODE   = E.ZONE_CODE
+		   AND A.ZONE_CODE   = F.ZONE_CODE
+		   AND A.MAP5000_NUM = F.MAP5000_NUM
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN     = D.STO_IDN
+		   AND LENGTH(A.MAP5000_NUM) IN (5, 6, 7, 8)
+		   <isNotEmpty property="zoneList" prepend="AND">
+			<iterate property="zoneList" prepend=" A.ZONE_CODE IN " open="(" close=")" conjunction=",">
+				#zoneList[]#
+				</iterate>
+		    </isNotEmpty>
+	</select>
+	
+	<select id="smartMapDAO.getOrtImgDataList" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT /* smartMapDAO.getOrtImgDataList */
+		      A.ZONE_CODE 
+		      , E.ZONE_NAM 
+		      , A.MAP5000_NUM 
+		      , H.MAP5000_NAM
+		      , I.GTYP_DST
+		      , E.ZONE_YY
+		      , B.FILE_SIZE
+		      , B.FILE_FORMAT
+		      , B.STO_IDN
+		      , B.FILE_NAM
+		      <include refid="Ort_file_path"/>
+		    FROM ORT_BASEMETA_DTS A 
+		    		, STO_ORTLOC_DTS B 
+		    		, CMT_STORAGE_CDE C 
+		    		, STO_INFO_DTS D 
+		    		, AIR_ZONE_DTS E 
+		    		, META_ORT_IDENT F 
+		    		, META_ORT_CONTR G 
+		    		, ORT_PRODUCT_DTS H 
+		    WHERE A.ZONE_CODE   = B.ZONE_CODE
+		    AND A.MAP5000_NUM   = B.MAP5000_NUM
+		    AND A.ZONE_CODE     = E.ZONE_CODE
+		    AND A.ZONE_CODE     = F.ZONE_CODE
+		    AND A.MAP5000_NUM   = F.MAP5000_NUM
+		    AND A.ZONE_CODE     = G.ZONE_CODE
+		    AND A.MAP5000_NUM   = G.MAP5000_NUM
+		    AND A.ZONE_CODE     = H.ZONE_CODE
+		    AND A.MAP5000_NUM   = H.MAP5000_NUM
+		    AND B.STORAGE_CDE   = C.CODE_CDE
+		    AND B.STO_IDN       = D.STO_IDN
+		    AND F.XMIN         IS NOT NULL
+		    AND G.SECURITY_CDE IS NOT NULL
+   		   <isNotEmpty property="zoneList" prepend="AND">
+			<iterate property="zoneList" prepend=" A.ZONE_CODE IN " open="(" close=")" conjunction=",">
+				#zoneList[]#
+				</iterate>
+		    </isNotEmpty>
+	</select>
+	
+	<insert id="smartMapDAO.insFilePath" parameterClass="java.util.Map" >
+		/* smartMapDAO.insFilePath */ 
+		INSERT INTO IMG_SUPPLY_SMART
+			(ORG_FILE_NAM, APPROVAL_CDE, REQ_DATE, NEW_FILE_NAM)
+		VALUES 
+			(#orgFileNam#, #approvalCde#, SYSDATE, #newFileNam#)
+	</insert>
+	
+	<select id="smartMapDAO.uploading" resultClass="java.lang.Integer">
+		SELECT /* smartMapDAO.uploading */
+			COUNT(*) AS CNT FROM IMG_SUPPLY_SMART
+		WHERE APPROVAL_CDE = '9'
+	</select>
+		
+	<select id="smartMapDAO.uploadingSupIdn" resultClass="java.lang.Integer">
+		select /* smartMapDAO.uploadingSupIdn */ 
+			COUNT(APPROVAL_CDE) AS CNT 
+		from USR_IMG_SUPPLY_APP_NIIM where APPROVAL_CDE = '9'
+	</select>
+	
+	<select id="smartMapDAO.smartMapfileList" parameterClass="java.util.Map" resultClass="egovMap">
+		select ORG_FILE_NAM, APPROVAL_CDE, REQ_DATE, NEW_FILE_NAM from IMG_SUPPLY_SMART where APPROVAL_CDE = '8'
+	</select>
+	
+	<update id="smartMapDAO.updateSmartMap" parameterClass="java.util.Map">
+		update IMG_SUPPLY_SMART
+		set APPROVAL_CDE = #approvalCde#
+		<isNotEmpty property="filePath" >
+			<iterate property="filePath" prepend="WHERE ORG_FILE_NAM IN " open="(" close=")" conjunction=",">
+				#filePath[]#
+			</iterate>
+	    </isNotEmpty>
+	</update>
+	
+</sqlMap>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_policy">
+
+	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap" />
+	
+	<sql id="Img_air_policy">
+		<!-- xacml 권한적용 -->
+		   AND G.SECURITY_CDE IN (''
+		<isNotEmpty property="_IMG_AIR_POLICY_">
+			<iterate property="_IMG_AIR_POLICY_">
+			   , #_IMG_AIR_POLICY_[]#
+			</iterate>
+		</isNotEmpty>
+		       )
+	</sql>
+	
+	<sql id="Img_dem_policy">
+		<!-- xacml 권한적용 -->
+		   AND F.SECURITY_CDE IN (''
+		<isNotEmpty property="_IMG_DEM_POLICY_">
+			<iterate property="_IMG_DEM_POLICY_">
+			   , #_IMG_DEM_POLICY_[]#
+			</iterate>
+		</isNotEmpty>
+		       )
+	</sql>
+	
+	<sql id="Img_ort_policy">
+		<!-- xacml 권한적용 -->
+		   AND G.SECURITY_CDE IN (''
+		<isNotEmpty property="_IMG_ORT_POLICY_">
+			<iterate property="_IMG_ORT_POLICY_">
+			   , #_IMG_ORT_POLICY_[]#
+			</iterate>
+		</isNotEmpty>
+		       )
+	</sql>
+	
+	<sql id="Img_lid_policy">
+		<!-- xacml 권한적용 -->
+		   AND A.SECURITY_CDE IN (''
+		<isNotEmpty property="_IMG_LID_POLICY_">
+			<iterate property="_IMG_LID_POLICY_">
+		   , #_IMG_LID_POLICY_[]#
+			</iterate>
+		</isNotEmpty>
+		       )
+	</sql>
+	
+	<sql id="Img_nir_policy">
+		<!-- xacml 권한적용 -->
+		   AND G.SECURITY_CDE IN (''
+		<isNotEmpty property="_IMG_NIR_POLICY_">
+			<iterate property="_IMG_NIR_POLICY_">
+		   , #_IMG_NIR_POLICY_[]#
+			</iterate>
+		</isNotEmpty>
+		       )
+	</sql>
+	
+	
+	<select id="policyDAO.getPolicyList" resultClass="egovMap">
+	<![CDATA[
+	
+		SELECT FLE_IDN
+		     , CDE_CDE
+		     , CDE_NAM
+		     , CDE_DES
+		     , CREATE_USR
+		     , TO_CHAR(CREATE_DT, 'YYYY-MM-DD') CREATE_DT
+		  FROM CMT_DETAIL_POLICY_NIIM
+		  
+	]]>
+	</select>
+	
+	
+	<select id="policyDAO.getAuthPolicyList" resultClass="egovMap">
+	<![CDATA[
+	
+		SELECT U.USE_AT
+		     , U.FLE_IDN
+		     , U.CDE_CDE
+		     , U.AUTH_YN
+		     , U.CREATE_USR
+		     , TO_CHAR(U.CREATE_DT, 'YYYY-MM-DD') CREATE_DT
+		  FROM CMT_DETAIL_POLICY_NIIM P
+		     , ITR_USR_AUTH_POLICY_NIIM U
+		 WHERE U.FLE_IDN = P.FLE_IDN
+		   AND U.CDE_CDE = P.CDE_CDE
+		   AND U.AUTH_YN = 'Y'
+		  
+	]]>
+	</select>
+	
+</sqlMap>

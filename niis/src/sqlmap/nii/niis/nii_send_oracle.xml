@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_send">
+
+	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	
+		<insert id="sendDAO.smsSend" parameterClass="java.util.Map">
+	
+		INSERT 
+		  INTO SC_TRAN@LK_CMS
+		  (
+		  	   TR_NUM, TR_SENDDATE, TR_SENDSTAT, TR_PHONE, TR_CALLBACK, TR_MSG, TR_MSGTYPE
+		  ) 
+		VALUES 
+		  ( 
+		      SCTRAN_SEQ.NEXTVAL@LK_CMS, SYSDATE, '0', #trPhone# , #trCallback#, #trMsg#,'0'
+		  )
+		
+	</insert>
+	
+</sqlMap>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/jdbc  http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd">
+	
+	<!-- 스마트전자지도 DB -->
+<!-- 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@210.97.42.245:1521:orcl"/>
+		<property name="url" value="jdbc:oracle:thin:@127.0.0.1:1521:ora1"/>
+        <property name="username" value="NGI_AIR"/>
+        <property name="password" value="NGI_AIR2357"/>
+        <property name="username" value="NGII_AIR3"/>
+        <property name="password" value="NGII_AIR3"/>
+        <property name="testWhileIdle" value="true"/>4
+        <property name="maxWait" value="60000"/>
+    </bean> -->
+    
+    <!-- 스마트전자지도 DB -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@192.168.0.10:1523:orcl"></property>
+        <property name="username" value="NGII_AIR3"/>
+        <property name="password" value="NGII_AIR3"/>
+        <!-- <property name="username" value="NGII_AIR3"/>
+        <property name="password" value="NGII_AIR3"/> -->
+        <property name="testWhileIdle" value="true"/>
+        <property name="validationQuery" value="select 1 from dual"/>
+        <property name="maxActive" value="50"/>
+        <property name="maxIdle" value="10"/>
+        <property name="maxWait" value="60000"/>
+    </bean>
+    
+    <!-- NGII_MAP DB -->
+    <bean id="dataSource-map" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@192.168.0.50:1523:orcl"></property>
+        <property name="username" value="NGII_MAP"/>
+        <property name="password" value="NGII_MAP"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="validationQuery" value="select 1 from dual"/>
+        <property name="maxActive" value="50"/>
+        <property name="maxIdle" value="10"/>
+        <property name="maxWait" value="60000"/>
+    </bean>
+    
+    <!-- 문자발송 DB -->
+    <bean id="dataSource-sms" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <!-- <property name="url" value="jdbc:oracle:thin:@210.97.42.245:1521:orcl"/> -->
+		<property name="url" value="jdbc:oracle:thin:@192.168.0.100:1521:orcl"/>
+        <property name="username" value="NGIISMART"/>
+        <property name="password" value="NGIISMART"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="validationQuery" value="select 1 from dual"/>
+        <property name="maxActive" value="50"/>
+        <property name="maxIdle" value="10"/>
+        <property name="maxWait" value="60000"/>
+    </bean>
+    
+    <!-- PostgreSQL postgres -->
+	<bean id="dataSource-postgres" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" primary="true">
+		<property name="driverClassName" value="core.log.jdbc.driver.PostgresqlDriver"/>
+		<property name="url" value="jdbc:postgresql://192.168.0.101:5432/ngii?loggerLevel=DEBUG"/>
+		<property name="connectionProperties" value="currentSchema=ngianalyze;"/>
+		<property name="username" value="rinogis"/>
+		<property name="password" value="rinoGis!@3"/>
+		<!-- <property name="defaultAutoCommit" value="false"/> -->
+		<property name="maxActive" value="6" />
+	</bean>
+	
+	<!-- G119 DB -->
+    <bean id="dataSource-g119" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+		<property name="url" value="jdbc:postgresql://10.98.25.124:5432/ugis_mn"/>
+        <property name="username" value="postgres"/>
+        <property name="password" value="postgres"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="validationQuery" value="select 1"/>
+        <property name="maxActive" value="50"/>
+        <property name="maxIdle" value="10"/>
+        <property name="maxWait" value="60000"/>
+    </bean>
+</beans>

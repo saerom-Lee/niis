@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_management">
+
+	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap" />
+	
+	<resultMap id="searchAreaVO" class="org.nii.niis.niim.service.SearchAreaVO">
+		<result property="ctprvn_nm"   		column="ctprvn_nm"/>
+		<result property="signgu_nm"   		column="signgu_nm"/>
+		<result property="dong_nm"   		column="dong_nm"/>
+		<result property="admcd"       		column="admcd"/>
+		<result property="wkb_geometry"		column="wkb_geometry" jdbcType="BLOB"/>
+		<result property="annox" 			column="annox"/>
+		<result property="annoy"       		column="annoy"/>
+		<result property="xmin"       		column="xmin"/>
+		<result property="ymin"       		column="ymin"/>
+		<result property="xmax"       		column="xmax"/>
+		<result property="ymax"       		column="ymax"/>
+	</resultMap>
+	
+	
+	<select id="managementDAO.getTnPhotoListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+
+		SELECT COUNT(*) ROWCOUNT
+		  FROM TN_PHOTO_CTRLPNT
+		
+		 WHERE 1=1
+		<isNotEqual property="xmin" compareValue="t"> 
+		   AND COOR_X &gt;= #xmin#
+		</isNotEqual>
+		<isNotEqual property="xmax" compareValue="t">
+		   AND COOR_X &lt;= #xmax#
+		</isNotEqual>
+		<isNotEqual property="ymin" compareValue="t">
+		   AND COOR_Y &gt;= #ymin#
+		</isNotEqual>
+		<isNotEqual property="ymax" compareValue="t">
+		   AND COOR_Y &lt;= #ymax#
+		</isNotEqual>
+
+	</select>
+	<select id="managementDAO.getTnPhotoList" parameterClass="java.util.Map" resultClass="egovMap">
+		
+		<include refid="Paging_head"/>
+		SELECT PHOTO_ID
+		     , SIGUNGU_NM
+		     , SIGUNGU_NM SIGUNGU_NAM
+		     , COOR_X
+		     , COOR_Y
+		     , COOR_Z
+		     , FLPTH
+		  FROM TN_PHOTO_CTRLPNT
+		 WHERE 1=1
+		<isNotEqual property="xmin" compareValue="t"> 
+		   AND COOR_X &gt;= #xmin#
+		</isNotEqual>
+		<isNotEqual property="xmax" compareValue="t">
+		   AND COOR_X &lt;= #xmax#
+		</isNotEqual>
+		<isNotEqual property="ymin" compareValue="t">
+		   AND COOR_Y &gt;= #ymin#
+		</isNotEqual>
+		<isNotEqual property="ymax" compareValue="t">
+		   AND COOR_Y &lt;= #ymax#
+		</isNotEqual>
+		 ORDER BY PHOTO_ID DESC
+		<include refid="Paging_tail"/>
+		
+	</select>
+	
+	<select id="managementDAO.getTnPhotoDetail" parameterClass="java.util.Map" resultClass="egovMap">
+		
+		SELECT PHOTO_ID
+		     , SIGUNGU_NM
+		     , SIGUNGU_NM SIGUNGU_NAM
+		     , COOR_X
+		     , COOR_Y
+		     , COOR_Z
+		     , FLPTH
+		  FROM TN_PHOTO_CTRLPNT
+		 WHERE PHOTO_ID = #photoId#
+		
+	</select>
+	
+	
+	<insert id="managementDAO.regTnPhoto" parameterClass="java.util.Map">
+	
+		INSERT 
+		  INTO TN_PHOTO_CTRLPNT
+		  (
+		       PHOTO_ID
+		     , SIGUNGU_NM
+		     , COOR_X
+		     , COOR_Y
+		     , COOR_Z
+		     , FLPTH
+		  )
+		VALUES
+		  (
+		       (
+		       	SELECT NVL(MAX(PHOTO_ID), 0)+1 
+		          FROM TN_PHOTO_CTRLPNT
+		       )
+		     , #sigunguNm#
+		     , #coorX#
+		     , #coorY#
+		     , #coorZ#
+		     , #flpth#
+		  )
+	
+	</insert>
+	
+	<update id="managementDAO.uptTnPhoto" parameterClass="java.util.Map">
+	
+		UPDATE TN_PHOTO_CTRLPNT
+		   SET SIGUNGU_NM  = #sigunguNm#
+		     , COOR_X      = #coorX#
+		     , COOR_Y      = #coorY#
+		     , COOR_Z      = #coorZ#
+		<isNotEmpty property="flpth">
+		     , FLPTH       = #flpth#
+		</isNotEmpty>
+		 WHERE PHOTO_ID    = #photoId#
+	
+	</update>
+	
+	<delete id="managementDAO.delTnPhoto" parameterClass="java.util.Map">
+	
+		DELETE
+		  FROM TN_PHOTO_CTRLPNT
+		 WHERE PHOTO_ID = #photoId#
+	
+	</delete>
+	
+	
+	<select id="managementDAO.selectAreaList" parameterClass="java.util.Map" resultMap="searchAreaVO">
+		<![CDATA[
+		SELECT DONG_CDE as admcd
+		     , SIDO_NAM as ctprvn_nm
+		     , SIGUNGU_NA as signgu_nm
+		     , DONG_NAM as dong_nm
+		     , COOR_X as annox
+		     , COOR_Y as annoy
+		     , XMIN as xmin
+		     , YMIN as ymin
+		     , XMAX as xmax
+		     , YMAX as ymax
+		     , SDO_UTIL.To_WKBGEOMETRY(SHAPE) as wkb_geometry
+		  FROM NGII_AIR_DONG_AS 
+		 WHERE SHAPE IS NOT NULL
+		   AND DONG_CDE IS NOT NULL
+		   AND XMIN <= #coorX#
+		   AND XMAX >= #coorX#
+		   AND YMIN <= #coorY#
+		   AND YMAX >= #coorY#
+		]]>
+	</select>
+	
+</sqlMap>

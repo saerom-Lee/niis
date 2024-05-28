@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>공간정보 행정망서비스</title>
+  <link rel="stylesheet" type="text/css" href="../css/style.css" />
+  <link rel="stylesheet" type="text/css" href="../css/external_popup.css" />
+  <script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.mCustomScrollbar.min.js"></script>
+  <script type="text/javascript" src="../js/default.js"></script>
+  <script type="text/javascript">
+	
+	$(document).ready(function(){
+		
+	});
+	
+	function setCookie(name, value, expiredays){
+		
+		var todayDate = new Date();
+		todayDate.setDate( todayDate.getDate() + expiredays );
+		document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
+	}
+
+	function closeWin(){
+		
+		if($("#popupChk").is(":checked")){
+			setCookie("popnotice", "no" , 1);
+		}
+		window.close();
+	}
+	
+	
+
+</script>
+ </head>
+
+ <body id="popup" class="general_type2"><!-- 팝업글 일반형2 -->
+  <!-- #popup -->
+  <div>
+	<!-- .contents -->
+	<div class="contents">
+		<p class="system"><span>공간정보</span><span>행정망 서비스</span></p>
+		<p class="tit">국토영상정보 공급시스템 개편안내</p>
+		<p>새로운 국토영상정보 공급시스템의 시범운영을 실시합니다.
+		<br />(2023.12.5 부터 ~ 정식운영 공지시까지)<br />
+		<br />
+		개편사항<br />
+		1. 국토영상정보 공급 시스템의 명칭이<br /> 
+		&nbsp;&nbsp;&nbsp;&nbsp;<strong>「 공간정보 행정망 서비스 」</strong> 로 변경됩니다.<br /> 
+		<br />
+		2.「수치지형도」, 「DEM」, 「AT성과」가 추가로 공급됩니다.<br />
+		&nbsp;&nbsp;&nbsp;&nbsp;※ DEM, AT성과는 23.12.8 부터 최신성과가 공급됩니다.<br />
+		<br />
+		3. 최신 웹브라우저에서도 데이터를 다운로드 할 수 있습니다.<br/>
+		&nbsp;&nbsp;(Chrome, Edge 등)<br />
+		<br />
+		※ 12월 4일 오후 5시 이후 시스템 접속이 원활하지 않을 수 있습니다
+		<!-- .bottom -->
+		<div class="bottom">&nbsp;&nbsp;
+			<span class="checkbox"><input type="checkbox" id="popupChk" onclick="closeWin();" /></span>
+			<label class="labelTxt">오늘 하루 이 창을 열지 않음</label>
+			<button onclick="javascript:closeWin();" class="searchDivBtn">닫기</button>
+		</div>
+		<!-- /.bottom -->
+	</div>
+	<!-- /.contents -->
+  </div>
+  <!-- /#popup -->
+ </body>
+</html>

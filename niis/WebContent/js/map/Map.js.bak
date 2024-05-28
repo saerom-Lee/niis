@@ -1,0 +1,1152 @@
+//********** 전역객체 **********
+var _Map2D = null;
+
+var measureControls = null; // 거리재기/면적재기 컨트롤
+var controls = null; // 거리재기/면적재기 컨트롤(e지도)
+var controlsNow = null; // 현재 거리재기/면적재기 컨트롤 구분자
+var dragZoomControl = null; //드래그 줌인/아웃 컨트롤
+var markerInfoWindowControl = null; // 마커 클릭시 정보창 Open을 위한 컨트롤
+var polygonControl = null;
+
+var infoWindow = null;
+
+var airImgLayer = null; // 영상 이미지
+var markersLayer = null; // 마커 레이어
+var spaceMarkersLayer = null; // 거리재기/면적재기 사각형 마커 레이어
+var vectorLayer = null; // 벡터 레이어
+var circleLayer = null; // 벡터 레이어
+var radiuslayer = null; // 벡터 레이어
+
+var wmtsLayer = null;
+var tmsLayer = null;
+var satelliteLayer = null;
+var indexTMSLayer = null;
+var gridmapVectorLayer = null;
+var imgBoundsVectorLayer = null;
+var zoneAreaVectorLayer = null;
+
+var indexmap = null; // 인덱스맵 객체
+var featureLayer = null; // 인덱스맵 box(위치) 표시 레이어
+var indexLayer = null; // 인덱스 지도 레이어
+
+var GOLD_Z_INDEX = 15;
+//기존
+//var tmsurl = 'http://192.168.0.117:8001/tilemap/';
+//수정중
+var tmsurl = 'http://openapi.ngii.go.kr:81/tilemap/2016/';
+//var tmsurl = 'http://211.60.125.3:8082/tilemap/';
+var etmsurl = 'http://192.168.0.117:8001/korean_map_tile/';
+//var etmsurl = 'http://211.60.125.3:8082/korean_map_tile/';
+var mapMinZoom = 0; 
+var mapMaxZoom = 12;
+  
+var mapBounds_tile = new OpenLayers1.Bounds(-200000.0, -28024123.62 , 31824123.62, 4000000.0);
+  
+var maxZoom = 0;
+  
+var mapOptions = null;
+var emapOptions = null;
+
+Proj4js.defs['중부'] = '+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +units=m +no_defs';
+Proj4js.defs['UTM-K'] = '+title=UTM_K +proj=tmerc +ellps=GRS80 +datum=WGS84 +lat_0=38.0 +lon_0=127.5 +x_0=1000000.0 +y_0=2000000.0 +k=0.9996 +a=6378137.0 +b=6356752.3141403';
+Proj4js.defs['EPSG:5174'] = '+proj=tmerc +lat_0=38 +lon_0=127.0028902777778 +k=1 +x_0=200000 +y_0=500000 +ellps=bessel +units=m +no_defs +towgs84=-115.80,474.99,674.11,1.16,-2.31,-1.63,6.43';
+
+var tmm = new Proj4js.Proj('중부');
+var utmk = new Proj4js.Proj('UTM-K');
+var bessel = new Proj4js.Proj('EPSG:5174');
+
+function overlay_getTileURL(bounds) { 	
+	var res = _Map2D.getResolution(); 
+	var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w)); 
+	var y = Math.round((bounds.bottom - this.maxExtent.bottom) / (res * this.tileSize.h)); 
+	var z = mapMaxZoom - _Map2D.getZoom();
+	
+	if (z < 0){
+		var idx = Math.pow(2, -z);
+		return tmsurl + 0 + "/" + x/idx + "/" + y/idx + "." + this.type;
+		//return "/niis/tms/tms.do?url=" + 0 + "/" + x/idx + "/" + y/idx + "." + this.type;
+	} else {
+		if (x >= 0 && y >= 0) { 
+			return tmsurl + z + "/" + x + "/" + y + "." + this.type;
+			//return "/niis/tms/tms.do?url=" + z + "/" + x + "/" + y + "." + this.type;
+		} else { 
+			return "http://www.maptiler.org/img/none.png"; 
+		} 
+	}
+} 
+/*
+function overlay_getEMapTileURL(bounds) { 
+	var res= _Map2D.getResolution();
+	var col;
+	var row;
+	if(1954.597389===res){
+		col = 0;
+		row = 3;		
+	}else if(977.2986945===res){
+		col = 3;
+		row = 7;
+	}else if(488.64934725===res){
+		col = 8;
+		row = 16;
+	}else if(244.324673625===res){
+		col = 17;
+		row = 34;		
+	}else if(122.1623368125===res){
+		col = 39;
+		row = 70;		
+	}else if(61.08116840625===res){
+		col = 80;
+		row = 142;		
+	}else if(30.540584203125===res){
+		col = 163;
+		row = 285;		
+	}else if(15.2702921015625===res){
+		col = 329;
+		row = 572;		
+	}else if(7.63514605078125===res){
+		col = 660;
+		row = 1145;		
+	}else if(3.817573025390625===res){
+		col = 1323;
+		row = 2293;		
+	}else if(1.9087865126953125===res){
+		col = 2649;
+		row = 4587;		
+	}else if(0.9543932563476563===res){
+		col = 5300;
+		row = 9176;		
+	}else if(0.47719662817382813===res){
+		col = 10602;
+		row = 18353;		
+	}else if(0.23859831408691407===res){
+		col = 19706;
+		row = 36165;		
+	}
+	var x;
+	var y;
+	//                           256 고정(this.tileSize.w)	   _Map2D.getResolution();		 -200000고정						
+	var xmin = (col) * this.tileSize.w * 				     res +                                      mapBounds_tile.left;
+	//					4000000고정         					       256고정(this.tileSize.h)     _Map2D.getResolution()
+	var ymin = mapBounds_tile.top - (row + 1) *     this.tileSize.h *                 res;
+	//                                      -200000고정
+	x = Math.round((xmin - mapBounds_tile.left) / (res *  this.tileSize.w));
+	//                                      -28024123.62고정
+	y = Math.round((ymin - mapBounds_tile.bottom) / (res * this.tileSize.h));
+	var z = _Map2D.getZoom()+6; 
+	z = "L"+fillzero(z, 2);
+	return "http://localhost:8051/niis/proxyTile.jsp?http://210.117.198.50:9082/proxy/proxyTile.jsp?apikey=rVmvKdRGmlVBTSIxLwkhdg&URL=http://210.117.198.62:8081/2015_map/korean_map_tile/"+ z + "/" + x + "/" + y + "." + this.type; 
+}
+*/
+function overlay_getEMapTileURL(bounds) { 
+	var res = _Map2D.getResolution(); 
+	var x = Math.round((bounds.left - mapBounds_tile.left) / (res * this.tileSize.w)); 
+	var y = Math.round((bounds.bottom - mapBounds_tile.bottom) / (res * this.tileSize.h)); 
+	var z = _Map2D.getZoom()+6; 
+	z = "L"+fillzero(z, 2);
+	//	return etmsurl + z + "/" + x + "/" + y + "." + this.type;
+	//기존
+	//return "/niis/tms/etms.do?url=" + z + "/" + x + "/" + y + "." + this.type;
+	//수정중
+	//return "http://localhost:8051/niis/proxyTile.jsp?http://210.117.198.50:9082/proxy/proxyTile.jsp?apikey=rVmvKdRGmlVBTSIxLwkhdg&URL=http://210.117.198.62:8081/2015_map/korean_map_tile/"+ z + "/" + x + "/" + y + "." + this.type; 
+	if(location.host.indexOf("127.0.0.1") >= 0  || location.host.indexOf("localhost") >= 0 || location.host.indexOf("172.22") >= 0 || location.host.indexOf("210.97") >= 0 || location.host.indexOf("10.10.0") >= 0){
+		return  "/niis/proxyTile.jsp?http://210.117.198.50:9082/proxy/proxyTile.jsp?apikey=rVmvKdRGmlVBTSIxLwkhdg&URL=http://210.117.198.62:8081/2015_map/korean_map_tile/" + z + "/" + x + "/" + y + ".png";
+	}else{
+		return "http://10.98.25.14:6080/arcgis/arcgis_js_api/proxyTile.jsp?http://10.98.25.67:9082/proxy/proxyTile.jsp?apikey=rVmvKdRGmlVBTSIxLwkhdg&URL=http://210.117.198.62:8081/2015_map/korean_map_tile/" + z + "/" + x + "/" + y + ".png";
+	}
+}
+
+	function fillzero(n, digits) { 
+	var zero = '';
+	n = n.toString();
+	if (digits > n.length) {
+		for (var i = 0; digits - n.length > i; i++) {
+			zero += '0';
+		}
+	}
+	return zero + n;
+}
+
+function overlay_getEMapTileURLMiniMap(bounds) { 
+	var res = indexMap.getResolution(); 
+	var x = Math.round((bounds.left - mapBounds_tile.left) / (res * this.tileSize.w)); 
+	var y = Math.round((bounds.bottom - mapBounds_tile.bottom) / (res * this.tileSize.h)); 
+	var z = indexMap.getZoom()+6; 
+	z = "L"+fillzero(z, 2);
+	return "http://10.98.25.14:6080/arcgis/arcgis_js_api/proxyTile.jsp?http://10.98.25.67:9082/proxy/proxyTile.jsp?apikey=rVmvKdRGmlVBTSIxLwkhdg&URL=http://210.117.198.62:8081/2015_map/korean_map_tile/"+ z + "/" + x + "/" + y + "." + this.type; 
+	} 
+
+	function fillzero(n, digits) { 
+	var zero = '';
+	n = n.toString();
+	if (digits > n.length) {
+		for (var i = 0; digits - n.length > i; i++) {
+			zero += '0';
+		}
+	}
+	return zero + n;
+}
+  
+function init() {
+	if(!_Map2D)
+	{
+		mapOptions = {
+			maxExtent: new OpenLayers1.Bounds(705680.0000, 1349270.0000, 1388291.0000, 2581448.0000), 
+			tileSize: new OpenLayers1.Size(512, 512), 
+			resolutions: [2088.96, 1044.48, 522.24, 261.12, 130.560000, 65.280000, 32.640000, 16.320000, 8.160000, 4.080000, 2.040000, 1.020000, 0.510000],
+			numZoomLevels: 13,
+			projection: new OpenLayers1.Projection("EPSG:5179"),
+			units : "m",
+			allOverlays : true, 
+			eventListeners : {"moveend": eventListenerCallback},
+		};
+	   
+		emapOptions = {
+			projection : new OpenLayers1.Projection("EPSG:5179"),
+			units : "m",
+			tileSize: new OpenLayers1.Size(256, 256), 
+			numZoomLevels : 14,
+			resolutions: [1954.597389, 977.2986945, 488.64934725, 244.324673625, 122.1623368125, 61.08116840625, 30.540584203125, 15.2702921015625, 7.63514605078125, 3.817573025390625, 1.9087865126953125, 0.9543932563476563, 0.47719662817382813,0.23859831408691406],
+			maxExtent: new OpenLayers1.Bounds(-200000.0, -3015.4524155292 , 3803015.45241553, 4000000.0), 
+			allOverlays : true, 
+			eventListeners : {"moveend": eventListenerCallback},
+		};
+		
+		_Map2D = new OpenLayers1.Map('mapView', emapOptions);
+		
+		circleLayer = new OpenLayers1.Layer.Vector("Kreise");
+		radiuslayer = new OpenLayers1.Layer.Vector("Radius");
+		
+		//initialize a draw control
+		var my_polygonhandler = OpenLayers1.Handler.RegularPolygon;
+		
+		polygonControl = new OpenLayers1.Control.DrawFeature(circleLayer,
+				my_polygonhandler, {
+				handlerOptions: {
+				sides: 100
+			}
+		});
+		_Map2D.addControl(polygonControl);
+		
+		var panel = new OpenLayers1.Control.CustomNavToolbar();
+		_Map2D.addControl(panel);
+
+		// eMap 수치지형도
+		wmtsLayer = new OpenLayers1.Layer.TMS("eTMS Layer","", 
+			    {
+					//기존
+					//url: etmsurl,
+					//수정중
+					//url: "http://10.98.25.14:6080/arcgis/arcgis_js_api/proxyTile.jsp?http://10.98.25.67:9082/proxy/proxyTile.jsp?apikey=rVmvKdRGmlVBTSIxLwkhdg&URL=http://210.117.198.62:8081/2015_map/korean_map_tile/", 
+					serviceVersion: '.', 
+					layername: 'KOREAN', 
+					alpha: true, 
+					type: 'png', 
+					getURL: overlay_getEMapTileURL,
+					isBaseLayer: true,
+					'buffer': 4
+			    });
+		wmtsLayer.setVisibility(true);
+		
+		// 스마트전자지도 항공영상
+	    satelliteLayer = new OpenLayers1.Layer.TMS("TMS Layer","",
+				{  
+	    			//기존
+	    			//url: tmsurl,
+	    			//수정중
+	    			//url: 'http://openapi.ngii.go.kr:81d/tilemap/2013/', 
+	    			serviceVersion: '.', 
+	    			layername: '.', 
+	    			alpha: true, 
+					isBaseLayer: true,
+					/*
+					numZoomLevels: 13, 
+			        minZoomLevel: 0,
+			        */
+			        serverResolutions : [2088.96, 1044.48, 522.24, 261.12, 130.560000, 65.280000, 32.640000, 16.320000, 8.160000, 4.080000, 2.040000, 1.020000, 0.510000],
+					type: 'jpg', 
+					getURL: overlay_getTileURL  
+				});
+	    satelliteLayer.setVisibility(false);
+	    
+        var renderer = OpenLayers1.Util.getParameters(window.location.href).renderer;
+        renderer = (renderer) ? [renderer] : OpenLayers1.Layer.Vector.prototype.renderers;
+	    // 마커 레이어
+	    markersLayer = new OpenLayers1.Layer.Vector(
+	    		"Markers Search",
+              {
+                  styleMap: new OpenLayers1.StyleMap({
+                      graphicZIndex: GOLD_Z_INDEX
+                  }),
+                  isBaseLayer: true,
+                  rendererOptions: {yOrdering: true},
+                  renderers: renderer
+              }
+	    );
+	    spaceMarkersLayer = new OpenLayers1.Layer.Vector("Markers Space");
+	    
+	    // 마커 선택시 정보창 Open을 위한 컨트롤 추가 및 활성화
+	    markerInfoWindowControl = new OpenLayers1.Control.SelectFeature(markersLayer, { clickFeature: onFeatureClick });
+	    _Map2D.addControl(markerInfoWindowControl);
+	    markerInfoWindowControl.activate();
+	    
+	    
+	    // 벡터 레이어
+	    vectorLayer = new OpenLayers1.Layer.Vector("Vector", {
+			styleMap: new OpenLayers1.StyleMap({'default':{
+				strokeColor: "#0054FF",
+				strokeOpacity: 0.5,
+				strokeWidth: 2,
+				fillColor: "#D5D5D5",
+				fillOpacity: 0.5,
+				pointRadius: 6,
+				pointerEvents: "visiblePainted",
+				label : "",
+				fontColor: "",
+				fontSize: "11px",
+				fontFamily: "Courier New, monospace",
+				fontWeight: "bold",
+				labelAlign: "",
+				labelXOffset: "",
+				labelYOffset: "",
+				labelOutlineColor: "white",
+				labelOutlineWidth: 3
+			}}),
+			attribution: {
+				title: "Provided by NGII",
+	            href: "http://www.ngii.go.kr"
+	        },
+	        renderers: renderer
+	    });
+      	vectorLayer.isBaseLayer = false;
+      	
+	    // 벡터 레이어
+      	gridmapVectorLayer = new OpenLayers1.Layer.Vector("gridmapVectorLayer", {
+			styleMap: new OpenLayers1.StyleMap({'default':{
+				strokeColor: "#0054FF",
+				strokeOpacity: 0.5,
+				strokeWidth: 2,
+				fillColor: "#D5D5D5",
+				fillOpacity: 0.5,
+				pointRadius: 6,
+				pointerEvents: "visiblePainted",
+				label : "",
+				fontColor: "",
+				fontSize: "10px",
+				fontFamily: "Courier New, monospace",
+				fontWeight: "red",
+				labelAlign: "",
+				labelXOffset: "",
+				labelYOffset: "",
+				labelOutlineColor: "white",
+				labelOutlineWidth: 2
+			}}),
+	        renderers: renderer
+	    });
+      	gridmapVectorLayer.isBaseLayer = false;
+      	
+      	imgBoundsVectorLayer = new OpenLayers1.Layer.Vector("imgBoundsVectorLayer", {
+			styleMap: new OpenLayers1.StyleMap({'default':{
+				strokeColor: "red",
+				strokeOpacity: 0.5,
+				strokeWidth: 2,
+				fillColor: "#D5D5D5",
+				fillOpacity: 0.5,
+				pointRadius: 6,
+				pointerEvents: "visiblePainted",
+				label : "",
+				fontColor: "",
+				fontSize: "10px",
+				fontFamily: "Courier New, monospace",
+				fontWeight: "red",
+				labelAlign: "",
+				labelXOffset: "",
+				labelYOffset: "",
+				labelOutlineColor: "white",
+				labelOutlineWidth: 2
+			}}),
+	        renderers: renderer
+	    });
+      	imgBoundsVectorLayer.isBaseLayer = false;
+      	
+      	zoneAreaVectorLayer = new OpenLayers1.Layer.Vector("zoneAreaVectorLayer", {
+      		styleMap: new OpenLayers1.StyleMap({'default':{
+      			strokeColor: "red",
+      			strokeOpacity: 0.5,
+      			strokeWidth: 2,
+      			fillColor: "#D5D5D5",
+      			fillOpacity: 0.5,
+      			pointRadius: 6,
+      			pointerEvents: "visiblePainted",
+      			label : "${name}\n",
+      			fontColor: "blue",
+      			fontSize: "10px",
+      			fontFamily: "Courier New, monospace",
+      			fontWeight: "red",
+      			labelAlign: "",
+      			labelXOffset: "",
+      			labelYOffset: "",
+      			labelOutlineColor: "white",
+      			labelOutlineWidth: 2
+      		}}),
+      		renderers: renderer
+      	});
+      	zoneAreaVectorLayer.isBaseLayer = false;
+      	
+      	
+		_Map2D.addLayers([wmtsLayer, vectorLayer, gridmapVectorLayer, imgBoundsVectorLayer, zoneAreaVectorLayer, markersLayer, spaceMarkersLayer, circleLayer, radiuslayer]);
+		_Map2D.setLayerZIndex(wmtsLayer, 0);
+		_Map2D.setLayerZIndex(circleLayer, 1);
+		_Map2D.setLayerZIndex(radiuslayer, 2);
+		_Map2D.setLayerZIndex(gridmapVectorLayer, 3);
+		_Map2D.setLayerZIndex(vectorLayer, 4);
+		_Map2D.setLayerZIndex(imgBoundsVectorLayer, 5);
+		_Map2D.setLayerZIndex(markersLayer, 8);
+		_Map2D.setLayerZIndex(zoneAreaVectorLayer, 7);
+		_Map2D.setLayerZIndex(spaceMarkersLayer, 6);
+  
+		_Map2D.setCenter(new OpenLayers1.LonLat(1034208.638, 1767316.234), 2);
+		var scaleline = new OpenLayers1.Control.ScaleLine();
+		_Map2D.addControl(scaleline);
+  
+		//_Map2D.addControl(new OpenLayers1.Control.Navigation()); // CustomNavToolbar.js에서 추가
+		// _Map2D.addControl(new OpenLayers1.Control.MouseDefaults()); //2.12 No Support
+		_Map2D.addControl(new OpenLayers1.Control.Attribution({	separator : " "	}));
+				
+		controls = {
+				measure_distance : new OpenLayers1.Control.Measure(
+						OpenLayers1.Handler.Path, measureOption),
+				measure_area : new OpenLayers1.Control.Measure(
+						OpenLayers1.Handler.Polygon, measureOption),
+                select: new OpenLayers1.Control.SelectFeature(
+                		zoneAreaVectorLayer,
+                        {
+                            clickout: false, toggle: false,
+                            multiple: false, hover: false,
+                            toggleKey: "ctrlKey", // ctrl key removes from selection
+                            multipleKey: "shiftKey", // shift key adds to selection
+                            box: true
+                        }
+                    ),
+                selecthover: new OpenLayers1.Control.SelectFeature(
+                		zoneAreaVectorLayer,
+                        {
+                            multiple: false, hover: true,
+                            toggleKey: "ctrlKey", // ctrl key removes from selection
+                            multipleKey: "shiftKey" // shift key adds to selection
+                        }
+                   )
+			};
+		for (var key in controls) {
+			if (key == "measure_distance" || key == "measure_area") {
+				var measureControl = controls[key];
+				measureControl.events.on({
+					"measure" : handleMeasurements_end,
+					"measurepartial" : handleMeasurements_start
+				});
+				_Map2D.addControl(measureControl);
+			} else {
+				_Map2D.addControl(controls[key]);
+			}
+		}
+
+		// 거리재기/면적재기 마우스 클릭 포인트
+		_Map2D.events.register("mousemove", _Map2D, function(e) {
+			lonLatPosition = _Map2D.getLonLatFromPixel(e.xy);
+		});
+		
+		// 드래그 줌인/아웃 컨트롤
+		dragZoomControl = new OpenLayers1.Control.CustomNavToolbar();
+		_Map2D.addControl(dragZoomControl);
+
+		
+//		// 인덱스맵
+//		_Map2D.events.on({
+//			"zoomend": function(event){
+//			} ,
+//			"moveend": function(event){
+//				changeIndexMap();
+//			}
+//		});
+//		var indexMapOptions = {
+//					          maxExtent : new OpenLayers1.Bounds(705680.0000, 1349270.0000, 1388291.0000, 2581448.0000), 
+//					          resolutions : [5500],
+//					          projection: "ITRF_2000_UTM_K", 
+//					          controls: [],
+//					          eventListeners : {"click" : indexMapClick}
+//			 				};
+//		indexMap = new OpenLayers1.Map('indexMap', indexMapOptions);
+//		
+//		indexLayer = new OpenLayers1.Layer.ArcGIS93Rest( "Mini Layer",
+//			      "http://sd.ngii.go.kr:6080/arcgis/rest/services/NGII_BaseMAP_MINI/MapServer/export", 
+//			      {layers: "show:0,2",
+//			           TRANSPARENT: true},
+//			          {isBaseLayer: true,
+//			           extractAttributes: true});
+//		
+//		featureLayer = new OpenLayers1.Layer.Vector("lyr_index_box", {
+//			styleMap: new OpenLayers1.StyleMap({
+//				'default': {
+//					strokeColor: "#FFFFFF",
+//					strokeOpacity: 1,
+//					strokeWidth: 1,
+//					fillColor: "#576FC2",
+//					fillOpacity: 0.5
+//				}
+//			}),
+//			renderers: OpenLayers1.Layer.Vector.prototype.renderers
+//		});
+//		
+//		indexMap.addLayer(indexLayer);
+//		indexMap.addLayer(featureLayer);
+//		indexMap.updateSize();
+//	    indexMap.zoomToMaxExtent();
+		
+		
+		
+		polygonControl.handler.callbacks.move = function (e) {
+
+		    var linearRing = new OpenLayers1.Geometry.LinearRing(e.components[0].components);
+		    var geometry = new OpenLayers1.Geometry.Polygon([linearRing]);
+		    var polygonFeature = new OpenLayers1.Feature.Vector(geometry, null);
+		    var polybounds = polygonFeature.geometry.getBounds();
+
+		    var minX = polybounds.left;
+		    var minY = polybounds.bottom;
+		    var maxX = polybounds.right;
+		    var maxY = polybounds.top;
+
+		    //calculate the center coordinates
+
+		    var startX = (minX + maxX) / 2;
+		    var startY = (minY + maxY) / 2;
+
+		    //make two points at center and at the edge
+		    var startPoint = new OpenLayers1.Geometry.Point(startX, startY);
+		    var endPoint = new OpenLayers1.Geometry.Point(maxX, startY);
+		    var radius = new OpenLayers1.Geometry.LineString([startPoint, endPoint]);
+		    var len = Math.round(radius.getLength()).toString();
+
+		    var laenge;
+		    if (len > 1000) {
+		        laenge = len / 1000;
+		        einheit = "km";
+		    } else {
+		        laenge = len;
+		        einheit = "m";
+		    }
+//		    document.getElementById("radius").innerHTML = laenge;
+//		    document.getElementById("einheit").innerHTML = einheit;
+
+		};
+
+		circleLayer.events.on({
+		    'featureadded': function (e) {
+
+		        // DRY-principle not applied
+
+		        var f = e.feature;
+		        //calculate the min/max coordinates of a circle
+		        var minX = f.geometry.bounds.left;
+		        var minY = f.geometry.bounds.bottom;
+		        var maxX = f.geometry.bounds.right;
+		        var maxY = f.geometry.bounds.top;
+		        //calculate the center coordinates
+		        var startX = (minX + maxX) / 2;
+		        var startY = (minY + maxY) / 2;
+		        
+		        var startPoint = new OpenLayers1.Geometry.Point(startX, startY);
+		        var endPoint = new OpenLayers1.Geometry.Point(maxX, startY);
+		        var radius = new OpenLayers1.Geometry.LineString([startPoint, endPoint]);
+		        var len = Math.round(radius.getLength()).toString();
+		        //style the radius
+		        var punktstyle = {
+		            strokeColor: "red",
+		            strokeWidth: 2,
+		            pointRadius: 5,
+		            fillOpacity: 0.2
+		        };
+		        var style = {
+		            strokeColor: "#0500bd",
+		            strokeWidth: 3,
+//		            label: len + " m",
+		            label: amountObj.val() + " m",
+		            labelAlign: "left",
+		            labelXOffset: "20",
+		            labelYOffset: "10",
+		            labelOutlineColor: "white",
+		            labelOutlineWidth: 3
+		        };
+		        //add radius feature to radii layer
+		        var punkt1 = new OpenLayers1.Feature.Vector(startPoint, {
+
+		        }, punktstyle);
+		        var fea = new OpenLayers1.Feature.Vector(radius, {
+		            'length': len
+		        }, style);
+
+
+		        radiuslayer.addFeatures([punkt1, fea]);
+		    }
+		});
+	}   
+}
+
+// 지도 전환
+function changeMap() {
+
+  	if(!satelliteLayer.getVisibility())
+	{
+  		wmtsLayer.setVisibility(false);
+  		_Map2D.removeLayer(wmtsLayer);
+		_Map2D.removeLayer(circleLayer);
+		_Map2D.removeLayer(radiuslayer);
+  		_Map2D.removeLayer(markersLayer);
+  		_Map2D.removeLayer(spaceMarkersLayer);
+  		_Map2D.removeLayer(vectorLayer);
+  		_Map2D.removeLayer(gridmapVectorLayer);
+  		_Map2D.removeLayer(imgBoundsVectorLayer);
+  		_Map2D.removeLayer(zoneAreaVectorLayer);
+  		
+  		_Map2D.setOptions(mapOptions);
+  		//_Map2D.resolutions = [2088.96, 1044.48, 522.24, 261.12, 130.560000, 65.280000, 32.640000, 16.320000, 8.160000, 4.080000, 2.040000, 1.020000, 0.510000];
+  		//_Map2D.resolution = _Map2D.resolutions[_Map2D.getZoom()];
+  		
+  		_Map2D.addLayer(satelliteLayer);
+  		satelliteLayer.setVisibility(true);
+  		_Map2D.setLayerZIndex(satelliteLayer, 0);
+		_Map2D.addLayer(circleLayer);
+		_Map2D.addLayer(radiuslayer);
+  		_Map2D.addLayer(markersLayer);
+  		_Map2D.addLayer(spaceMarkersLayer);
+  		_Map2D.addLayer(vectorLayer);
+  		_Map2D.addLayer(gridmapVectorLayer);
+  		_Map2D.addLayer(imgBoundsVectorLayer);
+  		_Map2D.addLayer(zoneAreaVectorLayer);
+
+  		satelliteLayer.redraw();
+  		circleLayer.redraw();
+  		radiuslayer.redraw();
+  		markersLayer.redraw();
+  		spaceMarkersLayer.redraw();
+  		vectorLayer.redraw();
+  		gridmapVectorLayer.redraw();
+  		imgBoundsVectorLayer.redraw();
+  		zoneAreaVectorLayer.redraw();
+  		if (airImgLayer != null){
+ 			_Map2D.removeLayer(airImgLayer);
+  			_Map2D.addLayer(airImgLayer);
+  			airImgLayer.redraw(); 			
+  		}
+  	}
+  	else
+	{
+  		satelliteLayer.setVisibility(false);
+  		_Map2D.removeLayer(satelliteLayer);
+		_Map2D.removeLayer(circleLayer);
+		_Map2D.removeLayer(radiuslayer);
+  		_Map2D.removeLayer(markersLayer);
+  		_Map2D.removeLayer(spaceMarkersLayer);
+  		_Map2D.removeLayer(vectorLayer);
+  		_Map2D.removeLayer(gridmapVectorLayer);
+  		_Map2D.removeLayer(imgBoundsVectorLayer);
+  		_Map2D.removeLayer(zoneAreaVectorLayer);
+  		
+  		_Map2D.setOptions(emapOptions);
+  		
+  		_Map2D.addLayer(wmtsLayer);
+  		wmtsLayer.setVisibility(true);
+  		_Map2D.setLayerZIndex(wmtsLayer, 0);
+		_Map2D.addLayer(circleLayer);
+		_Map2D.addLayer(radiuslayer);
+  		_Map2D.addLayer(markersLayer);
+  		_Map2D.addLayer(spaceMarkersLayer);
+  		_Map2D.addLayer(vectorLayer);
+  		_Map2D.addLayer(gridmapVectorLayer);
+  		_Map2D.addLayer(imgBoundsVectorLayer);
+  		_Map2D.addLayer(zoneAreaVectorLayer);
+  		
+  		wmtsLayer.redraw();
+  		circleLayer.redraw();
+  		radiuslayer.redraw();
+  		markersLayer.redraw();
+  		spaceMarkersLayer.redraw();
+  		vectorLayer.redraw();
+  		gridmapVectorLayer.redraw();
+  		imgBoundsVectorLayer.redraw();
+  		zoneAreaVectorLayer.redraw();
+  		if (airImgLayer != null){
+  	  		_Map2D.removeLayer(airImgLayer);
+  	  		_Map2D.addLayer(airImgLayer);
+  	  		airImgLayer.redraw();	
+  		}
+	}
+}
+
+/**
+* 설명 : 지도를 프린트한다.
+* 작성자 : W
+*/
+function printScreen(){
+	var mapDiv = $("#map2D");
+	var paramArray = new Array();
+	paramArray["mapHTML"] = mapDiv.html(); 
+	paramArray["mapWidth"] = mapDiv.css("width").replace("px","");
+	paramArray["mapHeight"] = mapDiv.css("height").replace("px","");
+	var url = "../html/print.html";
+	window.showModalDialog(url, paramArray, "dialogWidth:970px; dialogHeight:710px; center:yes; ");
+}
+
+/***** 지도 부가기능(툴바) *****/
+//지도 부가기능(툴바)
+function mapControl(str) {
+
+	if (!str.match('zoom')) {
+		for (key in controls) {
+			var control = controls[key];
+			control.deactivate();
+		}
+		clearPopup();
+	}
+
+	switch (str) {
+		case "zoomIn":
+			_Map2D.zoomIn();
+			break;
+		case "zoomOut":
+			_Map2D.zoomOut();
+			break;
+		case "modePan":
+			modePan();
+			break;
+		case "clearMap":
+			clearMap();
+			break;
+		case "measure_distance":
+			toggleControl('measure_distance');
+			break;
+		case "measure_area":
+			toggleControl('measure_area');
+			break;
+		case "dragZoomIn":
+			dragZoomIn();
+			break;
+		case "dragZoomOut":
+			dragZoomOut();
+			break;
+		case "printScreen":
+			printScreen();
+			break;
+	}
+}
+  
+// 지도 이동
+function modePan() {
+	for (key in controls) {
+		var control = controls[key];
+		control.deactivate();
+	}
+	clearPopup();
+	
+	// 드래그 줌인 컨트롤 비활성화
+	dragZoomControl.controls[1].deactivate();
+	dragZoomControl.controls[2].deactivate();
+}
+
+// 전체지도보기(최소레벨,중심점 설정해서 이동)
+function showMinMap() {
+//	_Map2D.setCenter(new OpenLayers1.LonLat(1160261.3851262713, 1918981.5933857378), 0);
+	_Map2D.setCenter(new OpenLayers1.LonLat(1034208.638, 1767316.234), 2);
+}
+
+// 초기화(거리재기,면적재기 삭제)
+function clearMap() {
+	for (key in controls) {
+		var control = controls[key];
+		control.deactivate();
+	}
+	clearPopup();
+	
+	removeAllMarker();
+//	removeAirImgLayers();
+	removeImgPolygon();
+	removeIndexPolygon();
+	removeImgBoundsPolygon();
+	removeZoneAreaPolygon();
+	unSelectedItem();
+	circleLayer.destroyFeatures();
+	radiuslayer.destroyFeatures();
+	removeAirImgLayers();
+}
+
+
+// 거리재기/면적재기 수행
+function toggleControl(element) {
+	// 드래그 줌인 컨트롤 비활성화
+	dragZoomControl.controls[1].deactivate();
+	dragZoomControl.controls[2].deactivate();
+	
+	controlsNow = element;
+	for (key in controls) {
+		var control = controls[key];
+		if (element == key) {
+			control.activate();
+		} else {
+			control.deactivate();
+		}
+	}
+};
+
+// 영역확대
+function dragZoomIn() {
+	dragZoomControl.controls[1].activate();
+	dragZoomControl.controls[2].deactivate();
+}
+
+// 영역축소
+function dragZoomOut() {
+	dragZoomControl.controls[2].activate();
+	dragZoomControl.controls[1].deactivate();
+}
+
+
+function getRes() {
+	alert(_Map2D.getResolution());
+}
+
+/**
+* 좌표변환 
+*/
+function transformLonLat(x1,y1,srcProj,dstProj){
+	var p = new Proj4js.Point(parseFloat(x1), parseFloat(y1));
+	p = Proj4js.transform(srcProj, dstProj, p);
+	return p;
+}
+
+
+var sharePolygonList = null;
+var sharePolygonName = "";
+var polygonFeature2D = null;
+
+var indexPolygonList = null;
+var indexPolygonName = "";
+var polygonIndex = null;
+
+var imgBoundsPolygonList = null;
+var imgBoundspolygon = null;
+
+var zoneAreaPolygonList = null;
+var zoneAreaPolygonName = "";
+var zoneAreaPolygonFeature2D = null;
+
+function removeImgPolygon(){
+	if (polygonFeature2D != null){
+		vectorLayer.removeFeatures(polygonFeature2D);
+	}
+}
+
+function removeIndexPolygon(){
+	if (polygonIndex != null){
+		gridmapVectorLayer.removeFeatures(polygonIndex);
+	}
+}
+
+function removeImgBoundsPolygon(){
+	if (imgBoundspolygon != null){
+		imgBoundsVectorLayer.removeFeatures(imgBoundspolygon);
+	}
+}
+
+function removeZoneAreaPolygon(){
+	if (zoneAreaPolygonFeature2D != null){
+		zoneAreaVectorLayer.removeAllFeatures();
+	}
+}
+
+function drawPolygon(polygonList, name){
+	sharePolygonList = polygonList;
+	sharePolygonName = name;
+	removeImgPolygon();
+	
+    var pointList = [];
+    var bounds = null;
+    var points = null;
+    var linearRing = null;
+    var polygon = null;
+    var polygons = [];
+    if (polygonList != null){
+    	for (var j=0; j < polygonList.length; j++){
+    		points = polygonList[j];
+		    if (points.indexOf(" ")){
+		    	var pointsObj = points.split(" ");
+			    for(var i=0; i<pointsObj.length; i++) {
+			    	var pointObj = pointsObj[i].split(",");
+			        var newPoint = new OpenLayers1.Geometry.Point(pointObj[0], pointObj[1]);
+			        
+			    	if (bounds == null)
+			    		bounds = new OpenLayers1.Bounds(pointObj[0], pointObj[1], pointObj[0], pointObj[1]);
+			    	else
+			    		bounds.extend(new OpenLayers1.LonLat(pointObj[0], pointObj[1]));
+		        
+			        pointList.push(newPoint);
+			    }
+		    }
+		    linearRing = new OpenLayers1.Geometry.LinearRing(pointList);
+		    polygon = new OpenLayers1.Geometry.Polygon([linearRing]);
+		    polygons.push(polygon);
+		    pointList = [];
+    	}
+    	var multuPolygonGeometry = new OpenLayers1.Geometry.MultiPolygon(polygons);
+    	polygonFeature2D = new OpenLayers1.Feature.Vector(multuPolygonGeometry);
+    	polygonFeature2D.attributes = {name:sharePolygonName, favColor:"red"};
+        vectorLayer.addFeatures([polygonFeature2D]);
+        _Map2D.zoomToExtent(bounds);
+	}
+}
+
+function drawIndexPolygon(polygonList, name){
+	indexPolygonList = polygonList;
+	indexPolygonName = name;
+	removeIndexPolygon();
+	
+    var pointList = [];
+    var bounds = null;
+    var points = null;
+    var linearRing = null;
+    var polygon = null;
+    var polygons = [];
+    if (polygonList != null){
+    	for (var j=0; j < polygonList.length; j++){
+    		points = polygonList[j];
+		    if (points.indexOf(" ")){
+		    	var pointsObj = points.split(" ");
+			    for(var i=0; i<pointsObj.length; i++) {
+			    	var pointObj = pointsObj[i].split(",");
+			        var newPoint = new OpenLayers1.Geometry.Point(pointObj[0], pointObj[1]);
+			        
+			    	if (bounds == null)
+			    		bounds = new OpenLayers1.Bounds(pointObj[0], pointObj[1], pointObj[0], pointObj[1]);
+			    	else
+			    		bounds.extend(new OpenLayers1.LonLat(pointObj[0], pointObj[1]));
+		        
+			        pointList.push(newPoint);
+			    }
+		    }
+		    linearRing = new OpenLayers1.Geometry.LinearRing(pointList);
+		    polygon = new OpenLayers1.Geometry.Polygon([linearRing]);
+		    polygons.push(polygon);
+		    pointList = [];
+    	}
+    	var multuPolygonGeometry = new OpenLayers1.Geometry.MultiPolygon(polygons);
+    	polygonIndex = new OpenLayers1.Feature.Vector(multuPolygonGeometry);
+    	polygonIndex.attributes = {name:name, favColor:"red"};
+    	gridmapVectorLayer.addFeatures([polygonIndex]);
+	}
+}
+
+function imgBoundsPolygon(polygonList, name){
+	imgBoundsPolygonList = polygonList;
+	removeImgBoundsPolygon();
+	
+    var pointList = [];
+    var bounds = null;
+    var points = null;
+    var linearRing = null;
+    var polygon = null;
+    var polygons = [];
+    if (polygonList != null){
+    	for (var j=0; j < polygonList.length; j++){
+    		points = polygonList[j];
+		    if (points.indexOf(" ")){
+		    	var pointsObj = points.split(" ");
+			    for(var i=0; i<pointsObj.length; i++) {
+			    	var pointObj = pointsObj[i].split(",");
+			        var newPoint = new OpenLayers1.Geometry.Point(pointObj[0], pointObj[1]);
+			        
+			    	if (bounds == null)
+			    		bounds = new OpenLayers1.Bounds(pointObj[0], pointObj[1], pointObj[0], pointObj[1]);
+			    	else
+			    		bounds.extend(new OpenLayers1.LonLat(pointObj[0], pointObj[1]));
+		        
+			        pointList.push(newPoint);
+			    }
+		    }
+		    linearRing = new OpenLayers1.Geometry.LinearRing(pointList);
+		    polygon = new OpenLayers1.Geometry.Polygon([linearRing]);
+		    polygons.push(polygon);
+		    pointList = [];
+    	}
+    	var multuPolygonGeometry = new OpenLayers1.Geometry.MultiPolygon(polygons);
+    	imgBoundspolygon = new OpenLayers1.Feature.Vector(multuPolygonGeometry);
+    	imgBoundspolygon.attributes = {name:name, favColor:"red"};
+    	imgBoundsVectorLayer.addFeatures([imgBoundspolygon]);
+    	
+    	_Map2D.zoomToExtent(bounds);
+	}
+}
+
+function imgBoundsPolygonNotZoom(polygonList, name){
+	imgBoundsPolygonList = polygonList;
+	removeImgBoundsPolygon();
+	
+    var pointList = [];
+    var bounds = null;
+    var points = null;
+    var linearRing = null;
+    var polygon = null;
+    var polygons = [];
+    if (polygonList != null){
+    	for (var j=0; j < polygonList.length; j++){
+    		points = polygonList[j];
+		    if (points.indexOf(" ")){
+		    	var pointsObj = points.split(" ");
+			    for(var i=0; i<pointsObj.length; i++) {
+			    	var pointObj = pointsObj[i].split(",");
+			        var newPoint = new OpenLayers1.Geometry.Point(pointObj[0], pointObj[1]);
+			        
+			    	if (bounds == null)
+			    		bounds = new OpenLayers1.Bounds(pointObj[0], pointObj[1], pointObj[0], pointObj[1]);
+			    	else
+			    		bounds.extend(new OpenLayers1.LonLat(pointObj[0], pointObj[1]));
+		        
+			        pointList.push(newPoint);
+			    }
+		    }
+		    linearRing = new OpenLayers1.Geometry.LinearRing(pointList);
+		    polygon = new OpenLayers1.Geometry.Polygon([linearRing]);
+		    polygons.push(polygon);
+		    pointList = [];
+    	}
+    	var multuPolygonGeometry = new OpenLayers1.Geometry.MultiPolygon(polygons);
+    	imgBoundspolygon = new OpenLayers1.Feature.Vector(multuPolygonGeometry);
+    	imgBoundspolygon.attributes = {name:name, favColor:"red"};
+    	imgBoundsVectorLayer.addFeatures([imgBoundspolygon]);
+    	
+    	//_Map2D.zoomToExtent(bounds);
+	}
+}
+
+function drawZoneAreaPolygon(polygonList, name, type){
+	zoneAreaPolygonList = polygonList;
+	zoneAreaPolygonName = name;
+	
+    var pointList = [];
+    var bounds = null;
+    var points = null;
+    var linearRing = null;
+    var polygon = null;
+    var polygons = [];
+    if (polygonList != null){
+    	for (var j=0; j < polygonList.length; j++){
+    		points = polygonList[j];
+		    if (points.indexOf(" ")){
+		    	var pointsObj = points.split(" ");
+			    for(var i=0; i<pointsObj.length; i++) {
+			    	var pointObj = pointsObj[i].split(",");
+			        var newPoint = new OpenLayers1.Geometry.Point(pointObj[0], pointObj[1]);
+			        
+			    	if (bounds == null)
+			    		bounds = new OpenLayers1.Bounds(pointObj[0], pointObj[1], pointObj[0], pointObj[1]);
+			    	else
+			    		bounds.extend(new OpenLayers1.LonLat(pointObj[0], pointObj[1]));
+		        
+			        pointList.push(newPoint);
+			    }
+		    }
+		    linearRing = new OpenLayers1.Geometry.LinearRing(pointList);
+		    polygon = new OpenLayers1.Geometry.Polygon([linearRing]);
+		    polygons.push(polygon);
+		    pointList = [];
+    	}
+    	var multuPolygonGeometry = new OpenLayers1.Geometry.MultiPolygon(polygons);
+    	zoneAreaPolygonFeature2D = new OpenLayers1.Feature.Vector(multuPolygonGeometry);
+    	zoneAreaPolygonFeature2D.attributes = {name:zoneAreaPolygonName, favColor:"red"};
+    	zoneAreaVectorLayer.addFeatures([zoneAreaPolygonFeature2D]);
+        
+    	if (type == 1){
+    		_Map2D.zoomToExtent(bounds);	
+    	}
+	}
+}
+
+var mycircle = null;
+var circlePoint = null;
+var featurecircle = null;
+function drawCircle(x, y, r){
+	circleLayer.destroyFeatures();
+	radiuslayer.destroyFeatures();
+	
+	circlePoint = new OpenLayers1.Geometry.Point(x, y);
+	mycircle = OpenLayers1.Geometry.Polygon.createRegularPolygon
+	(
+			circlePoint,
+	    r,
+	    40,
+	    0
+	);
+	featurecircle = new OpenLayers1.Feature.Vector(mycircle);
+
+	circleLayer.addFeatures([featurecircle]);
+}
+
+function changeCiecleRadius(target){
+	circleLayer.destroyFeatures();
+	radiuslayer.destroyFeatures();
+	
+	mycircle = OpenLayers1.Geometry.Polygon.createRegularPolygon
+	(
+		circlePoint,
+		$("#"+target).val(),
+	    40,
+	    0
+	);
+	featurecircle = new OpenLayers1.Feature.Vector(mycircle);
+	circleLayer.addFeatures([featurecircle]);
+}
+
+function setMapBounds(newBound){
+	_Map2D.zoomToExtent(newBound);
+}
+
+function moveToPoint(x, y, zoomNum){
+	_Map2D.setCenter(new OpenLayers1.LonLat(x, y), zoomNum);
+}
+
+function getMapBounds(){
+	return _Map2D.getExtent();
+}
+
+
+function tmToUtm(xmin, ymin, xmax, ymax){
+	var minPoint = transformLonLat(xmin, ymin, tmm, utmk);
+	var maxPoint = transformLonLat(xmax, ymax, tmm, utmk);
+	
+	var bound = new Array();
+	bound[0] = minPoint.x;
+	bound[1] = minPoint.y;
+	bound[2] = maxPoint.x;
+	bound[3] = maxPoint.y;
+	
+	return bound;
+}
+
+function utmToTm(xmin, ymin, xmax, ymax){
+	var minPoint = transformLonLat(xmin, ymin, utmk, tmm);
+	var maxPoint = transformLonLat(xmax, ymax, utmk, tmm);
+	
+	var bound = new Array();
+	bound[0] = minPoint.x;
+	bound[1] = minPoint.y;
+	bound[2] = maxPoint.x;
+	bound[3] = maxPoint.y;
+	
+	return bound;
+}
+
+function utmToTmToString(utmBound){
+	var bound = utmBound.split(",");
+	var minPoint = transformLonLat(bound[0], bound[1], utmk, tmm);
+	var maxPoint = transformLonLat(bound[2], bound[3], utmk, tmm);
+	var tmBound = minPoint.x + "," + minPoint.y + "," + maxPoint.x + "," + maxPoint.y;
+	
+	return tmBound;
+}

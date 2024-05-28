@@ -1,0 +1,2532 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>국토영상정보 보안관리시스템</title>
+  <link rel="stylesheet" type="text/css" href="../css/style.css" />
+  <script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.mCustomScrollbar.min.js"></script>
+  <script type="text/javascript" src="../js/default.js"></script>
+ </head>
+
+ <body>
+  <!-- #wrap -->
+  <div id="wrap">
+	<!-- #header -->
+	<div id="header">
+		<h1><img src="../images/common/h1_logo.png" alt="" /></h1>
+		<div class="utilMenu">
+			<div class="info">
+				<p><strong>홍길동</strong>님, 안녕하세요</p>
+				<ul>
+					<li><a href="#myInfoModify " class="btnLayerOpen"><img src="../images/common/btn_h_util_1.gif" alt="" /></a></li>
+					<li><a href="#sistemClose " class="btnLogout btnLayerOpen"><img src="../images/common/btn_h_util_2.gif" alt="" /></a></li>
+				</ul>
+			</div>
+			<div class="iden">
+				<ul>
+					<li><a href="#pageStandBy" class="pageMove">
+						대기
+						<span style="color:#87ade5">0</span>
+					</a></li>
+					<li><a href="#pageApproval" class="pageMove">
+						승인
+						<span style="color:#b6d657">1</span>
+					</a></li>
+					<li class="last"><a href="#pageReturn" class="pageMove">
+						반려
+						<span style="color:#f29d6e">2</span>
+					</a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- .gnb 현재 페이지 활성화시 <li class="active"> 넣어주세요. -->
+		<ul class="gnb">
+			<li class="menu_1 active"><a href="#main" class="pageMove">원본DB 검색</a></li>
+			<li class="menu_2"><a href="#none">원본DB 목록</a>
+				<ul>
+					<li class="active"><a href="#pageAerialPhoto" class="pageMove">- 항공사진</a></li>
+					<li><a href="#pageDigitalElevation" class="pageMove">- 수치표고</a></li>
+					<li><a href="#pageOrthoPhoto" class="pageMove">- 정사영상</a></li>
+				</ul>
+			</li>
+		</ul>
+		<!-- /.gnb -->
+	</div>
+	<!-- /#header -->
+
+	<!-- #footer -->
+	<div id="footer">
+		<h3><a href="#serviceGuide" class="btnPageUp">이용안내</a></h3>
+		<h3><a href="#notice" class="btnPageUp">공지사항</a></h3>
+		<ul>
+			<li><a href="#notice" class="btnPageUp">- 공지사항이 들어갑니다. 01 <img src="../images/common/ic_new.gif" alt="" /></a></li>
+			<li><a href="#notice" class="btnPageUp">- 공지사항이 들어갑니다. 02</a></li>
+			<li><a href="#notice" class="btnPageUp">- 공지사항이 들어갑니다. 03</a></li>
+		</ul>
+		<p class="copyright">copyright(c) 2012 NGII All Rights Reserved.</p>
+	</div>
+	<!-- /#footer -->
+
+	<hr />
+
+	<!-- #pageWrap -->
+	<div id="pageWrap">
+		<!-- 원본DB 검색 -->
+		<div id="main" class="active">
+			<!-- .twoDepthMenu -->
+			<div class="twoDepthMenu">
+				<div class="top">
+					<!-- <h2 class="tit">원본DB 검색</h2> -->
+					<h3 class="tit"><a href="#none" class="btnCloseOpen"></a>검색 구분</h3>
+					<div class="selectTab parentWrap">
+						<select class="select" style="width:90px;">
+							<option>행정</option>
+							<option>명칭</option>
+							<option>지번</option>
+							<option>새주소</option>
+							<option>도엽</option>
+						</select>
+						<div class="tab">
+							<!-- 행정 -->
+							<div>
+								<!-- .boardStyle_1 -->
+								<div class="boardStyle_1">
+									<table>
+										<colgroup>
+											<col width="85px" />
+											<col width="*" />
+										</colgroup>
+										<tbody>
+											<tr>
+												<th>시도</th>
+												<td>
+													<select class="select">
+														<option selected="selected">선택</option>
+														<option>선택 1</option>
+														<option>선택 2</option>
+														<option>선택 3 선택 3 선택 3 선택 3 선택 3 선택 3 선택 3 선택 3</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th>시군구</th>
+												<td>
+													<select class="select">
+														<option selected="selected">선택</option>
+														<option>선택 1</option>
+														<option>선택 2</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th>읍면동</th>
+												<td>
+													<select class="select">
+														<option selected="selected">선택</option>
+														<option>선택 1</option>
+														<option>선택 2</option>
+													</select>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<!-- /.boardStyle_1 -->
+								<a href="#none" class="searchDivBtn">이동</a>
+							</div>
+							<!-- /행정 -->
+							<!-- 명칭 -->
+							<div>
+								<div class="search"><input type="text" placeholder="명칭을 입력해주세요" style="width:254px" /> <a href="#none"><img src="../images/board/ic_search.png" alt="" /> 검색</a></div>
+								<ul class="topAppList mCustomScrollbar">
+									<li><a href="#none">검색결과 1</a></li>
+									<li><a href="#none">검색결과 2</a></li>
+									<li><a href="#none">검색결과 3</a></li>
+									<li><a href="#none">검색결과 4</a></li>
+									<li><a href="#none">검색결과 5</a></li>
+									<li class="last"><a href="#none">검색결과 6</a></li>
+								</ul>
+								<dl class="territoryBuffer">
+									<dt>영역버퍼</dt>
+									<dd>
+										<div id="areaBuffer" class="areaBuffer"></div>
+										<p>
+											<input type="text" id="amount" readonly="readonly" /><label for="amount">m</label>
+										</p>
+									</dd>
+								</dl>
+								<script type="text/javascript">
+									$(function() {
+										$("#areaBuffer").slider({
+											range: "min",
+											min:0, //버퍼 최소값
+											max:15000, //버퍼 최대값
+											value:7500, //버퍼 새로고침시 값
+											slide: function( event, ui ) {
+											$("#amount").val( ui.value );
+											}
+										});
+										$("#amount").val($("#areaBuffer").slider("value"));
+									});
+								</script>
+							</div>
+							<!-- /명칭 -->
+							<!-- 지번 -->
+							<div>
+								<!-- .boardStyle_1 -->
+								<div class="boardStyle_1">
+									<table>
+										<colgroup>
+											<col width="85px" />
+											<col width="*" />
+										</colgroup>
+										<tbody>
+											<tr>
+												<th>시도</th>
+												<td>
+													<select class="select">
+														<option selected="selected">선택</option>
+														<option>선택 1</option>
+														<option>선택 2</option>
+														<option>선택 3 선택 3 선택 3 선택 3 선택 3 선택 3 선택 3 선택 3</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th>시군구</th>
+												<td>
+													<select class="select">
+														<option selected="selected">선택</option>
+														<option>선택 1</option>
+														<option>선택 2</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th>읍면동</th>
+												<td>
+													<select class="select">
+														<option selected="selected">선택</option>
+														<option>선택 1</option>
+														<option>선택 2</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th>지번</th>
+												<td>
+													<span class="checkbox"><input type="checkbox" id="san" /></span> <label for="san" class="labelTxt" style="position:relative; top:9px; margin-right:13px">산</label>
+													<input type="text" style="width:88px;" /> - <input type="text" style="width:88px;" />
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<!-- /.boardStyle_1 -->
+								<a href="#none" class="searchDivBtn">검색</a>
+								<ul class="topAppList mCustomScrollbar mgt10">
+									<li><a href="#none">검색결과 1</a></li>
+									<li><a href="#none">검색결과 2</a></li>
+									<li><a href="#none">검색결과 3</a></li>
+									<li><a href="#none">검색결과 4</a></li>
+									<li><a href="#none">검색결과 5</a></li>
+									<li class="last"><a href="#none">검색결과 6</a></li>
+								</ul>
+							</div>
+							<!-- /지번 -->
+							<!-- 새주소 -->
+							<div>
+								<!-- .boardStyle_1 -->
+								<div class="boardStyle_1">
+									<table>
+										<colgroup>
+											<col width="85px" />
+											<col width="*" />
+										</colgroup>
+										<tbody>
+											<tr>
+												<th>시도</th>
+												<td>
+													<select class="select">
+														<option selected="selected">선택</option>
+														<option>선택 1</option>
+														<option>선택 2</option>
+														<option>선택 3 선택 3 선택 3 선택 3 선택 3 선택 3 선택 3 선택 3</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th>시군구</th>
+												<td>
+													<select class="select">
+														<option selected="selected">선택</option>
+														<option>선택 1</option>
+														<option>선택 2</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th>읍면동</th>
+												<td>
+													<select class="select">
+														<option selected="selected">선택</option>
+														<option>선택 1</option>
+														<option>선택 2</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th>건물번호</th>
+												<td><input type="text" style="width:88px;" /> - <input type="text" style="width:88px;" /></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<!-- /.boardStyle_1 -->
+								<a href="#none" class="searchDivBtn">검색</a>
+								<ul class="topAppList mCustomScrollbar mgt10">
+									<li><a href="#none">검색결과 1</a></li>
+									<li><a href="#none">검색결과 2</a></li>
+									<li><a href="#none">검색결과 3</a></li>
+									<li><a href="#none">검색결과 4</a></li>
+									<li><a href="#none">검색결과 5</a></li>
+									<li class="last"><a href="#none">검색결과 6</a></li>
+								</ul>
+							</div>
+							<!-- /새주소 -->
+							<!-- 도엽 -->
+							<div>
+								<!-- .boardStyle_1 -->
+								<div class="boardStyle_1">
+									<table>
+										<colgroup>
+											<col width="85px" />
+											<col width="*" />
+										</colgroup>
+										<tbody>
+											<tr>
+												<th>축적</th>
+												<td>
+													<select class="select">
+														<option selected="selected">선택</option>
+														<option>선택 1</option>
+														<option>선택 2</option>
+														<option>선택 3 선택 3 선택 3 선택 3 선택 3 선택 3 선택 3 선택 3</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th>도엽명</th>
+												<td>
+													<select class="select">
+														<option selected="selected">선택</option>
+														<option>선택 1</option>
+														<option>선택 2</option>
+													</select>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<!-- /.boardStyle_1 -->
+								<a href="#none" class="searchDivBtn">이동</a>
+							</div>
+							<!-- /도엽 -->
+						</div>
+					</div>
+					<h3 class="tit"><a href="#none" class="btnCloseOpen"></a>영상 구분</h3>
+					<!-- 영상 구분 -->
+					<div class="parent parentWrap">
+						<!-- .boardStyle_1 -->
+						<div class="boardStyle_1">
+							<table>
+								<colgroup>
+									<col width="85px" />
+									<col width="*" />
+								</colgroup>
+								<tbody>
+									<tr>
+										<th>영상종류</th>
+										<td>
+											<ul class="sortToggle">
+												<li class="active">항공사진</li>
+												<li class="">정사영상</li>
+												<li class="last">수치표고</li>
+											</ul>
+										</td>
+									</tr>
+									<tr>
+										<th>촬영년도</th>
+										<td>
+											<select class="select" style="width:113px;">
+												<option>2016</option>
+											</select>
+											<span style="position:relative; top:8px; padding:0 5px">~</span>
+											<select class="select" style="width:114px;">
+												<option>2016</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th>사업지구</th>
+										<td>
+											<select class="select">
+												<option selected="selected">전체</option>
+												<option>선택 1</option>
+												<option>선택 2</option>
+											</select>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- /.boardStyle_1 -->
+						<a href="#none" class="searchDivBtn btnParentHide">검색</a>
+					</div>
+					<!-- /영상 구분 -->
+					<h3 class="tit">검색 결과 (71)</h3>
+				</div>
+				<div class="scroll mCustomScrollbar">
+					<div style="padding:5px 20px;">
+						트리 체크 메뉴가 들어 갑니다.트리 체크 메뉴가 들어 갑니다.트리 체크 메뉴가 들어 갑니다.트리 체크 메뉴가 들어 갑니다.
+						트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />트리 체크 메뉴가 들어 갑니다.<br />
+					</div>
+				</div>
+				<div class="bottom">
+					<a href="#totalApplicationAlert" class="btnLayerOpen"><img src="../images/sub/btn_application_form.gif" alt="" /></a>
+				</div>
+			</div>
+			<!-- /.twoDepthMenu -->
+
+			<!-- .mapArea -->
+			<div class="container mapArea">
+				<!-- .mapTit -->
+				<div class="mapTit">
+					<div class="btnTwoDepthMenuClose"></div>
+					<h3><img src="../images/sub/ic_map_tit.png" width="14" height="20" alt="" /> 제주특별자치도 서귀포시 효돈동</h3>
+					<ul>
+						<li class="over"><a href="#none"><img src="../images/sub/ic_map_tit_13.gif" alt="" /></a></li>
+						<li class="over"><a href="#none"><img src="../images/sub/ic_map_tit_1.gif" alt="" /></a></li>
+						<li class="over"><a href="#none"><img src="../images/sub/ic_map_tit_2.gif" alt="" /></a></li>
+						<li class="over"><a href="#none"><img src="../images/sub/ic_map_tit_3.gif" alt="" /></a></li>
+						<li class="toggle"><a href="#none"><img src="../images/sub/ic_map_tit_4.gif" alt="" /></a></li>
+						<li class="toggle"><a href="#none"><img src="../images/sub/ic_map_tit_5.gif" alt="" /></a></li>
+						<li class="siblingsToggle"><a href="#none"><img src="../images/sub/ic_map_tit_6.gif" alt="" /></a></li>
+						<li class="siblingsToggle"><a href="#none"><img src="../images/sub/ic_map_tit_7.gif" alt="" /></a></li>
+						<li class="toggle"><a href="#none"><img src="../images/sub/ic_map_tit_8.gif" alt="" /></a></li>
+						<li class="over"><a href="#none"><img src="../images/sub/ic_map_tit_10.gif" alt="" /></a></li>
+						<li class="over"><a href="#none"><img src="../images/sub/ic_map_tit_11.gif" alt="" /></a></li>
+						<li class="over"><a href="#none"><img src="../images/sub/ic_map_tit_12.gif" alt="" /></a></li>
+						<li class="over"><a href="#none"><img src="../images/sub/ic_map_tit_9.gif" alt="" /></a></li>
+					</ul>
+				</div>
+				<!-- /.mapTit -->
+				<!-- .map -->
+				<div class="map" style="position:relative;">
+					<img src="../images/sub/img_map.jpg" width="100%" height="100%" alt="" />
+				</div>
+				<!-- /.map -->
+				<script type="text/javascript">
+					$(function(){
+						mapHeight();
+						$(window).resize(mapHeight);
+						function mapHeight(){
+							var wrapHeight = $('#wrap').height();
+							$('.map').height(wrapHeight-50);
+						}
+						
+					});
+				</script>
+			</div>
+			<!-- /.mapArea -->
+		</div>
+		<!-- /원본DB 검색 -->
+
+		<hr />
+
+		<!-- 항공사진 -->
+		<div id="pageAerialPhoto">
+			<!-- .twoDepthMenu -->
+			<div class="twoDepthMenu">
+				<div class="top">
+					<h3 class="tit"><a href="#none" class="btnCloseOpen"></a>조회 항목</h3>
+					<div class="parentWrap">
+						<!-- .boardStyle_1 -->
+						<div class="boardStyle_1">
+							<table>
+								<colgroup>
+									<col width="85px" />
+									<col width="*" />
+								</colgroup>
+								<tbody>
+									<tr>
+										<th class="colorOr">* 사업년도</th>
+										<td>
+											<select class="select" style="width:114px;">
+												<option>2016</option>
+											</select><span style="position:relative; top:8px; padding:0 5px">~</span>
+											<select class="select" style="width:114px;">
+												<option>2016</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th class="colorOr">* 사업지구</th>
+										<td>
+											<select class="select">
+												<option selected="selected">선택</option>
+												<option>선택 1</option>
+												<option>선택 2</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th>코스번호</th>
+										<td>
+											<select class="select">
+												<option selected="selected">선택</option>
+												<option>선택 1</option>
+												<option>선택 2</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th>사진번호</th>
+										<td>
+											<select class="select">
+												<option selected="selected">선택</option>
+												<option>선택 1</option>
+												<option>선택 2</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th>해상도</th>
+										<td>
+											<select class="select">
+												<option selected="selected">선택</option>
+												<option>선택 1</option>
+												<option>선택 2</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th>카메라구분</th>
+										<td>
+											<select class="select">
+												<option selected="selected">선택</option>
+												<option>선택 1</option>
+												<option>선택 2</option>
+											</select>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- /.boardStyle_1 -->
+						<a href="#none" class="searchDivBtn">조회</a>
+					</div>
+					<h3 class="tit">신청 목록 (17)</h3>
+				</div>
+				<div class="scroll mCustomScrollbar appList">
+					<!-- .appList -->
+					<ul>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+					</ul>
+					<!-- /.appList -->
+				</div>
+				<div class="bottom">
+					<a href="#none"><img src="../images/sub/btn_application_form.gif" alt="" /></a>
+				</div>
+			</div>
+			<!-- /.twoDepthMenu -->
+
+			<!-- .container -->
+			<div class="container">
+				<div class="top">
+					<div class="contTit">
+						<div class="btnTwoDepthMenuClose"></div>
+						<h3>검색결과</h3>
+						<select class="select" style="width:130px;">
+							<option>10개씩 보기</option>
+							<option>20개씩 보기</option>
+							<option>50개씩 보기</option>
+						</select>
+					</div>
+					<div class="thead">
+						<table>
+							<colgroup>
+								<col width="50" />
+								<col width="19%" />
+								<col width="19%" />
+								<col width="19%" />
+								<col width="19%" />
+								<col width="*" />
+							</colgroup>
+							<thead>
+								<tr>
+									<th><span class="checkbox theadCheckbox"><input type="checkbox" /></span></th>
+									<th>사업년도</th>
+									<th>사업지구명</th>
+									<th>도엽명</th>
+									<th>도엽번호</th>
+									<th class="last">해상도</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+				<div class="scroll mCustomScrollbar tbody">
+					<table>
+						<colgroup>
+							<col width="50" />
+							<col width="19%" />
+							<col width="19%" />
+							<col width="19%" />
+							<col width="19%" />
+							<col width="*" />
+						</colgroup>
+						<tbody>
+							<tr>
+								<td><span class="checkbox"><input type="checkbox" /></span></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">2016</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">충남지구</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">안흥001</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">00000000</a></td>
+								<td class="last"><a href="#detailInfo" class="btnLayerOpen">0.000m</a></td>
+							</tr>
+							<tr>
+								<td><span class="checkbox"><input type="checkbox" /></span></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">2016</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">충남지구</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">안흥001</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">00000000</a></td>
+								<td class="last"><a href="#detailInfo" class="btnLayerOpen">0.000m</a></td>
+							</tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="paging">
+					<ul>
+						<li class="btnPaging btnPagingFirst"><a href="#none">처음</a></li>
+						<li class="btnPaging btnPagingPrev"><a href="#none">이전</a></li>
+						<li><strong>1</strong></li>
+						<li><a href="#none">2</a></li>
+						<li><a href="#none">3</a></li>
+						<li><a href="#none">4</a></li>
+						<li><a href="#none">5</a></li>
+						<li><a href="#none">6</a></li>
+						<li><a href="#none">7</a></li>
+						<li><a href="#none">8</a></li>
+						<li><a href="#none">9</a></li>
+						<li><a href="#none">10</a></li>
+						<li class="btnPaging btnPagingNext"><a href="#none">다음</a></li>
+						<li class="btnPaging btnPagingLast"><a href="#none">마지막</a></li>
+					</ul>
+					<div class="btn"><a href="#none">전체신청</a></div>
+				</div>
+			</div>
+			<!-- /.container -->
+		</div>
+		<!-- /항공사진 -->
+
+		<hr />
+
+		<!-- 수치표고 -->
+		<div id="pageDigitalElevation">
+			<!-- .twoDepthMenu -->
+			<div class="twoDepthMenu">
+				<div class="top">
+					<!-- <h2 class="tit">원본DB 검색</h2> -->
+					<h3 class="tit"><a href="#none" class="btnCloseOpen"></a>조회 항목</h3>
+					<div class="parentWrap">
+						<!-- .boardStyle_1 -->
+						<div class="boardStyle_1">
+							<table>
+								<colgroup>
+									<col width="85px" />
+									<col width="*" />
+								</colgroup>
+								<tbody>
+									<tr>
+										<th class="colorOr">* 사업년도</th>
+										<td>
+											<select class="select" style="width:114px;">
+												<option>2016</option>
+											</select><span style="position:relative; top:8px; padding:0 5px">~</span>
+											<select class="select" style="width:114px;">
+												<option>2016</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th class="colorOr">* 사업지구</th>
+										<td>
+											<select class="select">
+												<option selected="selected">선택</option>
+												<option>선택 1</option>
+												<option>선택 2</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th>도엽번호</th>
+										<td>
+											<select class="select">
+												<option selected="selected">선택</option>
+												<option>선택 1</option>
+												<option>선택 2</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th>해상도</th>
+										<td>
+											<select class="select">
+												<option selected="selected">선택</option>
+												<option>선택 1</option>
+												<option>선택 2</option>
+											</select>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- /.boardStyle_1 -->
+						<a href="#none" class="searchDivBtn">조회</a>
+					</div>
+					<h3 class="tit">신청 목록 (0)</h3>
+				</div>
+				<div class="scroll mCustomScrollbar noData">
+					<!-- .noData -->
+					<div class="inner">
+						<div><img src="../images/sub/img_no_data.png" alt="" /></div>
+						<p>추가된 신청자료가 없습니다.</p>
+					</div>
+					<!-- /.noData -->
+				</div>
+				<div class="bottom">
+					<a><img src="../images/sub/btn_application_form_no.gif" alt="" /></a>
+				</div>
+			</div>
+			<!-- /.twoDepthMenu -->
+
+			<!-- .container -->
+			<div class="container">
+				<div class="top">
+					<div class="contTit">
+						<div class="btnTwoDepthMenuClose"></div>
+						<h3>검색결과</h3>
+						<select class="select">
+							<option>10개씩 보기</option>
+							<option>20개씩 보기</option>
+							<option>50개씩 보기</option>
+						</select>
+					</div>
+					<div class="thead">
+						<table>
+							<colgroup>
+								<col width="50" />
+								<col width="19%" />
+								<col width="19%" />
+								<col width="19%" />
+								<col width="19%" />
+								<col width="*" />
+							</colgroup>
+							<thead>
+								<tr>
+									<th><span class="checkbox theadCheckbox"><input type="checkbox" /></span></th>
+									<th>사업년도</th>
+									<th>사업지구명</th>
+									<th>도엽명</th>
+									<th>도엽번호</th>
+									<th class="last">해상도</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+				<div class="scroll mCustomScrollbar tbody">
+					<table>
+						<colgroup>
+							<col width="50" />
+							<col width="19%" />
+							<col width="19%" />
+							<col width="19%" />
+							<col width="19%" />
+							<col width="*" />
+						</colgroup>
+						<tbody>
+							<tr>
+								<td><span class="checkbox"><input type="checkbox" /></span></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">2016</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">충남지구</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">안흥001</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">00000000</a></td>
+								<td class="last"><a href="#detailInfo" class="btnLayerOpen">0.000m</a></td>
+							</tr>
+							<tr>
+								<td><span class="checkbox"><input type="checkbox" /></span></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">2016</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">충남지구</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">안흥001</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">00000000</a></td>
+								<td class="last"><a href="#detailInfo" class="btnLayerOpen">0.000m</a></td>
+							</tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="paging">
+					<ul>
+						<li class="btnPaging btnPagingFirst"><a href="#none">처음</a></li>
+						<li class="btnPaging btnPagingPrev"><a href="#none">이전</a></li>
+						<li><strong>1</strong></li>
+						<li><a href="#none">2</a></li>
+						<li><a href="#none">3</a></li>
+						<li><a href="#none">4</a></li>
+						<li><a href="#none">5</a></li>
+						<li><a href="#none">6</a></li>
+						<li><a href="#none">7</a></li>
+						<li><a href="#none">8</a></li>
+						<li><a href="#none">9</a></li>
+						<li><a href="#none">10</a></li>
+						<li class="btnPaging btnPagingNext"><a href="#none">다음</a></li>
+						<li class="btnPaging btnPagingLast"><a href="#none">마지막</a></li>
+					</ul>
+					<div class="btn"><a href="#none">전체신청</a></div>
+					
+				</div>
+			</div>
+			<!-- /.container -->
+		</div>
+		<!-- /수치표고 -->
+
+		<hr />
+
+		<!-- 정사영상 -->
+		<div id="pageOrthoPhoto">
+			<!-- .twoDepthMenu -->
+			<div class="twoDepthMenu">
+				<div class="top">
+					<!-- <h2 class="tit">원본DB 검색</h2> -->
+					<h3 class="tit"><a href="#none" class="btnCloseOpen"></a>검색 조건</h3>
+					<div class="parentWrap">
+						<!-- .boardStyle_1 -->
+						<div class="boardStyle_1">
+							<table>
+								<colgroup>
+									<col width="85px" />
+									<col width="*" />
+								</colgroup>
+								<tbody>
+									<tr>
+										<th class="colorOr">* 사업년도</th>
+										<td>
+											<select class="select" style="width:114px;">
+												<option>2016</option>
+											</select><span style="position:relative; top:8px; padding:0 5px">~</span>
+											<select class="select" style="width:114px;">
+												<option>2016</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th class="colorOr">* 사업지구</th>
+										<td>
+											<select class="select">
+												<option selected="selected">선택</option>
+												<option>선택 1</option>
+												<option>선택 2</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th>도엽번호</th>
+										<td>
+											<select class="select">
+												<option selected="selected">선택</option>
+												<option>선택 1</option>
+												<option>선택 2</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<th>해상도</th>
+										<td>
+											<select class="select">
+												<option selected="selected">선택</option>
+												<option>선택 1</option>
+												<option>선택 2</option>
+											</select>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- /.boardStyle_1 -->
+						<a href="#none" class="searchDivBtn">검색</a>
+					</div>
+					<h3 class="tit">신청 목록 (10)</h3>
+				</div>
+				<div class="scroll mCustomScrollbar appList">
+					<!-- .appList -->
+					<ul>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+						<li>충북지구(12) <a href="#none">삭제</a></li>
+					</ul>
+					<!-- /.appList -->
+				</div>
+				<div class="bottom">
+					<a href="#none"><img src="../images/sub/btn_application_form.gif" alt="" /></a>
+				</div>
+			</div>
+			<!-- /.twoDepthMenu -->
+
+			<!-- .container -->
+			<div class="container">
+				<div class="top">
+					<div class="contTit">
+						<div class="btnTwoDepthMenuClose"></div>
+						<h3>검색결과</h3>
+						<select class="select">
+							<option>10개씩 보기</option>
+							<option>20개씩 보기</option>
+							<option>50개씩 보기</option>
+						</select>
+					</div>
+					<div class="thead">
+						<table>
+							<colgroup>
+								<col width="50" />
+								<col width="19%" />
+								<col width="19%" />
+								<col width="19%" />
+								<col width="19%" />
+								<col width="*" />
+							</colgroup>
+							<thead>
+								<tr>
+									<th><span class="checkbox theadCheckbox"><input type="checkbox" /></span></th>
+									<th>사업년도</th>
+									<th>사업지구명</th>
+									<th>도엽명</th>
+									<th>도엽번호</th>
+									<th class="last">해상도</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+				<div class="scroll mCustomScrollbar tbody">
+					<table>
+						<colgroup>
+							<col width="50" />
+							<col width="19%" />
+							<col width="19%" />
+							<col width="19%" />
+							<col width="19%" />
+							<col width="*" />
+						</colgroup>
+						<tbody>
+							<tr>
+								<td><span class="checkbox"><input type="checkbox" /></span></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">2016</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">충남지구</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">안흥001</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">00000000</a></td>
+								<td class="last"><a href="#detailInfo" class="btnLayerOpen">0.000m</a></td>
+							</tr>
+							<tr>
+								<td><span class="checkbox"><input type="checkbox" /></span></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">2016</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">충남지구</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">안흥001</a></td>
+								<td><a href="#detailInfo" class="btnLayerOpen">00000000</a></td>
+								<td class="last"><a href="#detailInfo" class="btnLayerOpen">0.000m</a></td>
+							</tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+							<tr><td><span class="checkbox"><input type="checkbox" /></span></td><td></td><td></td><td></td><td></td><td class="last"></td></tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="paging">
+					<ul>
+						<li class="btnPaging btnPagingFirst"><a href="#none">처음</a></li>
+						<li class="btnPaging btnPagingPrev"><a href="#none">이전</a></li>
+						<li><strong>1</strong></li>
+						<li><a href="#none">2</a></li>
+						<li><a href="#none">3</a></li>
+						<li><a href="#none">4</a></li>
+						<li><a href="#none">5</a></li>
+						<li><a href="#none">6</a></li>
+						<li><a href="#none">7</a></li>
+						<li><a href="#none">8</a></li>
+						<li><a href="#none">9</a></li>
+						<li><a href="#none">10</a></li>
+						<li class="btnPaging btnPagingNext"><a href="#none">다음</a></li>
+						<li class="btnPaging btnPagingLast"><a href="#none">마지막</a></li>
+					</ul>
+					<div class="btn"><a href="#none">전체신청</a></div>
+				</div>
+			</div>
+			<!-- /.container -->
+		</div>
+		<!-- /정사영상 -->
+
+		<hr />
+
+		<!-- 신청서 대기 -->
+		<div id="pageStandBy">
+			<!-- .container -->
+			<div class="container pageFull">
+				<div class="top">
+					<div class="contTit">
+						<!-- <div id="btnTwoDepthMenuClose"></div> -->
+						<h3>신청서 대기</h3>
+					</div>
+					<div class="thead">
+						<table>
+							<colgroup>
+							<col width="80" />
+							<col width="23%" />
+							<col width="23%" />
+							<col width="23%" />
+							<col width="*" />
+							</colgroup>
+							<thead>
+								<tr>
+									<th>순번</th>
+									<th>신청일자</th>
+									<th>신청명</th>
+									<th>사용 목적</th>
+									<th class="last">상태</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+				<div class="scroll mCustomScrollbar tbody">
+					<table>
+						<colgroup>
+							<col width="80" />
+							<col width="23%" />
+							<col width="23%" />
+							<col width="23%" />
+							<col width="*" />
+						</colgroup>
+						<tbody>
+							<tr>
+								<td>000</td>
+								<td>2016.10.06</td>
+								<td>항공사진 4건</td>
+								<td>지번 확인</td>
+								<td class="last">처리중</td>
+							</tr>
+							<tr>
+								<td>000</td>
+								<td>2016.10.06</td>
+								<td>항공사진 4건</td>
+								<td>지번 확인</td>
+								<td class="last">처리중</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td></tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="paging">
+					<ul>
+						<li class="btnPaging btnPagingFirst"><a href="#none">처음</a></li>
+						<li class="btnPaging btnPagingPrev"><a href="#none">이전</a></li>
+						<li><strong>1</strong></li>
+						<li><a href="#none">2</a></li>
+						<li><a href="#none">3</a></li>
+						<li><a href="#none">4</a></li>
+						<li><a href="#none">5</a></li>
+						<li><a href="#none">6</a></li>
+						<li><a href="#none">7</a></li>
+						<li><a href="#none">8</a></li>
+						<li><a href="#none">9</a></li>
+						<li><a href="#none">10</a></li>
+						<li class="btnPaging btnPagingNext"><a href="#none">다음</a></li>
+						<li class="btnPaging btnPagingLast"><a href="#none">마지막</a></li>
+					</ul>
+				</div>
+			</div>
+			<!-- /.container -->
+		</div>
+		<!-- /신청서 대기 -->
+
+		<hr />
+
+		<!-- 신청서 승인 -->
+		<div id="pageApproval">
+			<!-- .container -->
+			<div class="container pageFull">
+				<div class="top">
+					<div class="contTit">
+						<!-- <div id="btnTwoDepthMenuClose"></div> -->
+						<h3>신청서 승인</h3>
+					</div>
+					<div class="thead">
+						<table>
+							<colgroup>
+								<col width="80" />
+								<col width="16%" />
+								<col width="16%" />
+								<col width="16%" />
+								<col width="16%" />
+								<col width="16%" />
+								<col width="*" />
+							</colgroup>
+							<thead>
+								<tr>
+									<th>순번</th>
+									<th>신청일자</th>
+									<th>신청명</th>
+									<th>승인일</th>
+									<th>다운로드</th>
+									<th>남은 일시</th>
+									<th class="last">상태</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+				<div class="scroll mCustomScrollbar tbody">
+					<table>
+						<colgroup>
+							<col width="80" />
+							<col width="16%" />
+							<col width="16%" />
+							<col width="16%" />
+							<col width="16%" />
+							<col width="16%" />
+							<col width="*" />
+						</colgroup>
+						<tbody>
+							<tr>
+								<td>000</td>
+								<td>2016.10.06</td>
+								<td>항공사진 4건</td>
+								<td>2016.10.10</td>
+								<td><a class="result result_1 btnLayerOpen" href="#down">다운로드</a></td>
+								<td>6일</td>
+								<td class="last">처리중</td>
+							</tr>
+							<tr>
+								<td>000</td>
+								<td>2016.10.06</td>
+								<td>항공사진 4건</td>
+								<td>2016.10.10</td>
+								<td><a class="result result_2">완료</a></td>
+								<td>6일</td>
+								<td class="last">처리중</td>
+							</tr>
+							<tr>
+								<td>000</td>
+								<td>2016.10.06</td>
+								<td>항공사진 4건</td>
+								<td>2016.10.10</td>
+								<td><a class="result result_3">만료</a></td>
+								<td>6일</td>
+								<td class="last">처리중</td>
+							</tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="paging">
+					<ul>
+						<li class="btnPaging btnPagingFirst"><a href="#none">처음</a></li>
+						<li class="btnPaging btnPagingPrev"><a href="#none">이전</a></li>
+						<li><strong>1</strong></li>
+						<li><a href="#none">2</a></li>
+						<li><a href="#none">3</a></li>
+						<li><a href="#none">4</a></li>
+						<li><a href="#none">5</a></li>
+						<li><a href="#none">6</a></li>
+						<li><a href="#none">7</a></li>
+						<li><a href="#none">8</a></li>
+						<li><a href="#none">9</a></li>
+						<li><a href="#none">10</a></li>
+						<li class="btnPaging btnPagingNext"><a href="#none">다음</a></li>
+						<li class="btnPaging btnPagingLast"><a href="#none">마지막</a></li>
+					</ul>
+				</div>
+			</div>
+			<!-- /.container -->
+		</div>
+		<!-- /신청서 승인 -->
+
+		<hr />
+
+		<!-- 신청서 반려 -->
+		<div id="pageReturn">
+			<!-- .container -->
+			<div class="container pageFull">
+				<div class="top">
+					<div class="contTit">
+						<!-- <div id="btnTwoDepthMenuClose"></div> -->
+						<h3>신청서 반려</h3>
+					</div>
+					<div class="thead">
+						<table>
+							<colgroup>
+								<col width="80" />
+								<col width="16%" />
+								<col width="16%" />
+								<col width="16%" />
+								<col width="16%" />
+								<col width="*" />
+							</colgroup>
+							<thead>
+								<tr>
+									<th>순번</th>
+									<th>신청일자</th>
+									<th>신청명</th>
+									<th>반려일</th>
+									<th>반려사유</th>
+									<th class="last">상태</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+				<div class="scroll mCustomScrollbar tbody">
+					<table>
+						<colgroup>
+							<col width="80" />
+							<col width="16%" />
+							<col width="16%" />
+							<col width="16%" />
+							<col width="16%" />
+							<col width="*" />
+						</colgroup>
+						<tbody>
+							<tr>
+								<td>000</td>
+								<td>2016.10.06</td>
+								<td>항공사진 4건</td>
+								<td>2016.10.10</td>
+								<td><a class="result result_3 btnLayerOpen" href="#returnReason">반려사유 확인</a></td>
+								<td class="last">처리중</td>
+							</tr>
+							<tr>
+								<td>000</td>
+								<td>2016.10.06</td>
+								<td>항공사진 4건</td>
+								<td>2016.10.10</td>
+								<td><a class="result result_3 btnLayerOpen" href="#returnReason">반려사유 확인</a></td>
+								<td class="last">처리중</td>
+							</tr>
+							<tr>
+								<td>000</td>
+								<td>2016.10.06</td>
+								<td>항공사진 4건</td>
+								<td>2016.10.10</td>
+								<td><a class="result result_3 btnLayerOpen" href="#returnReason">반려사유 확인</a></td>
+								<td class="last">처리중</td>
+							</tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="paging">
+					<ul>
+						<li class="btnPaging btnPagingFirst"><a href="#none">처음</a></li>
+						<li class="btnPaging btnPagingPrev"><a href="#none">이전</a></li>
+						<li><strong>1</strong></li>
+						<li><a href="#none">2</a></li>
+						<li><a href="#none">3</a></li>
+						<li><a href="#none">4</a></li>
+						<li><a href="#none">5</a></li>
+						<li><a href="#none">6</a></li>
+						<li><a href="#none">7</a></li>
+						<li><a href="#none">8</a></li>
+						<li><a href="#none">9</a></li>
+						<li><a href="#none">10</a></li>
+						<li class="btnPaging btnPagingNext"><a href="#none">다음</a></li>
+						<li class="btnPaging btnPagingLast"><a href="#none">마지막</a></li>
+					</ul>
+				</div>
+			</div>
+			<!-- /.container -->
+		</div>
+		<!-- /신청서 반려 -->
+	</div>
+	<!-- /#pageWrap -->
+
+	<!-- #pageUp -->
+	<div id="pageUp">
+		<!-- 이용안내 -->
+		<div id="serviceGuide">
+			<!-- .twoDepthMenu -->
+			<div class="twoDepthMenu">
+				<div class="top">
+					<h3 class="tit">이용안내</h3>
+					<a href="#none" class="btnPageUpClose">Close</a>
+				</div>
+				<div class="scroll mCustomScrollbar boardList">
+					<!-- .noticeList -->
+					<ul>
+						<li><strong>지도 기능 버튼 사용방법</strong></li>
+						<li><a href="#none">검색방법</a></li>
+						<li><a href="#none">신청서 작성 방법</a></li>
+					</ul>
+					<!-- /.noticeList -->
+				</div>
+				<div style="height:25px">
+				</div>
+			</div>
+			<!-- /.twoDepthMenu -->
+
+			<!-- .container -->
+			<div class="container noticeView">
+				<div class="top">
+					<div class="tit">
+						<h3>지도 기능 버튼 사용방법</h3>
+					</div>
+				</div>
+				<div class="scroll mCustomScrollbar con">
+					<div class="inner serviceGuideInner">
+						<h4>지도 기능 버튼 사용방법입니다.</h4>
+						<div class="mgb30">
+							<img src="../images/sub/img.jpg" alt="" />
+							<h5>지도 확대</h5>
+							<p>보고 있는 지도 화면을 한단계 확대시킬 수 있습니다.</p>
+						</div>
+						<div class="mgb30">
+							<img src="../images/sub/img.jpg" alt="" />
+							<h5>지도 축소</h5>
+							<p>보고 있는 지도 화면을 한단계 축소시킬 수 있습니다.</p>
+						</div>
+						<div class="mgb30">
+							<img src="../images/sub/img.jpg" alt="" />
+							<h5>지도 확대</h5>
+							<p>보고 있는 지도 화면을 한단계 확대시킬 수 있습니다.</p>
+						</div>
+						<div class="mgb30">
+							<img src="../images/sub/img.jpg" alt="" />
+							<h5>지도 축소</h5>
+							<p>보고 있는 지도 화면을 한단계 축소시킬 수 있습니다.</p>
+						</div>
+						<div class="mgb30">
+							<img src="../images/sub/img.jpg" alt="" />
+							<h5>지도 확대</h5>
+							<p>보고 있는 지도 화면을 한단계 확대시킬 수 있습니다.</p>
+						</div>
+						<div class="mgb30">
+							<img src="../images/sub/img.jpg" alt="" />
+							<h5>지도 축소</h5>
+							<p>보고 있는 지도 화면을 한단계 축소시킬 수 있습니다.</p>
+						</div>
+						<div class="mgb30">
+							<img src="../images/sub/img.jpg" alt="" />
+							<h5>지도 확대</h5>
+							<p>보고 있는 지도 화면을 한단계 확대시킬 수 있습니다.</p>
+						</div>
+						<div class="mgb30">
+							<img src="../images/sub/img.jpg" alt="" />
+							<h5>지도 축소</h5>
+							<p>보고 있는 지도 화면을 한단계 축소시킬 수 있습니다.</p>
+						</div>
+					</div>
+				</div>
+				<div></div>
+			</div>
+			<!-- /.container -->
+		</div>
+		<!-- /이용안내 -->
+
+		<hr />
+
+		<!-- 공지사항 -->
+		<div id="notice">
+			<!-- .twoDepthMenu -->
+			<div class="twoDepthMenu">
+				<div class="top">
+					<h3 class="tit">공지사항 (총0,000건)</h3>
+					<a href="#none" class="btnRegist"><img src="../images/board/btn_regist.gif" width="76" height="33" alt="" /></a>
+					<a href="#none" class="btnPageUpClose">Close</a>
+				</div>
+				<div class="scroll mCustomScrollbar boardList">
+					<!-- .noticeList -->
+					<ul>
+						<li><strong>영상DB 자료가 기존 50만건에서 70만건 ...</strong></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+						<li><a href="#none">공지사항이 들어 갑니다.</a></li>
+					</ul>
+					<!-- /.noticeList -->
+				</div>
+				<div class="paging">
+					<ul>
+						<li class="btnPaging btnPagingFirst"><a href="#none">처음</a></li>
+						<li class="btnPaging btnPagingPrev"><a href="#none">이전</a></li>
+						<li><strong>1</strong></li>
+						<li><a href="#none">2</a></li>
+						<li><a href="#none">3</a></li>
+						<li><a href="#none">4</a></li>
+						<li><a href="#none">5</a></li>
+						<li class="btnPaging btnPagingNext"><a href="#none">다음</a></li>
+						<li class="btnPaging btnPagingLast"><a href="#none">마지막</a></li>
+					</ul>
+				</div>
+			</div>
+			<!-- /.twoDepthMenu -->
+
+			<!-- .container -->
+			<div class="container noticeView">
+				<div class="top">
+					<div class="tit">
+						<h3>영상DB 자료가 기존 50만건에서 70만건으로 확대되었습니다.</h3>
+						<div>
+							<p class="date">2016.11.02 10:38</p>
+							<p class="view">10,000</p>
+						</div>
+					</div>
+				</div>
+				<div class="scroll mCustomScrollbar con">
+					<div class="inner">
+						국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 국토영상정보 공지사항이 들어갑니다. 
+						국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />국토영상정보 공지사항이 들어갑니다.  <br />
+					</div>
+				</div>
+				<div class="bottom">
+					<div class="file">
+						<dl>
+							<dt>첨부파일</dt>
+							<dd>자료확대목록리스트.txt (3057bytes)</dd>
+						</dl>
+						<div class="btnDown"><a href="#none"><img src="../images/board/btn_down.gif" alt="" /></a></div>
+					</div>
+					<!-- <div class="file popInfo">
+						<dl>
+							<dt>사이트 접속시 팝업창으로 확인할 수 있습니다.</dt>
+							<dd>공지 기간 : 2016년 10월 20일</dd>
+						</dl>
+						<div class="btnDown"><a href="#none"><img src="../images/board/btn_pop_view.gif" alt="" /></a></div>
+					</div> -->
+					<div class="btnBoard">
+						<a href="#none">수정</a>
+						<a href="#delete" class="gray btnLayerOpen">삭제</a>
+					</div>
+				</div>
+			</div>
+			<!-- /.container -->
+
+			<!-- .container -->
+			<div class="container noticeRegist">
+				<div class="top">
+					<div class="tit">
+						<h3>공지사항 등록</h3>
+					</div>
+				</div>
+				<div class="scroll mCustomScrollbar con">
+					<div class="inner">
+						<!-- .boardView -->
+						<div class="boardView">
+							<table>
+								<colgroup>
+									<col width="70" />
+								</colgroup>
+								<tbody>
+									<tr>
+										<th>형식</th>
+										<td>
+											<div class="btnBoardViewTab">
+												<a href="#none" class="active">게시글</a>
+												<a href="#none">팝업이미지</a>
+												<a href="#none">팝업글</a>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>제목</th>
+										<td><input type="text" style="width:100%;" /></td>
+									</tr>
+									<tr>
+										<th class="alignTop">내용</th>
+										<td><textarea name="" id="" cols="0" rows="0" style="width:100%; height:200px;"></textarea></td>
+									</tr>
+									<tr>
+										<th class="alignTop">첨부</th>
+										<td>
+											<div class="mgb5"><input type="file" /></div>
+											<p>- 첨부 파일은 최대 5MB까지 첨부하실 수 있습니다.</p>
+											<p>- 단일 파일만 등록이 가능합니다. 파일이 여러 개일 경우 압축 후 등록해주세요.</p>
+										</td>
+									</tr>
+									<tr>
+										<th>설정</th>
+										<td><span class="checkbox"><input type="checkbox" id="im" /></span> <label class="labelTxt" for="im" style="position:relative; top:2px;">중요(제목을 강조해줍니다)</label></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- /.boardView -->
+					</div>
+				</div>
+				<div class="bottom">
+					<div class="btnBoard">
+						<a href="#none">등록</a>
+						<a href="#none" class="gray btnNoticeRegistClose">취소</a>
+					</div>
+				</div>
+			</div>
+			<!-- /.container -->
+
+			<!-- .container -->
+			<div class="container noticeRegist">
+				<div class="top">
+					<div class="tit">
+						<h3>공지사항 등록</h3>
+					</div>
+				</div>
+				<div class="scroll mCustomScrollbar con">
+					<div class="inner">
+						<!-- .boardView -->
+						<div class="boardView">
+							<table>
+								<colgroup>
+									<col width="70" />
+								</colgroup>
+								<tbody>
+									<tr>
+										<th>형식</th>
+										<td>
+											<div class="btnBoardViewTab">
+												<a href="#none">게시글</a>
+												<a href="#none" class="active">팝업이미지</a>
+												<a href="#none">팝업글</a>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>제목</th>
+										<td><input type="text" style="width:100%;" /></td>
+									</tr>
+									<tr>
+										<th class="alignTop">첨부</th>
+										<td>
+											<div class="mgb5"><input type="file" /></div>
+											<p>- 첨부 파일은 최대 5MB까지 첨부하실 수 있습니다.</p>
+											<p>- 단일 파일만 등록이 가능합니다. 파일이 여러 개일 경우 압축 후 등록해주세요.</p>
+										</td>
+									</tr>
+									<tr>
+										<th class="alignTop">설정</th>
+										<td>
+											<div class="mgb5"><span class="middle">공지기간 시작일</span> <input type="text" class="date" /> &nbsp;&nbsp;&nbsp;&nbsp; <span class="middle">공지기간 종료일</span> <input type="text" class="date" /></div>
+											<p>- 게시물 등록일자와 상관없이 공지사항 팝업은 설정된 시작일부터 나타납니다.</p>
+											<p>- 종료일을 설정하시면 선택한 날짜 이후 자동으로 게시가 중단됩니다.</p>
+											<p>- 시작 및 종료일을 설정하지 않을 경우 등록 순간부터 게시물이 나타납니다.</p>
+											<div class="mgt10">
+												<strong class="middle" style="color:#133f4a;">팝업위치</strong>
+												<span class="middle">TOP</span> <input type="text" style="width:70px; text-align:right;" /> <span class="middle">PX</span> &nbsp;&nbsp;&nbsp;&nbsp;
+												<span class="middle">LEFT</span> <input type="text" style="width:70px; text-align:right;" /> <span class="middle">PX</span>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- /.boardView -->
+					</div>
+				</div>
+				<div class="bottom">
+					<div class="btnBoard">
+						<a href="#none" class="white">미리보기</a>
+						<a href="#none">등록</a>
+						<a href="#none" class="gray btnNoticeRegistClose">취소</a>
+					</div>
+				</div>
+			</div>
+			<!-- /.container -->
+
+			<!-- .container -->
+			<div class="container noticeRegist">
+				<div class="top">
+					<div class="tit">
+						<h3>공지사항 등록</h3>
+					</div>
+				</div>
+				<div class="scroll mCustomScrollbar con">
+					<div class="inner">
+						<!-- .boardView -->
+						<div class="boardView">
+							<table>
+								<colgroup>
+									<col width="70" />
+								</colgroup>
+								<tbody>
+									<tr>
+										<th>형식</th>
+										<td>
+											<div class="btnBoardViewTab">
+												<a href="#none">게시글</a>
+												<a href="#none">팝업이미지</a>
+												<a href="#none" class="active">팝업글</a>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>제목</th>
+										<td><input type="text" style="width:100%;" /></td>
+									</tr>
+									<tr>
+										<th class="alignTop">내용</th>
+										<td><textarea name="" id="" cols="0" rows="0" style="width:100%; height:200px;"></textarea></td>
+									</tr>
+									<tr>
+										<th class="alignTop">설정</th>
+										<td>
+											<div class="mgb15">
+												<strong class="middle" style="color:#133f4a;">배경이미지 선택</strong>
+											</div>
+											<ul class="bgSelect">
+												<li>
+													<img src="../images/board/img_bg_select.jpg" width="118" height="118" alt="" />
+													<span class="span txt">일반형1</span>
+												</li>
+												<li>
+													<img src="../images/board/img_bg_select.jpg" width="118" height="118" alt="" />
+													<span class="span txt">일반형2</span>
+												</li>
+												<li>
+													<img src="../images/board/img_bg_select.jpg" width="118" height="118" alt="" />
+													<span class="span txt">안내형</span>
+												</li>
+												<li>
+													<img src="../images/board/img_bg_select.jpg" width="118" height="118" alt="" />
+													<span class="span txt">긴급형</span>
+												</li>
+											</ul>
+											<script type="text/javascript">
+												$(function(){
+													$('.bgSelect li').click(function(){
+														$(this).addClass('active').siblings().removeClass('active');
+													});
+												});
+											</script>
+											<div class="mgb5"><span class="middle">공지기간 시작일</span> <input type="text" class="date" /> &nbsp;&nbsp;&nbsp;&nbsp; <span class="middle">공지기간 종료일</span> <input type="text" class="date" /></div>
+											<p>- 게시물 등록일자와 상관없이 공지사항 팝업은 설정된 시작일부터 나타납니다.</p>
+											<p>- 종료일을 설정하시면 선택한 날짜 이후 자동으로 게시가 중단됩니다.</p>
+											<p>- 시작 및 종료일을 설정하지 않을 경우 등록 순간부터 게시물이 나타납니다.</p>
+											<div class="mgt10">
+												<strong class="middle" style="color:#133f4a;">팝업위치</strong>
+												<span class="middle">TOP</span> <input type="text" style="width:70px; text-align:right;" /> <span class="middle">PX</span> &nbsp;&nbsp;&nbsp;&nbsp;
+												<span class="middle">LEFT</span> <input type="text" style="width:70px; text-align:right;" /> <span class="middle">PX</span>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- /.boardView -->
+					</div>
+				</div>
+				<div class="bottom">
+					<div class="btnBoard">
+						<a href="#none" class="white">미리보기</a>
+						<a href="#none">등록</a>
+						<a href="#none" class="gray btnNoticeRegistClose">취소</a>
+					</div>
+				</div>
+			</div>
+			<!-- /.container -->
+		</div>
+		<!-- /공지사항 -->
+	</div>
+	<!-- /#pageUp -->
+  </div>
+  <!-- /#wrap -->
+
+  <hr />
+
+  <!-- 초기에 마스크 보일시에는 class="maskShow" 주시면 됩니다. -->
+  <div id="mask"></div>
+  <!-- 정보 수정 -->
+  <div id="myInfoModify" class="layer" style="display:none">
+	<div class="tit">
+		<h3>정보 수정</h3>
+		<a href="#none" class="btnLayerClose"><img src="../images/popup/btn_layer_close.png" alt="" /></a>
+	</div>
+	<div class="con">
+		<!-- .boardStyle_1 -->
+		<div class="boardStyle_1">
+			<table>
+				<colgroup>
+					<col width="115px" />
+					<col width="*" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<th>이름</th>
+						<td>홍길동</td>
+					</tr>
+					<tr>
+						<th>아이디</th>
+						<td>xxxxxxxx0000</td>
+					</tr>
+					<tr>
+						<th class="essential">비밀번호 입력 *</th>
+						<td><input type="password" style="width:100%" /></td>
+					</tr>
+					<tr>
+						<th class="essential">비밀번호 확인 *</th>
+						<td><input type="password" style="width:100%" /></td>
+					</tr>
+					<tr>
+						<th class="essential">기관 *</th>
+						<td>국토교통부</td>
+					</tr>
+					<tr>
+						<th class="essential">부서명 *</th>
+						<td>운영지원과</td>
+					</tr>
+					<tr>
+						<th class="essential">직위 *</th>
+						<td>사무관</td>
+					</tr>
+					<tr>
+						<th class="essential">연락처 *</th>
+						<td>010-0000-0000</td>
+					</tr>
+					<tr>
+						<th>이메일</th>
+						<td>
+							xxxxxxxx0000@gmail.com
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!-- /.boardStyle_1 -->
+		<p class="announcement">
+			가입시 입력하신 주요 항목은 변경하실 수 없습니다.
+			<span class="block">문제 발생시 아래 연락처로 문의 바랍니다.</span>
+			<span class="block">XXXX과 XXX 02-456-7890</span>
+		</p>
+		<div class="btnArea">
+			<a href="#none" class="active">수정</a>
+			<a href="#none" class="btnLayerClose">취소</a>
+		</div>
+	</div>
+  </div>
+  <!-- /정보 수정 -->
+
+  <!-- 시스템 종료 -->
+  <div id="sistemClose" class="layer" style="display:none">
+	<div class="tit">
+		<h3>시스템 종료</h3>
+		<a href="#none" class="btnLayerClose"><img src="../images/popup/btn_layer_close.png" alt="" /></a>
+	</div>
+	<div class="con">
+		<p class="txt">
+			정상적으로 로그아웃 되었습니다.
+			<span class="block">이용해 주셔서 감사합니다.</span>
+		</p>
+		<p class="count"><span>5</span>초 뒤 종료</p>
+		<div class="btnArea">
+			<a href="../index.html" class="active">확인</a>
+		</div>
+	</div>
+  </div>
+  <!-- /시스템 종료 -->
+  <script type="text/javascript">
+	/* 로그아웃 타이머 */
+	var myVar;
+	var cont = 6;
+	$(function(){
+		$('.btnLogout').click(function(){
+				myVar = setInterval("myTimer()",1000);
+		});
+	});
+	function myTimer(){
+		if(cont > 0){ 
+			cont--;
+			$(".count span").html(cont);
+		}else{
+			clearInterval(myVar);
+			location.href="../index.html";
+		}
+	}
+  </script>
+
+  <!-- 전체 신청 -->
+  <div id="totalApplicationAlert" class="layer" style="display:none">
+	<div class="tit">
+		<h3>전체 신청</h3>
+		<a href="#none" class="btnLayerClose"><img src="../images/popup/btn_layer_close.png" alt="" /></a>
+	</div>
+	<div class="con">
+		<p class="txt">
+			현재 검색된 165건의 자료를 신청하시겠습니까?
+		</p>
+		<div class="btnArea">
+			<a href="#totalApplication" class="active btnLayerOpen btnLayerClose">신청서 작성</a>
+			<a href="#none" class="btnLayerClose">취소</a>
+		</div>
+	</div>
+  </div>
+  <!-- /전체 신청 -->
+
+  <!-- 전체 신청 -->
+  <div id="totalApplication" class="layer" style="display:none">
+	<div class="tit">
+		<h3>신청서 작성</h3>
+		<a href="#none" class="btnLayerClose"><img src="../images/popup/btn_layer_close.png" alt="" /></a>
+	</div>
+	<div class="con">
+		<div class="totalApplicationTit">
+			<h4>기관명 <span>부서명</span></h4>
+			<!-- <p>서울특별시 XX구 XXX길 342 </p> -->
+		</div>
+
+		<!-- .boardStyle_1 -->
+		<div class="boardStyle_1 mgb15">
+			<table>
+				<colgroup>
+					<!-- <col width="115px" />
+					<col width="*" /> -->
+				</colgroup>
+				<thead>
+					<tr>
+						<th></th>
+						<th>직위(직급)</th>
+						<th>성명(생년월일)</th>
+						<th>연락처</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th>관리책임부서장</th>
+						<td><input type="text" style="width:150px;" /></td>
+						<td><input type="text" style="width:150px;" /></td>
+						<td><input type="text" style="width:150px;" /></td>
+					</tr>
+					<tr>
+						<th>관리담당자</th>
+						<td><input type="text" style="width:150px;" /></td>
+						<td><input type="text" style="width:150px;" /></td>
+						<td><input type="text" style="width:150px;" /></td>
+					</tr>
+					<tr>
+						<th>사용목적</th>
+						<td colspan="3"><input type="text" style="width:480px;" /></td>
+					</tr>
+					<tr>
+						<th>신청지역(주소)</th>
+						<td colspan="3">서울시 용산구 이태원 2동 315-1 102호</td>
+					</tr>
+					<tr>
+						<th>사진번호(코스 및 수량)</th>
+						<td colspan="3">사진번호(코스 및 수량)</td>
+					</tr>
+					<tr>
+						<th>보안 및 자료관리 계획</th>
+						<td colspan="3">신규 포맷에 명시된 내용으로 사용</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!-- /.boardStyle_1 -->
+
+		<!-- .boardStyle_1 -->
+		<div class="boardStyle_1 mgb25">
+			<table>
+				<colgroup>
+					<!-- <col width="115px" />
+					<col width="*" /> -->
+				</colgroup>
+				<thead>
+					<tr>
+						<th></th>
+						<th>용역기관명</th>
+						<th>관리책임자 (연락처)</th>
+						<th>관리담당자 (연락처)</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th>외부용역인 경우 자료관리</th>
+						<td><input type="text" style="width:150px;" /></td>
+						<td><input type="text" style="width:150px;" /></td>
+						<td><input type="text" style="width:150px;" /></td>
+					</tr>
+					
+				</tbody>
+			</table>
+		</div>
+		<!-- /.boardStyle_1 -->
+		<p><span class="checkbox"><input type="checkbox" id="ch_1" /></span> <label for="ch_1" class="labelTxt">신청 정보에 이상이 없음을 확인하며 2016년 10월 14일부로 신청서를 제출합니다.</label></p>
+		<div class="btnArea">
+			<a href="#none" class="active">신청</a>
+			<a href="#none" class="btnLayerClose">취소</a>
+		</div>
+	</div>
+  </div>
+  <!-- /전체 신청 -->
+
+  <!-- 다운로드 -->
+  <div id="down" class="layer" style="display:none">
+	<div class="tit">
+		<h3>다운로드</h3>
+		<a href="#none" class="btnLayerClose"><img src="../images/popup/btn_layer_close.png" alt="" /></a>
+	</div>
+	<div class="con">
+		다운로드 프로그램이 들어 갑니다. <br /><br />
+		<div>
+			<img src="../images/popup/img_down.gif" width="376" height="86" alt="" />
+		</div>
+		<div class="btnArea">
+			<a href="#none" class="active">전송중지</a>
+			<a href="#none" class="btnLayerClose">취소</a>
+		</div>
+	</div>
+  </div>
+  <!-- /다운로드 -->
+
+  <!-- 반려 사유 확인 -->
+  <div id="returnReason" class="layer" style="display:none">
+	<div class="tit">
+		<h3>반려</h3>
+		<a href="#none" class="btnLayerClose"><img src="../images/popup/btn_layer_close.png" alt="" /></a>
+	</div>
+	<div class="con">
+		<p class="titTxt">승인 심사결과, 승인 처리가 보류되었습니다.</p>
+		<p class="reason">불분명한 정보 입력으로 인한 승인 불가</p>
+		<p class="txt">
+			<span class="block">문의사항은 아래 연락처로 문의 바랍니다.</span>
+			<span class="block">XXXX과 XXX 02-456-7890</span>
+		</p>
+		<div class="btnArea">
+			<a href="#none" class="active">확인</a>
+			<a href="#none" class="btnLayerClose">취소</a>
+		</div>
+	</div>
+  </div>
+  <!-- /반려 사유 확인 -->
+
+  <!-- 알림 -->
+  <div class="layer alertOpen" style="display:none">
+	<div class="tit">
+		<h3>알림</h3>
+		<a href="#none" class="btnLayerClose"><img src="../images/popup/btn_layer_close.png" alt="" /></a>
+	</div>
+	<div class="con">
+		<p class="txt">
+			다른 메뉴로 이동시 신청하지 않은 목록이 삭제됩니다.
+			<span class="block">이동하시겠습니까?</span>
+		</p>
+		<div class="btnArea">
+			<a href="#none" class="active">확인</a>
+			<a href="#none" class="btnLayerClose">취소</a>
+		</div>
+	</div>
+  </div>
+  <!-- /알림 -->
+
+  <!-- 삭제 -->
+  <div id="delete" class="layer" style="display:none">
+	<div class="tit">
+		<h3>삭제</h3>
+		<a href="#none" class="btnLayerClose"><img src="../images/popup/btn_layer_close.png" alt="" /></a>
+	</div>
+	<div class="con">
+		<p class="txt">
+			공지사항을 삭제하시겠습니까?
+		</p>
+		<div class="btnArea">
+			<a href="#totalApplication" class="active btnLayerClose">삭제</a>
+			<a href="#none" class="btnLayerClose">취소</a>
+		</div>
+	</div>
+  </div>
+  <!-- /삭제 -->
+
+  <!-- 선택 파일 제목 -->
+  <div id="" class="layer" style="display:block; width:700px;">
+	<div class="tit">
+		<h3>선택 파일 제목</h3>
+		<a href="#none" class="btnLayerClose"><img src="../images/popup/btn_layer_close.png" alt="" /></a>
+	</div>
+	<div class="mCustomScrollbar" style="height:500px; background:#fff;">
+		<!-- .tableStyle -->
+		<div class="tableStyle" style="padding:20px;">
+			<table>
+				<colgroup>
+					<col width="20%" />
+					<col width="30%" />
+					<col width="20%" />
+					<col width="30%" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<th colspan="4" class="tit">메타데이터</th>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td>내용이 들어갑니다.</td>
+						<th>제목</th>
+						<td>내용이 들어갑니다.</td>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td>내용이 들어갑니다.</td>
+						<th>제목</th>
+						<td>내용이 들어갑니다.</td>
+					</tr>
+					<tr>
+						<td colspan="4" class="empty"></td>
+					</tr>
+					<tr>
+						<th colspan="4" class="tit">메타데이터 연락정보</th>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td>내용이 들어갑니다.</td>
+						<th>제목</th>
+						<td>내용이 들어갑니다.</td>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td>내용이 들어갑니다.</td>
+						<th>제목</th>
+						<td>내용이 들어갑니다.</td>
+					</tr>
+					<tr>
+						<td colspan="4" class="empty"></td>
+					</tr>
+					<tr>
+						<th colspan="4" class="tit">메타데이터 연락정보</th>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td colspan="3">내용이 들어갑니다.</td>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td colspan="3">내용이 들어갑니다.</td>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td colspan="3">내용이 들어갑니다.</td>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td colspan="3">내용이 들어갑니다.</td>
+					</tr>
+					<tr>
+						<td colspan="4" class="empty"></td>
+					</tr>
+					<tr>
+						<th colspan="4" class="tit">메타데이터 연락정보</th>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td colspan="3">내용이 들어갑니다.</td>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td colspan="3">내용이 들어갑니다.</td>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td colspan="3">내용이 들어갑니다.</td>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td colspan="3">내용이 들어갑니다.</td>
+					</tr>
+					<tr>
+						<td colspan="4" class="empty"></td>
+					</tr>
+					<tr>
+						<th colspan="4" class="tit">메타데이터</th>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td>내용이 들어갑니다.</td>
+						<th>제목</th>
+						<td>내용이 들어갑니다.</td>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td colspan="3">내용이 들어갑니다.</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!-- /.tableStyle -->
+	</div>
+  </div>
+  <!-- /선택 파일 제목 -->
+
+  <!-- 상세정보 -->
+  <div id="detailInfo" class="layer" style="display:block; width:700px; display:none">
+	<div class="tit">
+		<h3>상세정보</h3>
+		<a href="#none" class="btnLayerClose"><img src="../images/popup/btn_layer_close.png" alt="" /></a>
+	</div>
+	<!-- .btnTabArea -->
+	<div class="btnTabArea">
+		<ul>
+			<li class="first"><a href="#detailInfo_1" class="active">성과 관리</a></li>
+			<li class="second"><a href="#detailInfo_2">외부표정요소 관리</a></li>
+			<li class="last"><a href="#detailInfo_3">메타데이터 관리</a></li>
+		</ul>
+	</div>
+	<div style="height:500px; background:#fff;">
+		<div class="mCustomScrollbar" id="detailInfo_1" style="height:500px; background:#fff;">
+			<!-- .tableStyle -->
+			<div class="tableStyle" style="padding:20px 20px 20px 20px;">
+				<table>
+					<colgroup>
+						<col width="22%" />
+						<col width="28%" />
+						<col width="22%" />
+						<col width="28%" />
+					</colgroup>
+					<tbody>
+						<tr>
+							<th>사업지구코드</th>
+							<td>201602041125F</td>
+							<th>코스번호</th>
+							<td>00000</td>
+						</tr>
+						<tr>
+							<th>사진번호</th>
+							<td></td>
+							<th>사업지구명</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>항공사진 수량</th>
+							<td></td>
+							<th>항공사진 현재보유 수량</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>영화필름 수량</th>
+							<td></td>
+							<th>영화필름 현재보유 수량</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>성과사진 수량</th>
+							<td></td>
+							<th>성과사진 현재보유 수량</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>성과사진 수량</th>
+							<td></td>
+							<th>성과사진 현재보유 수량</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>미디어1(DVD)</th>
+							<td></td>
+							<th>미디어2(HDD)</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>비고</th>
+							<td colspan="3"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- /.tableStyle -->
+		</div>
+		<div class="mCustomScrollbar" id="detailInfo_2" style="height:500px; background:#fff; display:none">
+			<!-- .tableStyle -->
+			<div class="tableStyle" style="padding:20px 20px 20px 20px;">
+				<table>
+					<colgroup>
+						<col width="22%" />
+						<col width="28%" />
+						<col width="22%" />
+						<col width="28%" />
+					</colgroup>
+					<tbody>
+						<tr>
+							<th>X</th>
+							<td></td>
+							<th>Y</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>Z</th>
+							<td colspan="3"></td>
+						</tr>
+						<tr>
+							<th>Omega</th>
+							<td></td>
+							<th>Phi</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>Kappa</th>
+							<td></td>
+							<th>지리좌표계</th>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- /.tableStyle -->
+		</div>
+		<div class="mCustomScrollbar" id="detailInfo_3" style="height:500px; background:#fff; display:none">
+			<!-- .tableStyle -->
+			<div class="tableStyle" style="padding:20px 20px 20px 20px;">
+				<table>
+					<colgroup>
+						<col width="22%" />
+						<col width="28%" />
+						<col width="22%" />
+						<col width="28%" />
+					</colgroup>
+					<tbody>
+						<tr>
+							<th colspan="4" class="tit">메타데이터</th>
+						</tr>
+						<tr>
+							<th>파일식별자</th>
+							<td>0000000000000000</td>
+							<th>언어</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>적용대상명</th>
+							<td colspan="3">항공사진 이미지</td>
+						</tr>
+						<tr>
+							<td colspan="4" class="empty"></td>
+						</tr>
+						<tr>
+							<th colspan="4" class="tit">메타데이터 연락정보</th>
+						</tr>
+						<tr>
+							<th>책임기관명</th>
+							<td></td>
+							<th>책임부서명</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>전화</th>
+							<td></td>
+							<th>팩스</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>주소</th>
+							<td colspan="3"></td>
+						</tr>
+						<tr>
+							<th>우편번호</th>
+							<td></td>
+							<th>작성일</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>버전</th>
+							<td colspan="3"></td>
+						</tr>
+						<tr>
+							<td colspan="4" class="empty"></td>
+						</tr>
+						<tr>
+							<th colspan="4" class="tit">메타데이터 연락정보</th>
+						</tr>
+						<tr>
+							<th>비고</th>
+							<td colspan="3"></td>
+						</tr>
+						<tr>
+							<td colspan="4" class="empty"></td>
+						</tr>
+						<tr>
+							<th colspan="4" class="tit">메타데이터 연락정보</th>
+						</tr>
+						<tr>
+							<th>비고</th>
+							<td colspan="3"></td>
+						</tr>
+						<tr>
+							<td colspan="4" class="empty"></td>
+						</tr>
+						<tr>
+							<th colspan="4" class="tit">메타데이터 연락정보</th>
+						</tr>
+						<tr>
+							<th>비고</th>
+							<td colspan="3"></td>
+						</tr>
+						<tr>
+							<td colspan="4" class="empty"></td>
+						</tr>
+						<tr>
+							<th colspan="4" class="tit">메타데이터 연락정보</th>
+						</tr>
+						<tr>
+							<th>비고</th>
+							<td colspan="3"></td>
+						</tr>
+						<tr>
+							<td colspan="4" class="empty"></td>
+						</tr>
+						<tr>
+							<th colspan="4" class="tit">메타데이터 연락정보</th>
+						</tr>
+						<tr>
+							<th>비고</th>
+							<td colspan="3"></td>
+						</tr>
+						<tr>
+							<td colspan="4" class="empty"></td>
+						</tr>
+						<tr>
+							<th colspan="4" class="tit">메타데이터 연락정보</th>
+						</tr>
+						<tr>
+							<th>비고</th>
+							<td colspan="3"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- /.tableStyle -->
+		</div>
+	</div>
+	<!-- /.btnTabArea -->
+  </div>
+  <!-- /선택 파일 제목 -->
+
+  <style type="text/css">
+.btnTabArea {background:#fff;height:40px; border-bottom:1px solid #000; padding-top:10px; padding-left:20px; background:#eee;}
+.btnTabArea ul {border-left:1px solid #000; position:relative; top:1px;}
+.btnTabArea ul:after {content:""; display:block; height:0; clear:both;}
+.btnTabArea li {float:left; width:145px;}
+.btnTabArea li.first a {}
+.btnTabArea li a {display:block; border-right:solid 1px #000; height:28px; padding-top:10px; border-bottom:1px solid #000; border-top:1px solid #000; text-align:center; background:#366674; color:#8bacb6;}
+.btnTabArea li a.active {border-bottom:1px solid #000; background:#fff; color:#2b5665; font-weight:600;}
+  </style>
+  <script type="text/javascript">
+	$(function(){
+		$('.btnTabArea li a').click(function(){
+			var href = $(this).attr('href');
+			$(href).show();
+			$(href).siblings().hide();
+			$(this).addClass('active').parent().siblings().find('a').removeClass('active');
+			return false;
+		});
+	});
+  </script>
+ </body>
+</html>

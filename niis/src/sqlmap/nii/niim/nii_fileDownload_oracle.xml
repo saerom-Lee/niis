@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_fileDownload">
+
+	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap" />
+	<typeAlias alias="EntityMap" type="org.nii.niis.fileDownlaod.service.impl.EntityMap" />
+	
+	<sql id="tnSmdMap1000Table">
+		SELECT 'SM0011' AS PDT_CD, T1.* FROM TN_SMD_MAP_1000@LK_NLIP T1
+	</sql>
+	
+	<sql id="tnSmdMap5000Table">
+		SELECT 'SM0012' AS PDT_CD , T2.* FROM TN_SMD_MAP_5000@LK_NLIP T2
+	</sql>
+	
+	<sql id="bsmListSelectColumn">
+		A.POLCY_MANU
+		, A.BSNSPLAN_NO
+		, A.BIZ_NM
+		, A.BIZ_YEAR
+		, A.BIZ_DEPT_CD
+		, (SELECT SCLF_NM FROM TN_ITR_SYS_CD@LK_NLIP WHERE LCLF_CD = 'DM' AND  (LCLF_CD || SCLF_CD) = A.BIZ_DEPT_CD) AS BIZ_DEPT_NM
+		, A.MNG_DEPT_CD
+		, (SELECT SCLF_NM FROM TN_ITR_SYS_CD@LK_NLIP WHERE LCLF_CD = 'DM' AND  (LCLF_CD || SCLF_CD) = A.MNG_DEPT_CD) AS MNG_DEPT_NM
+		, A.RGR_SUPE_NM
+		, A.SEOD_SUPE_NM
+		, A.DEL_YN
+		, A.RGR_SUPE_PHONE_NO
+		, B.SN
+		, B.CTINFO_INSTTY_CD
+		, B.CTINFO_INST_NM
+		, B.CTINFO_INST_DEPT
+		, B.CTINFO_INST_CONTACT_TELNO
+		, B.CTINFO_INST_CONTACT_NTN
+		, B.CTINFO_INST_CONTACT_ADMINISTZO
+		, B.CTINFO_INST_CONTACT_CITY
+		, B.CTINFO_INST_CONTACT_DADDR
+		, B.CTINFO_INST_CONTACT_ZIP
+		, B.CTINFO_INST_CONTACT_URL
+		, B.CTINFO_INST_CONTACT_NM
+		, B.CTINFO_INST_CONTACT_SVTI
+		, B.CTINFO_INST_CONTACT_CTMANUAL
+		, TO_CHAR(TO_DATE(B.YMDINFO_YMD), 'YYYY-MM-DD') AS YMDINFO_YMD 
+		, B.YMDINFO_YMDTY_CD
+		, B.IDNTFCINFO_LANG_LANG_CD
+		, B.IDNTFCINFO_LANG_NTN_CD
+		, B.IDNTFCINFO_LANG_ENCD
+		, B.IDNTFCINFO_REFRN_DATANM
+		, TO_CHAR(TO_DATE(B.IDNTFCINFO_REFRN_REFRNDT_YMD), 'YYYY-MM-DD') AS IDNTFCINFO_REFRN_REFRNDT_YMD
+		, B.IDNTFCINFO_REFRN_REFRNDT_CD
+		, B.IDNTFCINFO_REFRN_DATART_CD
+		, B.IDNTFCINFO_REFRN_ETC_MNFCTAREA
+		, B.IDNTFCINFO_REFRN_ETC_MNFCTTY
+		, B.IDNTFCINFO_REFRN_ETC_ANCMNT_NO
+		, B.IDNTFCINFO_REFRN_ETC_PTGYR
+		, B.IDNTFCINFO_REFRN_ETC_EXMYR
+		, B.IDNTFCINFO_REFRN_ETC_MNFYR
+		, B.IDNTFCINFO_REFRN_ONLINE_URL
+		, B.IDNTFCINFO_REFRN_ONLINE_NM
+		, B.IDNTFCINFO_REFRN_ONLINE_DC
+		, B.IDNTFCINFO_REFRN_ONLINE_FNCT_C
+		, B.IDNTFCINFO_SUMRY
+		, B.IDNTFCINFO_CTTPC_INSTTY_CD
+		, B.IDNTFCINFO_CTTPC_INSTDEPT_NM
+		, B.IDNTFCINFO_CTTPC_INSTDEPT_TELN
+		, B.IDNTFCINFO_SRTY_CD
+		, B.IDNTFCINFO_SPRESOL_ACCUM_DNMNT
+		, B.IDNTFCINFO_PRUSETM_CD
+		, B.IDNTFCINFO_SCOPE_GGRPH_WEST_LO
+		, B.IDNTFCINFO_SCOPE_GGRPH_EAST_LO
+		, B.IDNTFCINFO_SCOPE_GGRPH_SOUT_LA
+		, B.IDNTFCINFO_SCOPE_GGRPH_NRTH_LA
+		, TO_CHAR(TO_DATE(B.IDNTFCINFO_SCOPE_HR_BGNG_YMD), 'YYYY-MM-DD') AS IDNTFCINFO_SCOPE_HR_BGNG_YMD
+		, TO_CHAR(TO_DATE(B.IDNTFCINFO_SCOPE_HR_END_YMD), 'YYYY-MM-DD') AS IDNTFCINFO_SCOPE_HR_END_YMD
+		, B.RSTRCTINFO_ACSRSTRCT_CD
+		, B.RSTRCTINFO_USERSTRCT_CD
+		, B.RSTRCTINFO_OTHRSTRCT
+		, B.MNTMNG_UPDT_CYCLE_CD
+		, TO_CHAR(TO_DATE(B.MNTMNG_YMD), 'YYYY-MM-DD') AS MNTMNG_YMD
+		, B.MNTMNG_TY_CD
+		, B.MNTMNG_NOTE
+		, B.REFRNSYS_REFRNIDNT_CD
+		, B.REFRNSYS_REFRNIDNT_CDSP
+		, B.REFRNSYS_REFRNIDNT_VER
+		, B.REFRNSYS_REFRNIDNT_DC
+		, B.REFRNSYS_TY_CD
+		, B.CTINFO_COIDCD
+		, B.CTINFO_LANG_CD
+		, B.CTINFO_CHRCTR_ENCD
+		, B.CTINFO_INDATSETYN_CD
+		, B.CTINFO_FCCAT_REFRN_SJ
+		, TO_CHAR(TO_DATE(B.CTINFO_FCCAT_REFRN_YMD), 'YYYY-MM-DD') AS CTINFO_FCCAT_REFRN_YMD
+		, B.CTINFO_FCCAT_REFRN_YMDTY_CD
+		, B.CTINFO_FCCAT_REPST_CD
+		, B.CTINFO_FCCAT_ONLINE_URL
+		, B.CTINFO_FCCAT_ONLINE_NM
+		, B.CTINFO_FCCAT_ONLINE_DC
+		, B.CTINFO_FCCAT_ONLINE_FNCT_CD
+		, B.WDTBINFO_WDTB_INSTTY_CD
+		, B.WDTBINFO_WDTB_INSTDEPT_NM
+		, B.WDTBINFO_WDTB_INSTDEPT_TELNO
+		, B.WDTBINFO_FRMAT_REFRN_NM
+		, B.WDTBINFO_FRMAT_REFRN_QOTATDAT
+		, B.SRINFO_PHASELV_CD
+		, B.SRINFO_GEOMOBJ_TY_CD
+		, B.SRINFO_GEOMOBJ_CO
+		, B.PRTY_CTLG_REFRNTL
+		, TO_CHAR(TO_DATE(B.PRTY_CTLG_REFRNDT), 'YYYY-MM-DD') AS PRTY_CTLG_REFRNDT
+		, B.PRTY_CTLG_REFRNDTTY_CD
+		, B.PRTY_CTLG_REPST_CD
+		, B.PRTY_CTLG_ONLINE_URL
+		, B.PRTY_CTLG_ONLINE_NM
+		, B.PRTY_CTLG_ONLINE_DC
+		, B.PRTY_CTLG_ONLINE_FNCT_CD
+		, DECODE(B.SUPEAPPR, 'N', '접수', 'Y', '승인', 'R', '반려', NVL(B.SUPEAPPR, '미등록')) AS SUPEAPPR
+		, B.SPLEMNT_DC
+		, B.PDT_CD
+		, NVL(
+			(SELECT SCLF_NM FROM TN_ITR_SYS_CD@LK_NLIP WHERE LCLF_CD = 'SM' AND LCLF_CD || SCLF_CD = B.PDT_CD)
+			, '미등록'
+		) AS PDT_NM
+	</sql>
+	
+	
+	<select id="fileDownloadDAO.getFileAirList" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT L.STORAGE_CDE,
+	       B.ZONE_CODE,
+	       B.PH_COURSE,
+	       B.PH_NUM,
+	       B.FILE_IDENTIFIER
+	  	FROM AIR_BASEMETA_DTS B, USR_AIR_SUPPLYITEM_APP_NIIM S, STO_AIRLOC_DTS L
+		 WHERE     B.ZONE_CODE = S.ZONE_CODE
+		       AND B.PH_COURSE = S.PH_COURSE
+		       AND B.PH_NUM = S.PH_NUM
+		       AND B.ZONE_CODE = L.ZONE_CODE
+		       AND B.PH_COURSE = L.PH_COURSE
+		       AND B.PH_NUM = L.PH_NUM
+		       AND L.STORAGE_CDE IN ('AIR001')
+	       AND S.SUP_IDN = #supIdn#
+	</select>
+	
+	<select id="fileDownloadDAO.getFileOrtList" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT L.STORAGE_CDE,
+		       B.ZONE_CODE,
+		       B.MAP5000_NUM,
+		       S.GTYP_DST,
+		       B.FILE_IDENTIFIER
+		  FROM ORT_BASEMETA_DTS B, USR_ORT_SUPPLYITEM_APP_NIIM S, STO_ORTLOC_DTS L
+		 WHERE     B.ZONE_CODE = S.ZONE_CODE
+		       AND B.MAP5000_NUM = S.MAP5000_NUM
+		       AND B.ZONE_CODE = L.ZONE_CODE
+		       AND B.MAP5000_NUM = L.MAP5000_NUM
+		       AND S.GTYP_DST =
+		              DECODE (L.STORAGE_CDE,
+		                      'ORT001', '0.08',
+		                      'ORT002', '0.12',
+		                      'ORT003', '0.25',
+		                      'ORT004', '0.51',
+		                      'ORT005', '1.00')
+		       AND S.SUP_IDN = #supIdn#
+	</select>
+	
+	<select id="fileDownloadDAO.getFileDemList" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT L.STORAGE_CDE,
+		       B.ZONE_CODE,
+		       B.MAP5000_NUM,
+		       B.FILE_IDENTIFIER
+		  FROM DEM_BASEMETA_DTS B, DEM_PRODUCT_DTS P, USR_DEM_SUPPLYITEM_APP_NIIM S, STO_DEMLOC_DTS L
+		 WHERE     B.ZONE_CODE = S.ZONE_CODE
+		       AND B.MAP5000_NUM = S.MAP5000_NUM
+		       AND B.ZONE_CODE = L.ZONE_CODE
+		       AND B.MAP5000_NUM = L.MAP5000_NUM
+		       AND B.ZONE_CODE = P.ZONE_CODE
+		       AND B.MAP5000_NUM = P.MAP5000_NUM
+		       AND P.ZONE_CODE = S.ZONE_CODE
+		       AND P.MAP5000_NUM = S.MAP5000_NUM
+		       AND P.GRID_INT = S.GRID_INT
+		       AND L.STORAGE_CDE LIKE 'DEM00%'
+		       AND S.SUP_IDN = #supIdn#
+	</select>
+	
+	<select id="fileDownloadDAO.getFileMapList" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT MAP_SER_NO, MAP_HISTORY_NO, MAP_SHT_NO
+		  FROM USR_MAP_SUPPLYITEM_APP_NIIM
+		 WHERE SUP_IDN = #supIdn#
+	</select>
+
+	
+	<select id="fileDownloadDAO.getFileAtList" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT ZONE_CODE
+		  FROM USR_AT_SUPPLYITEM_APP_NIIM
+		 WHERE SUP_IDN = #supIdn#
+	</select>
+	
+		
+	<!-- 수치지형도-표준메타데이터 pk 조회 -->
+	<select id="fileDownloadDAO.getFileMapBis" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT 		POLCY_MANU
+				,	BSNSPLAN_NO
+		        , ( SELECT CD_TYPE_NM
+		              FROM COMMON_CD_TBL@LK_MMS 
+		             WHERE CD_KIND    = '11'
+		               AND CD_TYPE    =  MAP_KIND_CD
+		               AND CD_KIND_NM = 'map_kind_cd')       AS MAP_KIND_NM
+		        , 	MAP_KIND_CD
+		        , ( SELECT CD_TYPE_NM
+		              FROM COMMON_CD_TBL@LK_MMS 
+		             WHERE CD_KIND    = '21'
+		               AND CD_TYPE    =  SCALE_CD
+		               AND CD_KIND_NM = 'map_scale')         AS SCALE_NM
+		        , 	SCALE_CD
+		        , ( SELECT CD_TYPE_NM
+					              FROM COMMON_CD_TBL@LK_MMS 
+					             WHERE CD_KIND    = '41'
+					               AND CD_TYPE    =  OPEN_DVSN_CD
+					               AND CD_KIND_NM = 'open_dvsn_cd')     AS OPEN_DVSN_NM
+		        , 	OPEN_DVSN_CD
+		        , 	MAP_SHT_NO
+		        ,	MAP_SHT_NM
+		<isEqual property="mapHistoryNo" compareValue="0">
+		  FROM 	MAP_INFO_TBL@LK_MMS
+		</isEqual>
+		<isNotEqual property="mapHistoryNo" compareValue="0">
+		  FROM 	MAP_HISTORY_TBL@LK_MMS
+		</isNotEqual> 
+		 WHERE 	MAP_SER_NO 		= #mapSerNo#
+		   AND  MAP_HISTORY_NO 	= #mapHistoryNo#
+		   AND  MAP_SHT_NO		= #mapShtNo#
+	</select>
+	
+	<!-- 수치지형도 표준메타데이터 1:1000 조회 -->
+	<select id="fileDownloadDAO.selectBsmDetail1000" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT
+		<include refid="bsmListSelectColumn"/>
+		FROM (
+			         SELECT   SUBTB.POLCY_MANU
+			                , SUBTB.BSNSPLAN_NO
+			                , SUBTB.BIZ_NM
+			                , SUBTB.BIZ_YEAR
+			                , SUBTB.BIZ_DEPT_CD
+			                , (SELECT SCLF_NM FROM TN_ITR_SYS_CD@LK_NLIP WHERE LCLF_CD = 'DM' AND  (LCLF_CD || SCLF_CD) = SUBTB.BIZ_DEPT_CD) AS BIZ_DEPT_NM
+			                , SUBTB.MNG_DEPT_CD
+			                , (SELECT SCLF_NM FROM TN_ITR_SYS_CD@LK_NLIP WHERE LCLF_CD = 'DM' AND  (LCLF_CD || SCLF_CD) = SUBTB.MNG_DEPT_CD) AS MNG_DEPT_NM
+			                , SUBTB.RGR_SUPE_NM
+			                , SUBTB.SEOD_SUPE_NM
+			                , SUBTB.DEL_YN
+			                , SUBTB.RGR_SUPE_PHONE_NO 
+			           FROM TN_PMM_EXC_INFO@LK_NLIP  SUBTB
+    		)  A
+    		
+LEFT JOIN (
+		<include refid="tnSmdMap1000Table"/>
+			) B
+			
+		   ON  A.POLCY_MANU 	= B.POLCY_MANU 
+		  AND  A.BSNSPLAN_NO 	= B.BSNSPLAN_NO
+		  
+		WHERE  B.POLCY_MANU 	= #polcyManu# 
+		  AND  B.BSNSPLAN_NO 	= #bsnsplanNo#
+			  
+	</select>
+	
+	<!-- 수치지형도 표준메타데이터 1:5000 조회 -->
+	<select id="fileDownloadDAO.selectBsmDetail5000" parameterClass="java.util.Map" resultClass="egovMap">
+				SELECT
+		<include refid="bsmListSelectColumn"/>
+		FROM (
+			         SELECT   SUBTB.POLCY_MANU
+			                , SUBTB.BSNSPLAN_NO
+			                , SUBTB.BIZ_NM
+			                , SUBTB.BIZ_YEAR
+			                , SUBTB.BIZ_DEPT_CD
+			                , (SELECT SCLF_NM FROM TN_ITR_SYS_CD@LK_NLIP WHERE LCLF_CD = 'DM' AND  (LCLF_CD || SCLF_CD) = SUBTB.BIZ_DEPT_CD) AS BIZ_DEPT_NM
+			                , SUBTB.MNG_DEPT_CD
+			                , (SELECT SCLF_NM FROM TN_ITR_SYS_CD@LK_NLIP WHERE LCLF_CD = 'DM' AND  (LCLF_CD || SCLF_CD) = SUBTB.MNG_DEPT_CD) AS MNG_DEPT_NM
+			                , SUBTB.RGR_SUPE_NM
+			                , SUBTB.SEOD_SUPE_NM
+			                , SUBTB.DEL_YN
+			                , SUBTB.RGR_SUPE_PHONE_NO 
+			           FROM TN_PMM_EXC_INFO@LK_NLIP  SUBTB
+    		)  A
+    		
+LEFT JOIN (
+		<include refid="tnSmdMap5000Table"/>
+			) B
+			
+		   ON  A.POLCY_MANU 	= B.POLCY_MANU 
+		  AND  A.BSNSPLAN_NO 	= B.BSNSPLAN_NO
+		  
+		WHERE  B.POLCY_MANU 	= #polcyManu# 
+		  AND  B.BSNSPLAN_NO 	= #bsnsplanNo#
+	</select>
+	
+	<!-- 표준메타데이타 조회 -->
+	<select id="fileDownloadDAO.selectBsmDetailMap" parameterClass="java.util.Map" resultClass="entityMap">
+		SELECT
+		<include refid="bsmListSelectColumn"/>
+		FROM (
+			         SELECT   SUBTB.POLCY_MANU
+			                , SUBTB.BSNSPLAN_NO
+			                , SUBTB.BIZ_NM
+			                , SUBTB.BIZ_YEAR
+			                , SUBTB.BIZ_DEPT_CD
+			                , (SELECT SCLF_NM FROM TN_ITR_SYS_CD@LK_NLIP WHERE LCLF_CD = 'DM' AND  (LCLF_CD || SCLF_CD) = SUBTB.BIZ_DEPT_CD) AS BIZ_DEPT_NM
+			                , SUBTB.MNG_DEPT_CD
+			                , (SELECT SCLF_NM FROM TN_ITR_SYS_CD@LK_NLIP WHERE LCLF_CD = 'DM' AND  (LCLF_CD || SCLF_CD) = SUBTB.MNG_DEPT_CD) AS MNG_DEPT_NM
+			                , SUBTB.RGR_SUPE_NM
+			                , SUBTB.SEOD_SUPE_NM
+			                , SUBTB.DEL_YN
+			                , SUBTB.RGR_SUPE_PHONE_NO 
+			           FROM TN_PMM_EXC_INFO@LK_NLIP  SUBTB
+    		)  	A
+  LEFT JOIN (
+				<include refid="tnSmdMap1000Table"/>
+	  UNION
+				<include refid="tnSmdMap5000Table"/>
+			) 	B
+		 ON 	A.POLCY_MANU = B.POLCY_MANU AND A.BSNSPLAN_NO = B.BSNSPLAN_NO
+	  WHERE 	SN = #sn#
+	    AND 	PDT_CD = #pdtCd#
+	</select>
+
+
+	<!-- 수치지형도 표준메타데이터관리 namespace 조회 -->
+	<select id="fileDownloadDAO.selectSmdNamespaceInfo" parameterClass="entityMap" resultClass="entityMap">
+		SELECT
+				  MAIN.METDATA_CD
+				, MAIN.NMSP
+				, MAIN.IEMNM
+				, NAME.SRN
+				, NAME.DCLR
+				, NAME.NMSP_LC_VALUE
+				, NAME.NMSP AS NMSP_NM
+				, NAME.SCHEMA_LC_VALUE
+		FROM
+				TN_SMD_MAIN@LK_NLIP MAIN
+   LEFT JOIN 	TN_SMD_NAMESPACE_INFO@LK_NLIP NAME
+          ON 	MAIN.METDATA_CD = NAME.METDATA_CD
+		WHERE	MAIN.METDATA_CD = #pdtCd#
+	</select>
+
+	<!-- 수치지형도 표준메타데이터관리 스키마데이터 조회 -->
+	<select id="fileDownloadDAO.selectSmdSchemaInfo" parameterClass="entityMap" resultClass="entityMap">
+		SELECT
+					  A.METDATA_CD
+					, A.NMSP
+					, A.IEMNM
+					, C.SN
+					, C.UP_SN
+					, C.SRN
+					, C.IEMNM AS IEMNM_NM
+					, C.NMSP  AS NMSP_NM
+					, C.ENGNM
+					, C.USE_YN
+					, C.ESNTL_YN
+					, C.INDCT_YN
+					, C.DEFAULT_YN
+					, C.DEFAULT_VALUE
+					, C.TRGT_TABLE
+					, C.TRGT_FIELD
+					, C.CD_YN
+					, C.CD_TABLE
+					, C.LCLF_CD
+					, C.CD_FIELD
+					, C.CDVALUE_FIELD
+					, C.VALUE_FOM
+					, C.CD_LIST
+					, C.CD_VALUE
+					, C.ATCH_VALUE
+					, C.MAPDMC_INFO_REFRNTABLE
+					, C.MAPDMC_INFO_REFRNFIELD
+		  FROM
+					TN_SMD_MAIN@LK_NLIP A
+	 LEFT JOIN 		TN_SMD_SCHEMA_INFO@LK_NLIP C 
+	 		ON 		A.METDATA_CD = C.METDATA_CD
+		 WHERE
+			   		A.METDATA_CD = #pdtCd#
+		   AND	 	USE_YN 		 = 'Y'
+		<isEqual property="nmsp" compareValue="mdb">			
+		   AND 		C.NMSP 		 = #nmsp#
+		</isEqual>
+		<isNotEmpty property="upSn">
+		   AND 		C.UP_SN 	= #upSn#
+		</isNotEmpty>
+		ORDER BY
+					C.SRN
+	</select>
+	
+	<select id="bsmDAO.selectMapSmdCdInfo" parameterClass="java.lang.String" resultClass="egovMap">
+		SELECT
+				  CD
+				, CD_NM
+				, CD_NM_ENG
+				, UPPER_CD
+				, USE_YN
+		 FROM
+				TN_SMD_CD_INFO@LK_NLIP
+		WHERE
+			    USE_YN = 'Y'
+		  AND 	CD LIKE DECODE(LENGTH(#CD#), 3, #CD# || '___', #CD#)
+	 ORDER BY   CD
+	</select>
+</sqlMap>

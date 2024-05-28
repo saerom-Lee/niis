@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>국토영상정보 보안관리시스템</title>
+  <link rel="stylesheet" type="text/css" href="./css/login.css" />
+  <script type="text/javascript" src="./js/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="./js/jquery.easing.1.3.min.js"></script>
+  <script type="text/javascript" src="./js/default.js"></script>
+  <script type="text/javascript">
+	$(function(){
+		medeaLogin();
+		$(window).resize(medeaLogin);
+	});
+	function medeaLogin(){
+		if ($(window).height() < 550) {
+			$('.loginBox').addClass('minimum');
+		} else {
+			$('.loginBox').removeClass('minimum');
+		}
+	}
+  </script>
+ </head>
+
+ <body>
+  <!-- #loginWrap -->
+  <div id="loginWrap">
+	<!-- .loginBox -->
+	<div class="loginBox">
+		<div class="inner">
+			<h1><img src="./images/login/h1_logo.png" alt="" /></h1>
+			<ul>
+				<li><input type="text" class="placeholder" id="userId" /><label for="userId">아이디</label></li>
+				<li><input type="password" class="placeholder" id="userPw" /> <label for="userPw">비밀번호를 입력해주세요.</label></li>
+				<li class="btnLogin"><a href="./html/main.html"><img src="./images/login/ic_login_btn.png" alt="" />로그인</a></li>
+			</ul>
+			<p class="btnJoin"><a href="#membership" class="btnLayerOpen">회원가입</a></p>
+			<p class="copyright">copyright(c) 2012 NGII All Rights Reserved.</p>
+		</div>
+	</div>
+	<!-- /.loginBox -->
+  </div>
+  <!-- /#loginWrap -->
+
+  <hr />
+
+  <!-- 초기에 마스크 보일시에는 class="maskShow" 주시면 됩니다. -->
+  <div id="mask" class="maskShow"></div>
+  <!-- 회원가입 -->
+  <div id="membership" class="layer" style="display:none;">
+	<div class="tit">
+		<h3>회원가입</h3>
+		<a href="#none" class="btnLayerClose"><img src="./images/popup/btn_layer_close.png" alt="" /></a>
+	</div>
+	<div class="con">
+		<!-- .boardStyle_1 -->
+		<div class="boardStyle_1">
+			<table>
+				<colgroup>
+					<col width="115px" />
+					<col width="*" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<th class="essential">이름 *</th>
+						<td><input type="text" style="width:100%" /></td>
+					</tr>
+					<tr>
+						<th class="essential">아이디 *</th>
+						<td><input type="text" style="width:185px" /> <a href="#none" class="btnStyle btnStyle_1">중복확인</a></td>
+					</tr>
+					<tr class="idcheck">
+						<th class="essential">아이디 *</th>
+						<td>
+							<input type="text" style="width:185px" /> <a href="#none" class="btnStyle btnStyle_1">중복확인</a>
+							<p>다른 아이디를 입력해 주세요.</p>
+						</td>
+					</tr>
+					<tr class="idcheckOk">
+						<th class="essential">아이디 *</th>
+						<td>
+							<input type="text" style="width:185px" /> <a href="#none" class="btnStyle btnStyle_1">중복확인</a>
+							<p>사용 하실 수 있습니다.</p>
+						</td>
+					</tr>
+					<tr>
+						<th class="essential">비밀번호 입력 *</th>
+						<td><input type="password" style="width:100%" /></td>
+					</tr>
+					<tr>
+						<th class="essential">비밀번호 확인 *</th>
+						<td><input type="password" style="width:100%" /></td>
+					</tr>
+					<tr>
+						<th class="essential">기관 *</th>
+						<td><input type="text" style="width:100%" /></td>
+					</tr>
+					<tr>
+						<th class="essential">부서명 *</th>
+						<td><input type="text" style="width:100%" /></td>
+					</tr>
+					<tr>
+						<th class="essential">직급 *</th>
+						<td><input type="text" style="width:100%" /></td>
+					</tr>
+					<tr>
+						<th class="essential">연락처 *</th>
+						<td>
+							<select class="select" style="width:85px">
+								<option>010</option>
+							</select> - <input type="text" style="width:88px" /> - <input type="text" style="width:88px" />
+						</td>
+					</tr>
+					<tr>
+						<th>이메일</th>
+						<td><input type="text" style="width:100%" /></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!-- /.boardStyle_1 -->
+		<p class="announcement">가입 후 관리자의 승인처리가 완료되면 서비스를 이용하실 수 있습니다.</p>
+		<div class="btnArea">
+			<a href="#none" class="active">회원가입</a>
+			<a href="#none" class="btnLayerClose">취소</a>
+		</div>
+	</div>
+  </div>
+  <!-- /회원가입 -->
+
+  <!-- 가입보류 -->
+  <div id="membershipPending" class="layer" style="display:block;">
+	<div class="tit">
+		<h3>가입보류</h3>
+		<a href="#none" class="btnLayerClose"><img src="./images/popup/btn_layer_close.png" alt="" /></a>
+	</div>
+	<div class="con">
+		<p class="titTxt">승인 심사결과, 가입신청이 보류되었습니다.</p>
+		<p class="reason">불분명한 정보 입력으로 인한 가입 보류</p>
+		<p class="txt">
+			<span class="block">아래 재신청버튼을 클릭하신 후 신청서를 다시 작성해 주세요.</span>
+			<span class="block">기타 문의사항은 아래 연락처로 문의 바랍니다.</span>
+			<span class="block">XXXX과XXX 02-456-7890</span>
+		</p>
+		<div class="btnArea">
+			<a href="#membership" class="active btnLayerOpen btnLayerClose">재신청</a>
+			<a href="#none" class="btnLayerClose">취소</a>
+		</div>
+	</div>
+  </div>
+  <!-- /가입보류 -->
+
+  <!-- 가입대기 -->
+  <div id="membershipWait" class="layer" style="display:block;">
+	<div class="tit">
+		<h3>가입대기</h3>
+		<a href="#none" class="btnLayerClose"><img src="./images/popup/btn_layer_close.png" alt="" /></a>
+	</div>
+	<div class="con">
+		<p class="txt">현재 가입 신청서가 전달되었으며 승인을 대기중입니다. <span class="block">승인심사는 최대3~5일이 소요됩니다.</span></p>
+		<p class="txt">승인이 거절될 경우 로그인을 진행하시면 <span class="block">거절 사유를 확인하실 수 있습니다.</span></p>
+		<p class="txt">기타 문의사항은 아래 연락처로 문의 바랍니다.<span class="block">XXXX과XXX 02-456-7890</span></p>
+		<div class="btnArea">
+			<a href="#none" class="active btnLayerClose">확인</a>
+		</div>
+	</div>
+  </div>
+  <!-- /가입대기 -->
+ </body>
+</html>

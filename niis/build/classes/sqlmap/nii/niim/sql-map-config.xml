@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<sqlMap resource="sqlmap/nii/niim/nii_paging_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_policy_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_filePath_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_apply_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_board_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_disaster_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_suchi_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_listSearch_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_main_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_manageAir_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_management_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_management_tn_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_meta_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_rest_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_scheduler_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_search_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_supply_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_user_oracle.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/nii_space_search.xml"/>
+
+	<sqlMap resource="sqlmap/nii/niim/nii_watermark.xml"/>
+	<sqlMap resource="sqlmap/nii/niim/niim_smartMap_oracle.xml"/>
+	
+	<sqlMap resource="sqlmap/nii/niim/nii_map_search_oracle.xml"/>
+	
+	<!-- 원본DB 목록 -->
+	<sqlMap resource="sqlmap/nii/niim/digitTopoMap_SQL.xml"/>
+	
+	<!-- 파일다운로드  -->
+	<sqlMap resource="sqlmap/nii/niim/nii_fileDownload_oracle.xml"/>
+</sqlMapConfig>

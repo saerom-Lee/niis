@@ -1,0 +1,56 @@
+[DEBUG] [172029] [GPKIHttpServletRequest] [http-nio-8070-exec-5] GpkiApi.init() : C:/service/webapps/niis/gpkisecureweb/WEB-INF/conf
+[DEBUG] [172029] [GPKIHttpServletRequest] [http-nio-8070-exec-5] query : null
+[DEBUG] [172029] [login_jsp] [current_thread][Thread[http-nio-8070-exec-5,5,main]] gpkisecureweb ref= com.gpki.io.GPKIJspWriter@46df3f60
+[ERR] [172029] [GPKIHttpServletResponse] ErrCode=1100,ErrMsg=[GPKI_API_Init] Load license is failed.
+[DEBUG] [172029] [GPKIHttpServletRequest] [http-nio-8070-exec-8] GpkiApi.init() : C:/service/webapps/niis/gpkisecureweb/WEB-INF/conf
+[DEBUG] [172029] [GPKIHttpServletRequest] [http-nio-8070-exec-8] query : null
+[DEBUG] [172029] [login_jsp] [current_thread][Thread[http-nio-8070-exec-8,5,main]] gpkisecureweb ref= com.gpki.io.GPKIJspWriter@d31a19d
+[ERR] [172029] [GPKIHttpServletResponse] ErrCode=1100,ErrMsg=[GPKI_API_Init] Load license is failed.
+[DEBUG] [172029] [GPKIHttpServletRequest] [http-nio-8070-exec-1] GpkiApi.init() : C:/service/webapps/niis/gpkisecureweb/WEB-INF/conf
+[DEBUG] [172029] [GPKIHttpServletRequest] [http-nio-8070-exec-1] query : null
+[DEBUG] [172029] [login_jsp] [current_thread][Thread[http-nio-8070-exec-1,5,main]] gpkisecureweb ref= com.gpki.io.GPKIJspWriter@45aef94b
+[ERR] [172029] [GPKIHttpServletResponse] ErrCode=1100,ErrMsg=[GPKI_API_Init] Load license is failed.
+[DEBUG] [172029] [GPKIHttpServletRequest] [http-nio-8070-exec-4] GpkiApi.init() : C:/service/webapps/niis/gpkisecureweb/WEB-INF/conf
+[DEBUG] [172029] [GPKIHttpServletRequest] [http-nio-8070-exec-4] query : null
+[DEBUG] [172029] [login_jsp] [current_thread][Thread[http-nio-8070-exec-4,5,main]] gpkisecureweb ref= com.gpki.io.GPKIJspWriter@1304d4c7
+[ERR] [172029] [GPKIHttpServletResponse] ErrCode=1100,ErrMsg=[GPKI_API_Init] Load license is failed.
+[DEBUG] [172029] [GPKIHttpServletRequest] [http-nio-8070-exec-7] GpkiApi.init() : C:/service/webapps/niis/gpkisecureweb/WEB-INF/conf
+[DEBUG] [172029] [GPKIHttpServletRequest] [http-nio-8070-exec-7] query : null
+[DEBUG] [172029] [login_jsp] [current_thread][Thread[http-nio-8070-exec-7,5,main]] gpkisecureweb ref= com.gpki.io.GPKIJspWriter@4f146908
+[ERR] [172029] [GPKIHttpServletResponse] ErrCode=1100,ErrMsg=[GPKI_API_Init] Load license is failed.
+[DEBUG] [172029] [GPKIHttpServletRequest] [http-nio-8070-exec-10] GpkiApi.init() : C:/service/webapps/niis/gpkisecureweb/WEB-INF/conf
+[DEBUG] [172029] [GPKIHttpServletRequest] [http-nio-8070-exec-10] query : null
+[DEBUG] [172029] [login_jsp] [current_thread][Thread[http-nio-8070-exec-10,5,main]] gpkisecureweb ref= com.gpki.io.GPKIJspWriter@339b4868
+[ERR] [172029] [GPKIHttpServletResponse] ErrCode=1100,ErrMsg=[GPKI_API_Init] Load license is failed.
+[DEBUG] [172029] [GPKIHttpServletRequest] [http-nio-8070-exec-3] GpkiApi.init() : C:/service/webapps/niis/gpkisecureweb/WEB-INF/conf
+[DEBUG] [172029] [GPKIHttpServletRequest] [http-nio-8070-exec-3] query : null
+[DEBUG] [172029] [login_jsp] [current_thread][Thread[http-nio-8070-exec-3,5,main]] gpkisecureweb ref= com.gpki.io.GPKIJspWriter@4b4c3c6d
+[ERR] [172029] [GPKIHttpServletResponse] ErrCode=1100,ErrMsg=[GPKI_API_Init] Load license is failed.
+[DEBUG] [180532] [GPKIHttpServletRequest] [http-nio-8070-exec-6] GpkiApi.init() : C:/service/webapps/niis/gpkisecureweb/WEB-INF/conf
+[DEBUG] [180532] [GPKIHttpServletRequest] [http-nio-8070-exec-6] query : null
+[DEBUG] [180532] [login_jsp] [current_thread][Thread[http-nio-8070-exec-6,5,main]] gpkisecureweb ref= com.gpki.io.GPKIJspWriter@3e021776
+[ERR] [180532] [GPKIHttpServletResponse] ErrCode=1100,ErrMsg=[GPKI_API_Init] Load license is failed.
+[DEBUG] [180533] [GPKIHttpServletRequest] [http-nio-8070-exec-9] GpkiApi.init() : C:/service/webapps/niis/gpkisecureweb/WEB-INF/conf
+[DEBUG] [180533] [GPKIHttpServletRequest] [http-nio-8070-exec-9] query : null
+[DEBUG] [180533] [login_jsp] [current_thread][Thread[http-nio-8070-exec-9,5,main]] gpkisecureweb ref= com.gpki.io.GPKIJspWriter@7b08cc49
+[ERR] [180533] [GPKIHttpServletResponse] ErrCode=1100,ErrMsg=[GPKI_API_Init] Load license is failed.
+[DEBUG] [180533] [GPKIHttpServletRequest] [http-nio-8070-exec-2] GpkiApi.init() : C:/service/webapps/niis/gpkisecureweb/WEB-INF/conf
+[DEBUG] [180533] [GPKIHttpServletRequest] [http-nio-8070-exec-2] query : null
+[DEBUG] [180533] [login_jsp] [current_thread][Thread[http-nio-8070-exec-2,5,main]] gpkisecureweb ref= com.gpki.io.GPKIJspWriter@32a3037
+[ERR] [180533] [GPKIHttpServletResponse] ErrCode=1100,ErrMsg=[GPKI_API_Init] Load license is failed.
+[DEBUG] [180533] [GPKIHttpServletRequest] [http-nio-8070-exec-5] GpkiApi.init() : C:/service/webapps/niis/gpkisecureweb/WEB-INF/conf
+[DEBUG] [180533] [GPKIHttpServletRequest] [http-nio-8070-exec-5] query : null
+[DEBUG] [180533] [login_jsp] [current_thread][Thread[http-nio-8070-exec-5,5,main]] gpkisecureweb ref= com.gpki.io.GPKIJspWriter@7adaeb60
+[ERR] [180533] [GPKIHttpServletResponse] ErrCode=1100,ErrMsg=[GPKI_API_Init] Load license is failed.
+[DEBUG] [180533] [GPKIHttpServletRequest] [http-nio-8070-exec-8] GpkiApi.init() : C:/service/webapps/niis/gpkisecureweb/WEB-INF/conf
+[DEBUG] [180533] [GPKIHttpServletRequest] [http-nio-8070-exec-8] query : null
+[DEBUG] [180533] [login_jsp] [current_thread][Thread[http-nio-8070-exec-8,5,main]] gpkisecureweb ref= com.gpki.io.GPKIJspWriter@3f65e4b
+[ERR] [180533] [GPKIHttpServletResponse] ErrCode=1100,ErrMsg=[GPKI_API_Init] Load license is failed.
+[DEBUG] [180533] [GPKIHttpServletRequest] [http-nio-8070-exec-1] GpkiApi.init() : C:/service/webapps/niis/gpkisecureweb/WEB-INF/conf
+[DEBUG] [180533] [GPKIHttpServletRequest] [http-nio-8070-exec-1] query : null
+[DEBUG] [180533] [login_jsp] [current_thread][Thread[http-nio-8070-exec-1,5,main]] gpkisecureweb ref= com.gpki.io.GPKIJspWriter@376875b2
+[ERR] [180533] [GPKIHttpServletResponse] ErrCode=1100,ErrMsg=[GPKI_API_Init] Load license is failed.
+[DEBUG] [180533] [GPKIHttpServletRequest] [http-nio-8070-exec-4] GpkiApi.init() : C:/service/webapps/niis/gpkisecureweb/WEB-INF/conf
+[DEBUG] [180533] [GPKIHttpServletRequest] [http-nio-8070-exec-4] query : null
+[DEBUG] [180533] [login_jsp] [current_thread][Thread[http-nio-8070-exec-4,5,main]] gpkisecureweb ref= com.gpki.io.GPKIJspWriter@5b8cdf59
+[ERR] [180533] [GPKIHttpServletResponse] ErrCode=1100,ErrMsg=[GPKI_API_Init] Load license is failed.

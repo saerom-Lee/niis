@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<PolicySet xmlns="urn:oasis:names:tc:xacml:2.0:policy:schema:os"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:oasis:names:tc:xacml:2.0:policy:schema:os 
+      access_control-xacml-2.0-policy-schema-os.xsd"
+	PolicySetId="urn:xacml:2.0:ngis:policyset:01"
+	PolicyCombiningAlgId="urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:deny-overrides">
+	<Description>
+		Policyset to evaluate trade-limit and credit-ext
+		restrictions
+	</Description>
+	<Target />
+	<PolicyIdReference>urn:xacml:2.0:ngis:policyid:time</PolicyIdReference>
+	
+	<PolicySet 
+		PolicySetId="urn:xacml:2.0:ngis:policyset:02"
+		PolicyCombiningAlgId="urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:permit-overrides">
+	    <Description>
+	    </Description>
+	    <Target/>
+		<PolicyIdReference>urn:xacml:2.0:ngis:policyid:01</PolicyIdReference>
+		<PolicyIdReference>urn:xacml:2.0:ngis:policyid:02</PolicyIdReference>
+	</PolicySet>
+</PolicySet>

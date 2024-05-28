@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_watermark">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	
+
+	
+	<select id="watermarkDAO.selectApproval" resultClass="egovMap">
+		
+		SELECT SUP_IDN, APPROVAL_CDE
+		  FROM USR_IMG_SUPPLY_APP_NIIM	
+		 WHERE APPROVAL_CDE = '14' 
+		 OR APPROVAL_CDE = '15'
+		 OR APPROVAL_CDE = '16'
+		 OR APPROVAL_CDE = '17'
+		 
+	</select>
+	
+	
+	<insert id="watermarkDAO.insertMarkIndex" parameterClass="java.util.Map">
+		INSERT INTO INDEX_DETECTING_NIIM
+		VALUES (#markIndex#, SYSDATE, #fileNam#, #fileFormat#)
+	</insert>
+	
+	
+</sqlMap>

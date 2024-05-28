@@ -1,0 +1,4618 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_management">
+
+	<typeAlias alias="egovMap"
+		type="egovframework.rte.psl.dataaccess.util.EgovMap" />
+	<typeAlias alias="ManagementServiceVO"
+		type="org.nii.niis.niim.service.ManagementServiceVO" />
+
+
+	<!-- 통합관리(사업지구 검색) -->
+	<select id="managementDAO.getZoneType" resultClass="egovMap">
+		SELECT DISTINCT B.CDE_NAM PROJECTTYPE_CDE
+		FROM AIR_ZONE_DTS A, CMT_DETAIL_CODE_NIIM B
+		WHERE A.PROJECTTYPE_CDE = B.CDE_CDE
+	</select>
+
+
+	<select id="managementDAO.getZoneListCnt" parameterClass="ManagementServiceVO" resultClass="java.lang.Integer">
+
+		SELECT /* managementDAO.getZoneListCnt */
+			COUNT(*) ROWCOUNT
+		FROM AIR_ZONE_DTS T
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneType" prepend="AND">
+					<![CDATA[  T.PROJECTTYPE_CDE = (SELECT A.CDE_CDE
+                                  FROM CMT_DETAIL_CODE_NIIM A
+                                 WHERE A.CDE_NAM = #zoneType#
+                                   AND A.FLE_IDN = 'PROJECTTYPE_CDE') ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+                  <![CDATA[ T.ZONE_YY >= #sYear# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+                  <![CDATA[ T.ZONE_YY <= #eYear#]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<!-- 통합관리(사업지구 검색) -->
+	<select id="managementDAO.getZoneList" parameterClass="ManagementServiceVO"
+		resultClass="egovMap">
+		
+		<include refid="Paging_head"/>
+		SELECT T.ZONE_CODE,
+		T.ZONE_NAM,
+		T.PRJ_NAM,
+		T.ZONE_YY,
+		T.SCALE,
+		T.GSD_VAL,
+		(SELECT A.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'PROJECTTYPE_CDE'
+		AND A.CDE_CDE = T.PROJECTTYPE_CDE) PROJECT_CDE,
+		(SELECT A.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'CAMERA_CDE'
+		AND A.CDE_CDE = T.CAMERA_CDE) CAMERA_CDE,
+		(SELECT A.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'IMAGE_CDE'
+		AND A.CDE_CDE = T.IMAGE_CDE) IMAGE_CDE,
+		T.DEM_GRID,
+		T.REMARK,
+		T.PRJ_INFO_MGNO
+		FROM AIR_ZONE_DTS T
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneType" prepend="AND">
+					<![CDATA[  T.PROJECTTYPE_CDE = (SELECT A.CDE_CDE
+                                  FROM CMT_DETAIL_CODE_NIIM A
+                                 WHERE A.CDE_NAM = #zoneType#
+                                   AND A.FLE_IDN = 'PROJECTTYPE_CDE') ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+                  <![CDATA[ T.ZONE_YY >= #sYear# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+                  <![CDATA[ T.ZONE_YY <= #eYear#]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY T.ZONE_YY DESC,
+		T.ZONE_NAM
+		<include refid="Paging_tail"/>
+		
+	</select>
+
+	<!-- 통합관리(사업지구 상세 검색) -->
+	<select id="managementDAO.getsubResultZoneList" parameterClass="String"
+		resultClass="egovMap">
+		SELECT T.ZONE_CODE,
+		T.ZONE_NAM,
+		T.PRJ_NAM,
+		T.ZONE_YY,
+		T.SCALE,
+		T.GSD_VAL,
+		(SELECT A.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'PROJECTTYPE_CDE'
+		AND A.CDE_CDE = T.PROJECTTYPE_CDE) PROJECT_CDE,
+		(SELECT A.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'CAMERA_CDE'
+		AND A.CDE_CDE = T.CAMERA_CDE) CAMERA_CDE,
+		(SELECT A.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'IMAGE_CDE'
+		AND A.CDE_CDE = T.IMAGE_CDE) IMAGE_CDE,
+		T.DEM_GRID,
+		T.REMARK,
+		T.PRJ_INFO_MGNO
+		FROM AIR_ZONE_DTS T
+		WHERE ZONE_CODE = #zoneCode#
+	</select>
+
+	<!-- 통합검색(항공사진 년도 검색) -->
+	<select id="managementDAO.selectYearListAir" resultClass="egovMap">
+    SELECT DISTINCT (T.ZONE_YY) ZONE_YY
+      FROM AIR_ZONE_DTS T, AIR_PRODUCT_DTS C
+     WHERE T.ZONE_CODE = C.ZONE_CODE
+       AND T.IMAGE_CDE NOT IN ( 'PDT009', 'PDT011' )
+     ORDER BY ZONE_YY DESC
+	</select>
+	
+	<!-- 통합검색(항공사진 사업지구명 검색) -->
+	<select id="managementDAO.selectZoneNam" parameterClass="java.util.Map"
+		resultClass="egovMap">
+	SELECT ZONE_CODE FROM AIR_ZONE_DTS
+	</select>
+
+	<!-- 통합검색(항공사진 사업지구명 검색) -->
+	<select id="managementDAO.selectZoneNamAir" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT DISTINCT A.ZONE_NAM, A.ZONE_CODE, A.ZONE_YY
+		FROM AIR_ZONE_DTS A, AIR_PRODUCT_DTS C
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.ZONE_CODE = C.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.IMAGE_CDE NOT IN ( 'PDT009', 'PDT011' ) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="sYearAir" prepend="AND">
+		             <![CDATA[ A.ZONE_YY >= #sYearAir# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="eYearAir" prepend="AND">
+		           <![CDATA[ A.ZONE_YY <= #eYearAir#]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY A.ZONE_YY DESC
+	</select>
+
+	<!-- 통합검색(항공사진 코스번호 검색) -->
+	<select id="managementDAO.selectPhCourseAir" parameterClass="String"
+		resultClass="egovMap">
+		SELECT DISTINCT A.PH_COURSE
+		FROM AIR_PRODUCT_DTS A, AIR_ZONE_DTS C
+		WHERE A.ZONE_CODE = #zoneCode#
+		  AND A.ZONE_CODE = C.ZONE_CODE
+          AND C.IMAGE_CDE NOT IN ( 'PDT009', 'PDT011' )
+		ORDER BY LPAD(A.PH_COURSE, 4)
+	</select>
+
+	<!-- 통합검색(항공사진 사진번호 검색) -->
+	<select id="managementDAO.selectPhNumAir" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT DISTINCT A.PH_NUM
+		FROM AIR_PRODUCT_DTS A, AIR_ZONE_DTS C
+		WHERE A.ZONE_CODE = #zoneCode#
+		<isNotEmpty property="phCourse">
+			AND A.PH_COURSE = #phCourse#
+		</isNotEmpty>
+		AND A.ZONE_CODE = C.ZONE_CODE
+        AND C.IMAGE_CDE NOT IN ( 'PDT009', 'PDT011' )
+		ORDER BY LPAD(A.PH_NUM, 4)
+	</select>
+	
+		<!-- 통합검색(항공사진 사업지구명 검색) -->
+	<select id="managementDAO.selectZoneNamOrient" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT DISTINCT A.ZONE_NAM, A.ZONE_CODE, A.ZONE_YY
+		FROM AIR_ZONE_DTS A, AIR_PRODUCT_DTS C
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.ZONE_CODE = C.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.IMAGE_CDE NOT IN ( 'PDT009', 'PDT011' ) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="sYearAir" prepend="AND">
+		             <![CDATA[ A.ZONE_YY >= #sYearAir# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="eYearAir" prepend="AND">
+		           <![CDATA[ A.ZONE_YY <= #eYearAir#]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY A.ZONE_YY DESC
+	</select>
+	
+		<!-- 통합검색(항공사진 촬영기록부사업지구명 검색) -->
+	<select id="managementDAO.selectZoneNamCmr" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT DISTINCT A.ZONE_NAM, A.ZONE_CODE, A.ZONE_YY
+		  FROM AIR_ZONE_DTS A, AIR_NOTE_DTS B
+		  <dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.ZONE_CODE = B.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.IMAGE_CDE NOT IN ( 'PDT009', 'PDT011' ) ]]>
+			</isNotEmpty>
+		 	<isNotEmpty property="sYearAir" prepend="AND">
+		             <![CDATA[ A.ZONE_YY >= #sYearAir# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="eYearAir" prepend="AND">
+		           <![CDATA[ A.ZONE_YY <= #eYearAir#]]>
+			</isNotEmpty>
+			</dynamic>
+		 ORDER BY A.ZONE_NAM
+	</select>
+	
+	<!-- 통합검색(항공사진 촬영기록부코스번호 검색) -->
+	<select id="managementDAO.selectPhCourseCmr" parameterClass="String"
+		resultClass="egovMap">
+    SELECT DISTINCT B.PH_COURSE
+      FROM AIR_NOTE_DTS A, AIR_NOTECOURSE_DTS B, AIR_ZONE_DTS C
+     WHERE A.ZONE_CODE = #zoneCode#
+       AND B.ZONE_CODE = A.ZONE_CODE
+       AND A.ZONE_CODE = C.ZONE_CODE
+       AND C.IMAGE_CDE NOT IN ( 'PDT009', 'PDT011' )
+     ORDER BY LPAD(B.PH_COURSE, 4)
+	</select>
+	
+	<!-- 통합검색(Nir사진 촬영기록부코스번호 검색) -->
+	<select id="managementDAO.selectPhCourseNirCmr" parameterClass="String"
+		resultClass="egovMap">
+    SELECT DISTINCT B.PH_COURSE
+      FROM AIR_NOTE_DTS A, AIR_NOTECOURSE_DTS B, AIR_ZONE_DTS C
+     WHERE A.ZONE_CODE = #zoneCode#
+       AND B.ZONE_CODE = A.ZONE_CODE
+       AND A.ZONE_CODE = C.ZONE_CODE
+       AND C.IMAGE_CDE = 'PDT009'
+     ORDER BY LPAD(B.PH_COURSE, 4)
+	</select>
+	
+			<!-- 통합검색(Nir사진 촬영기록부사업지구명 검색) -->
+	<select id="managementDAO.selectZoneNamNirCmr" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT DISTINCT A.ZONE_NAM, A.ZONE_CODE, A.ZONE_YY
+		  FROM AIR_ZONE_DTS A, AIR_NOTE_DTS B
+		  <dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.ZONE_CODE = B.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.IMAGE_CDE = 'PDT009' ]]>
+			</isNotEmpty>
+		 	<isNotEmpty property="sYearNir" prepend="AND">
+		             <![CDATA[ A.ZONE_YY >= #sYearNir# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="eYearNir" prepend="AND">
+		           <![CDATA[ A.ZONE_YY <= #eYearNir#]]>
+			</isNotEmpty>
+		</dynamic>
+		 ORDER BY A.ZONE_NAM
+	</select>
+
+
+
+	<!-- 통합검색(항공사진 코스번호 검색) -->
+	<select id="managementDAO.selectPhCourseOrient" parameterClass="String"
+		resultClass="egovMap">
+		SELECT DISTINCT A.PH_COURSE
+		FROM AIR_ORIENTMAP_DTS A
+		WHERE A.ZONE_CODE = #zoneCode#
+		ORDER BY LPAD(A.PH_COURSE, 4)
+	</select>
+
+	<!-- 통합검색(항공사진 사진번호 검색) -->
+	<select id="managementDAO.selectPhNumOrient" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT DISTINCT A.PH_NUM
+		FROM AIR_ORIENTMAP_DTS A
+		WHERE A.ZONE_CODE = #zoneCode#
+		AND A.PH_COURSE = #phCourse#
+		ORDER BY LPAD(A.PH_NUM, 4)
+	</select>
+
+
+	<!-- 통합검색(사진주점 검색) -->
+	<select id="managementDAO.selectOrientmapListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	
+		SELECT COUNT(*) ROWCOUNT
+		FROM (SELECT T.ZONE_CODE,
+		T.PH_COURSE,
+		T.PH_NUM,
+		T.PYOJUNG_ID,
+		T.MAP_NUM,
+		T.MAP_NAM,
+		T.COOR_X,
+		T.COOR_Y,
+		T.ORIGIN,
+		T.COOR_CX,
+		T.COOR_CY,
+		K.CRS_IDN,
+		T.P_COOR_X,
+		T.P_COOR_Y,
+		T.P_CRS_IDN
+		FROM AIR_ORIENTMAP_DTS T,
+		META_AIRMAP_REFRC K
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		          	<![CDATA[ T.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phCourse" prepend="AND">
+		          	<![CDATA[ T.PH_COURSE = #phCourse# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phNum" prepend="AND">
+		          	<![CDATA[ T.PH_NUM = #phNum# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+			        <![CDATA[ K.ZONE_CODE(+) = T.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+			        <![CDATA[ K.PH_COURSE(+) = T.PH_COURSE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+			        <![CDATA[ K.PH_NUM(+) = T.PH_NUM ]]>
+			</isNotEmpty>
+			) A,
+		</dynamic>
+		AIR_ZONE_DTS B
+	  <dynamic prepend="WHERE">
+      <isNotEmpty prepend="AND">
+                 <![CDATA[ B.ZONE_CODE = A.ZONE_CODE ]]>
+      </isNotEmpty>
+      <isNotEmpty prepend="AND">
+                 <![CDATA[ B.IMAGE_CDE NOT IN ( 'PDT009', 'PDT011' ) ]]>
+      </isNotEmpty>
+      <isNotEmpty property="sYearAir" prepend="AND">
+                 <![CDATA[ B.ZONE_YY >= #sYearAir# ]]>
+      </isNotEmpty>
+      <isNotEmpty property="eYearAir" prepend="AND">
+               <![CDATA[ B.ZONE_YY <= #eYearAir#]]>
+      </isNotEmpty>
+    </dynamic>
+		
+	</select>
+	
+	<!-- 통합검색(사진주점 검색) -->
+	<select id="managementDAO.selectOrientmapList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		
+		<include refid="Paging_head"/>
+		SELECT A.*, B.ZONE_YY, B.ZONE_NAM
+		FROM (SELECT T.ZONE_CODE,
+		T.PH_COURSE,
+		T.PH_NUM,
+		T.PYOJUNG_ID,
+		T.MAP_NUM,
+		T.MAP_NAM,
+		T.COOR_X,
+		T.COOR_Y,
+		T.ORIGIN,
+		T.COOR_CX,
+		T.COOR_CY,
+		K.CRS_IDN,
+		T.P_COOR_X,
+		T.P_COOR_Y,
+		T.P_CRS_IDN
+		FROM AIR_ORIENTMAP_DTS T,
+		META_AIRMAP_REFRC K
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+                <![CDATA[ T.ZONE_CODE = #zoneCode# ]]>
+      </isNotEmpty>
+      <isNotEmpty property="phCourse" prepend="AND">
+                <![CDATA[ T.PH_COURSE = #phCourse# ]]>
+      </isNotEmpty>
+      <isNotEmpty property="phNum" prepend="AND">
+                <![CDATA[ T.PH_NUM = #phNum# ]]>
+      </isNotEmpty>
+      <isNotEmpty prepend="AND">
+              <![CDATA[ K.ZONE_CODE(+) = T.ZONE_CODE ]]>
+      </isNotEmpty>
+      <isNotEmpty prepend="AND">
+              <![CDATA[ K.PH_COURSE(+) = T.PH_COURSE ]]>
+      </isNotEmpty>
+      <isNotEmpty prepend="AND">
+              <![CDATA[ K.PH_NUM(+) = T.PH_NUM ]]>
+      </isNotEmpty>
+      ) A,
+    </dynamic>
+    AIR_ZONE_DTS B
+    <dynamic prepend="WHERE">
+      <isNotEmpty prepend="AND">
+                 <![CDATA[ B.ZONE_CODE = A.ZONE_CODE ]]>
+      </isNotEmpty>
+      <isNotEmpty prepend="AND">
+                 <![CDATA[ B.IMAGE_CDE NOT IN ( 'PDT009', 'PDT011' ) ]]>
+      </isNotEmpty>
+      <isNotEmpty property="sYearAir" prepend="AND">
+                 <![CDATA[ B.ZONE_YY >= #sYearAir# ]]>
+      </isNotEmpty>
+      <isNotEmpty property="eYearAir" prepend="AND">
+               <![CDATA[ B.ZONE_YY <= #eYearAir#]]>
+      </isNotEmpty>
+    </dynamic>
+    ORDER BY B.ZONE_YY DESC,
+    LPAD(A.PH_COURSE, 4)
+    , LPAD(A.PH_NUM, 4)
+    <include refid="Paging_tail"/>
+		
+	</select>
+
+	<!-- 통합검색(사진주점상세 검색) -->
+	<select id="managementDAO.selectSubOrientmapList"
+		parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT T.ZONE_CODE,
+		T.PH_COURSE,
+		T.PH_NUM,
+		T.PYOJUNG_ID,
+		T.MAP_NUM,
+		T.MAP_NAM,
+		T.COOR_X,
+		T.COOR_Y,
+		T.ORIGIN,
+		T.COOR_CX,
+		T.COOR_CY,
+		K.CRS_IDN,
+		T.P_COOR_X,
+		T.P_COOR_Y,
+		T.P_CRS_IDN
+		FROM AIR_ORIENTMAP_DTS T,
+		META_AIRMAP_REFRC K
+		WHERE T.ZONE_CODE = #zoneCode#
+		AND T.PH_COURSE = #phCourse#
+		AND T.PH_NUM = #phNum#
+		AND K.ZONE_CODE(+) = T.ZONE_CODE
+		AND K.PH_COURSE(+) = T.PH_COURSE
+		AND K.PH_NUM(+) = T.PH_NUM
+	</select>
+
+	<!-- 통합검색(사업지구 수정) -->
+	<update id="managementDAO.updateAdjustZone" parameterClass="java.util.Map">
+		UPDATE AIR_ZONE_DTS T
+		SET T.ZONE_NAM = #zoneNam#,
+		T.ZONE_YY = #zoneYy#,
+		T.PRJ_NAM = #prjNam#,
+		T.GSD_VAL = #gsdVal#,
+		T.SCALE = #scale#,
+		T.DEM_GRID = #demGrid#,
+		T.REMARK = #remark#,
+		T.PRJ_INFO_MGNO = #prjInfoMgno#,
+		T.PROJECTTYPE_CDE = #projecttypeCde#,
+		T.IMAGE_CDE =
+		(SELECT A.CDE_CDE
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'IMAGE_CDE'
+		AND A.CDE_NAM = #imageCde#),
+		T.CAMERA_CDE =
+		(SELECT A.CDE_CDE
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'CAMERA_CDE'
+		AND A.CDE_NAM = #cameraCde#)
+		WHERE T.ZONE_CODE = #zoneCode#
+	</update>
+	
+	
+	<insert id="managementDAO.insertZone" parameterClass="java.util.Map">
+	INSERT INTO AIR_ZONE_DTS B
+		  (B.ZONE_CODE,
+		   B.ZONE_NAM,
+		   B.PRJ_NAM,
+		   B.ZONE_YY,
+		   B.SCALE,
+		   B.GSD_VAL,
+		   B.PROJECTTYPE_CDE,
+		   B.CAMERA_CDE,
+		   B.IMAGE_CDE,
+		   B.DEM_GRID,
+		   B.REMARK,
+		   B.PRJ_INFO_MGNO)
+		VALUES
+		  (#zoneCode#,
+		   #zoneNam#,
+		   #prjNam#,
+		   #zoneYy#,
+		   #scale#,
+		   #gsdVal#,
+		   #projecttypeCde#,
+		   (SELECT A.CDE_CDE
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'CAMERA_CDE'
+		AND A.CDE_NAM = #cameraCde#),
+		   (SELECT A.CDE_CDE
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'IMAGE_CDE'
+		AND A.CDE_NAM = #imageCde#),
+		   #demGrid#,
+		   #remark#,
+		   #prjInfoMgno#)
+	</insert>
+	
+	<delete id="managementDAO.delZone" parameterClass="String">
+	DELETE AIR_ZONE_DTS
+ 	WHERE ZONE_CODE = #zoneCode#
+	</delete>
+	
+	<!-- 통합검색(사진주점 수정) -->
+	<update id="managementDAO.updateAdjustOrientmap" parameterClass="java.util.Map">
+		UPDATE AIR_ORIENTMAP_DTS
+		SET PYOJUNG_ID = #pyojungId#,
+		MAP_NUM = #mapNum#,
+		MAP_NAM = #mapNam#,
+		COOR_X = #coorX#,
+		COOR_Y = #coorY#,
+		ORIGIN = #origin#,
+		COOR_CX = #coorCx#,
+		COOR_CY = #coorCy#,
+		P_COOR_X = #pCoorX#,
+		P_COOR_Y = #pXoorY#,
+		P_CRS_IDN = #pCrsIdn#
+		WHERE ZONE_CODE = #zoneCode#
+		AND PH_COURSE = #phCourse#
+		AND PH_NUM = #phNum#
+	</update>
+
+	<!-- 통합검색(보안등급) -->
+	<select id="managementDAO.selectSecurityCode" resultClass="egovMap">
+		SELECT A.CDE_CDE
+		     , A.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'SECURITY_CDE'
+		AND CDE_CHK = 'Y'
+	</select>
+	
+	<!--2016.10.25 민병현 : 지상표본거리 컬럼 추가. -->
+	<!-- 통합검색(보안등급) -->
+	<select id="managementDAO.selectGtypDstOrt" resultClass="egovMap">
+		SELECT DISTINCT GTYP_DST
+		FROM ORT_PRODUCT_DTS
+		ORDER BY GTYP_DST
+	</select>
+
+	<!-- 통합검색(카메라코드) -->
+	<select id="managementDAO.selectCameraCode" resultClass="egovMap">
+		SELECT A.CDE_NAM 
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'CAMERA_CDE'
+		AND CDE_CHK = 'Y'
+	</select>
+	
+	<!-- 통합검색(해상도) -->
+	<select id="managementDAO.selectResolutionAir" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT A.RESOLUTION cde_cde
+		     , A.RESOLUTION cde_nam
+		  FROM META_AIRMAP_IDENT A, AIR_ZONE_DTS C
+		 WHERE A.RESOLUTION is not null
+		<isNotEmpty property="zoneCode">
+		   AND A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		<isNotEmpty property="phCourse">
+		   AND A.PH_COURSE = #phCourse#
+		</isNotEmpty>
+		<isNotEmpty property="phNum">
+		   AND A.PH_NUM = #phNum#
+		</isNotEmpty>
+		AND A.ZONE_CODE = C.ZONE_CODE
+		 GROUP BY A.RESOLUTION
+		 ORDER BY A.RESOLUTION
+	</select>
+	
+	<!-- 통합검색(성과관리목록) -->
+	<select id="managementDAO.selectProductAirListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	
+		SELECT COUNT(*) ROWCOUNT
+		FROM (SELECT A.ZONE_CODE,
+					 A.PH_COURSE,
+					 A.PH_NUM,
+					 A.APH_NUM,
+					 A.FILM_NUM,
+					 A.RPH_NUM,
+					 A.NIX_OX,
+					 A.SCUR_OX,
+					 (SELECT T.CDE_NAM
+					 FROM CMT_DETAIL_CODE_NIIM T
+					 WHERE T.FLE_IDN = 'SECURITY_CDE'
+					 AND B.SECURITY_CDE = T.CDE_CDE) SECURITY_CDE,
+					 B.MASK_OX,
+					 (SELECT C.CDE_NAM
+					 FROM CMT_DETAIL_CODE_NIIM C, AIR_ZONE_DTS T
+					 WHERE T.ZONE_CODE = A.ZONE_CODE
+					 AND C.FLE_IDN = 'CAMERA_CDE'
+					 AND T.CAMERA_CDE = C.CDE_CDE) CAMERA_CDE,
+					 (SELECT R.RESOLUTION
+                  	 FROM META_AIRMAP_IDENT R
+                     WHERE R.ZONE_CODE = A.ZONE_CODE
+                     AND R.PH_COURSE = A.PH_COURSE
+                     AND R.PH_NUM = A.PH_NUM) RESOLUTION,
+					 (SELECT T.ZONE_YY
+					 FROM AIR_ZONE_DTS T
+					 WHERE T.ZONE_CODE = A.ZONE_CODE) ZONE_YY,
+					 (SELECT T.ZONE_NAM
+					 FROM AIR_ZONE_DTS T
+					 WHERE T.ZONE_CODE = A.ZONE_CODE) ZONE_NAM
+					 FROM AIR_PRODUCT_DTS A
+					 
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		                    <![CDATA[ A.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phCourse" prepend="AND">
+		                    <![CDATA[ A.PH_COURSE = #phCourse# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phNum" prepend="AND">
+		                    <![CDATA[ A.PH_NUM = #phNum# ]]>
+			</isNotEmpty>
+			
+		</dynamic>
+		) A, AIR_ZONE_DTS C
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		                   <![CDATA[ A.ZONE_YY >= #sYearAir# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                 <![CDATA[ A.ZONE_YY <= #eYearAir#]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                 <![CDATA[ A.ZONE_CODE = C.ZONE_CODE]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                 <![CDATA[ C.IMAGE_CDE NOT IN ( 'PDT009', 'PDT011' )]]>
+			</isNotEmpty>
+			<isNotEmpty property="securityCde" prepend="AND">
+		                    <![CDATA[ A.SECURITY_CDE = #securityCde# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="cameraCde" prepend="AND">
+		                    <![CDATA[ A.CAMERA_CDE = #cameraCde# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="resolution" prepend="AND">
+		                    <![CDATA[ A.RESOLUTION = #resolution# ]]>
+			</isNotEmpty>
+		</dynamic>
+		
+	</select>
+	
+	<!-- 통합검색(성과관리목록) -->
+	<select id="managementDAO.selectProductAirList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		
+		<include refid="Paging_head"/>
+		SELECT 'PDT001' IMAGE_CDE, 
+		A.ZONE_CODE,
+		A.PH_COURSE,
+		A.PH_NUM,
+		A.APH_NUM,
+		A.FILM_NUM,
+		A.RPH_NUM,
+		A.NIX_OX,
+		A.SCUR_OX,
+		A.SECURITY_CDE,
+		A.CAMERA_CDE,
+		A.ZONE_YY,
+		A.ZONE_NAM,
+		A.RESOLUTION
+		FROM (SELECT A.ZONE_CODE,
+					 A.PH_COURSE,
+					 A.PH_NUM,
+					 A.APH_NUM,
+					 A.FILM_NUM,
+					 A.RPH_NUM,
+					 A.NIX_OX,
+					 A.SCUR_OX,
+					 (SELECT T.CDE_NAM
+					 FROM CMT_DETAIL_CODE_NIIM T
+					 WHERE T.FLE_IDN = 'SECURITY_CDE'
+					 AND B.SECURITY_CDE = T.CDE_CDE) SECURITY_CDE,
+					 B.MASK_OX,
+					 (SELECT C.CDE_NAM
+					 FROM CMT_DETAIL_CODE_NIIM C, AIR_ZONE_DTS T
+					 WHERE T.ZONE_CODE = A.ZONE_CODE
+					 AND C.FLE_IDN = 'CAMERA_CDE'
+					 AND T.CAMERA_CDE = C.CDE_CDE) CAMERA_CDE,
+					 (SELECT R.RESOLUTION
+                  	 FROM META_AIRMAP_IDENT R
+                     WHERE R.ZONE_CODE = A.ZONE_CODE
+                     AND R.PH_COURSE = A.PH_COURSE
+                     AND R.PH_NUM = A.PH_NUM) RESOLUTION,
+					 (SELECT T.ZONE_YY
+					 FROM AIR_ZONE_DTS T
+					 WHERE T.ZONE_CODE = A.ZONE_CODE) ZONE_YY,
+					 (SELECT T.ZONE_NAM
+					 FROM AIR_ZONE_DTS T
+					 WHERE T.ZONE_CODE = A.ZONE_CODE) ZONE_NAM
+					 FROM AIR_PRODUCT_DTS A
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		                    <![CDATA[ A.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phCourse" prepend="AND">
+		                    <![CDATA[ A.PH_COURSE = #phCourse# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phNum" prepend="AND">
+		                    <![CDATA[ A.PH_NUM = #phNum# ]]>
+			</isNotEmpty>
+		</dynamic>
+		) A, AIR_ZONE_DTS C
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		                   <![CDATA[ A.ZONE_YY >= #sYearAir# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                 <![CDATA[ A.ZONE_YY <= #eYearAir#]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                 <![CDATA[ A.ZONE_CODE = C.ZONE_CODE]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                 <![CDATA[ C.IMAGE_CDE NOT IN ( 'PDT009', 'PDT011' )]]>
+			</isNotEmpty>
+			<isNotEmpty property="securityCde" prepend="AND">
+		                    <![CDATA[ A.SECURITY_CDE = #securityCde# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="cameraCde" prepend="AND">
+		                    <![CDATA[ A.CAMERA_CDE = #cameraCde# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="resolution" prepend="AND">
+		                    <![CDATA[ A.RESOLUTION = #resolution# ]]>
+			</isNotEmpty>
+		</dynamic>
+		<include refid="Paging_tail"/>
+		
+	</select>
+	
+	<select id="managementDAO.selectResSeqOrt" resultClass="egovMap">
+		SELECT MAX(RES_SEQ) MAX_RES_SEQ
+		FROM ORT_PRODUCT_DTS
+		WHERE 1=1
+		AND ZONE_CODE = #zoneCode#
+		AND MAP5000_NUM = #map5000Num#
+	</select>
+	
+	<select id="managementDAO.selectSubProductAirList"
+		parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT K.ZONE_NAM,
+		T.ZONE_CODE,
+		T.PH_COURSE,
+		T.PH_NUM,
+		T.APH_NUM,
+		T.APH_NOW,
+		T.FILM_NUM,
+		T.FILM_NOW,
+		T.RPH_NUM,
+		T.RPH_NOW,
+		T.MD1_NUM,
+		T.MD2_NUM,
+		T.NIX_OX,
+		T.SCUR_OX,
+		T.SERV_OX,
+		T.REMARK
+		FROM AIR_PRODUCT_DTS T, AIR_ZONE_DTS K
+		WHERE T.ZONE_CODE = #zoneCode#
+		AND T.PH_COURSE = #phCourse#
+		AND T.PH_NUM = #phNum#
+		AND K.ZONE_CODE = T.ZONE_CODE
+	</select>
+	
+	<select id="managementDAO.selectSubProductAirLibList"
+		parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT K.ZONE_NAM,
+		T.ZONE_CODE,
+		T.PH_COURSE,
+		T.PH_NUM,
+		T.APH_NUM,
+		T.APH_NOW,
+		T.FILM_NUM,
+		T.FILM_NOW,
+		T.RPH_NUM,
+		T.RPH_NOW,
+		T.MD1_NUM,
+		T.MD2_NUM,
+		T.NIX_OX,
+		T.SCUR_OX,
+		T.SERV_OX,
+		T.REMARK
+		FROM AIR_PRODUCT_DTS T, AIR_ZONE_DTS K
+		WHERE T.ZONE_CODE = #zoneCode#
+		AND T.PH_COURSE = #phCourse#
+		AND T.PH_NUM = #phNum#
+		AND K.ZONE_CODE = T.ZONE_CODE
+	</select>
+
+	<select id="managementDAO.selectSubProductEOAirList"
+		parameterClass="java.util.Map" resultClass="egovMap">
+		 SELECT NVL(MIN(T.EO_X),'') EO_X,
+            NVL(MIN(T.EO_Y),'') EO_Y,
+            NVL(MIN(T.EO_Z),'') EO_Z,
+            NVL(MIN(T.EO_OMEGA),'') EO_OMEGA,
+            NVL(MIN(T.EO_PHI),'') EO_PHI,
+            NVL(MIN(T.EO_KAPPA),'') EO_KAPPA,
+            NVL(MIN(T.CRS_IDN),'') CRS_IDN
+            FROM AIR_PRODUCTEO_DTS T, AIR_ZONE_DTS C
+            WHERE T.ZONE_CODE = #zoneCode#
+            AND T.PH_COURSE = #phCourse#
+            AND T.PH_NUM = #phNum#
+            AND C.IMAGE_CDE NOT IN ( 'PDT009', 'PDT011' )
+            AND T.ZONE_CODE = C.ZONE_CODE
+
+	</select>
+
+	<select id="managementDAO.selectSubMetaAirList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		
+	SELECT NVL(MIN(T.FILE_IDENTIFIER),'') FILE_IDENTIFIER,
+	       NVL(MIN(T.TARGET_NAME),'') TARGET_NAME,
+	       NVL(MIN(T.LANGUAGE),'') LANGUAGE,
+	       NVL(MIN(K.RES_OFFICENAME),'') RES_OFFICENAME,
+	       NVL(MIN(T.RES_POSTNAME),'') RES_POSTNAME,
+	       NVL(MIN(T.RES_PHONE),'') RES_PHONE,
+	       NVL(MIN(T.RES_FAX),'') RES_FAX,
+	       NVL(MIN(T.RES_ADDRESS),'') RES_ADDRESS,
+	       NVL(MIN(T.RES_POSTAL_CODE),'') RES_POSTAL_CODE,
+	       NVL(MIN(K.META_DATE),'') META_DATE,
+	       NVL(MIN(K.META_VERSION),'') META_VERSION,
+	       NVL(MIN(P.ZONE_CODE),'') ZONE_CODE,
+	       NVL(MIN(T.PH_COURSE),'') PH_COURSE,
+	       NVL(MIN(T.PH_NUM),'') PH_NUM,
+	       NVL(MIN(P.SCALE),'') SCALE,
+	       NVL(MIN(K.SPATIAL_DATA),'') SPATIAL_DATA,
+	       NVL(MIN((SELECT T.CDE_NAM
+	          FROM CMT_DETAIL_CODE_NIIM T
+	         WHERE T.FLE_IDN = 'SECURITY_CDE'
+	           AND Q.SECURITY_CDE = T.CDE_CDE)),'') SECURITY_CDE,
+	       NVL(MIN(R.MAP_NUM),'') MAP_NUM,
+	       NVL(MIN(R.MAP_NAM),'') MAP_NAM,
+	       NVL(MIN(S.PH_DATE),'') PH_DATE,
+	       NVL(MIN(K.DIST_FORMAT_NAME),'') DIST_FORMAT_NAME,
+	       NVL(MIN(K.DIST_FORMAT_VERSION),'') DIST_FORMAT_VERSION,
+	       NVL(MIN(K.DIST_OFFICENAME),'') DIST_OFFICENAME,
+	       NVL(MIN(K.DIST_POSTNAME),'') DIST_POSTNAME,
+	       NVL(MIN(K.DIST_PHONE),'') DIST_PHONE,
+	       NVL(MIN(U.TEMP_ONE),'') TEMP_ONE,
+	       NVL(MIN(U.MAX_HUMIDITY),'') MAX_HUMIDITY,
+	       NVL(MIN(U.HIGHT_ONE),'') HIGHT_ONE,
+	       NVL(MIN(U.WEATHER),'') WEATHER,
+	       NVL(MIN(U.CMR_NUM),'') CMR_NUM,
+	       NVL(MIN(U.CMR_TYPE),'') CMR_TYPE,
+	       NVL(MIN(U.CMR_DSCRT),'') CMR_DSCRT,
+	       NVL(MIN(U.LENS_TYPE),'') LENS_TYPE,
+	       NVL(MIN(U.LENS_DSCRT),'') LENS_DSCRT,
+	       NVL(MIN(U.NOTE_PLANE),'') NOTE_PLANE,
+	       NVL(MIN(U.PLAT_DSCRT),'') PLAT_DSCRT,
+	       NVL(MIN(U.PH_DATE),'') PH_DATE,
+	       NVL(MIN(U.PILOT),'') PILOT,
+	       NVL(MIN(U.NAVIG),'') NAVIG,
+	       NVL(MIN(U.CMR_MAN),'') CMR_MAN,
+	       NVL(MIN(U.EQUIP),'') EQUIP,
+	       NVL(MIN(U.SCALE_ONE),'') SCALE_ONE,
+	       NVL(MIN(U.LENS_NUM),'') LENS_NUM,
+	       NVL(MIN(U.ZONE_CODE),'') ZONE_CODE,
+	       NVL(MIN(K.SIGUNGU_NAM),'') SIGUNGU_NAM,
+	       NVL(MIN(K.QUALITY_TARGET),'') QUALITY_TARGET,
+	       NVL(MIN(K.SCAN),'') SCAN,
+	       NVL(MIN(K.FILM),'') FILM,
+	       NVL(MIN(K.DOCUMENT),'') DOCUMENT,
+	       NVL(MIN(T.RESOLUTION),'') RESOLUTION
+	  FROM META_AIRMAP_IDENT  T,
+	       AIR_BASEMETA_DTS   K,
+	       AIR_ZONE_DTS       P,
+	       AIR_PRODUCT_DTS  Q,
+	       AIR_ORIENTMAP_DTS  R,
+	       AIR_NOTE_DTS       S,
+	       META_AIRMAP_ACQUT  U,
+	       AIR_COURSETEST_DTS V
+	 WHERE T.ZONE_CODE = #zoneCode#
+	   AND T.PH_COURSE = #phCourse#
+	   AND T.PH_NUM = #phNum#
+	   AND K.ZONE_CODE(+) = T.ZONE_CODE
+	   AND K.PH_COURSE(+) = T.PH_COURSE
+	   AND K.PH_NUM(+) = T.PH_NUM
+	   AND P.ZONE_CODE = T.ZONE_CODE(+)
+	   AND Q.PH_COURSE(+) = T.PH_COURSE
+	   AND Q.PH_NUM(+) = T.PH_NUM
+	   AND Q.ZONE_CODE(+) = T.ZONE_CODE
+	   AND R.ZONE_CODE(+) = T.ZONE_CODE
+	   AND R.PH_COURSE(+) = T.PH_COURSE
+	   AND R.PH_NUM(+) = T.PH_NUM
+	   AND V.ZONE_CODE(+) = T.ZONE_CODE
+	   AND V.PH_COURSE(+) = T.PH_COURSE
+	   AND V.PH_NUM(+) = T.PH_NUM
+	   AND U.PH_DATE(+) = V.PH_DATE
+	   AND U.LENS_NUM(+) = V.LENS_NUM
+	   AND S.ZONE_CODE(+) = V.ZONE_CODE
+	   AND S.PH_DATE(+) = V.PH_DATE
+	   AND S.LENS_NUM(+) = V.LENS_NUM
+	</select>
+
+	<!-- 통합검색(사업지구 수정) -->
+	<insert id="managementDAO.insertMetaAirmapIdent"
+		parameterClass="java.util.Map">
+		INSERT INTO META_AIRMAP_IDENT
+			  (FILE_IDENTIFIER,
+			   TARGET_NAME,
+			   RESOLUTION,
+			   LANGUAGE,
+			   ZONE_CODE,
+			   PH_COURSE,
+			   PH_NUM,
+			   RES_POSTNAME,
+			   RES_PHONE,
+			   RES_FAX,
+			   RES_ADDRESS,
+			   RES_POSTAL_CODE)
+			VALUES
+			  (#fileIdentifier#,
+			   #targetName#,
+			   #resolution#,
+			   #language#,
+			   #zoneCode#,
+			   #phCourse#,
+			   #phNum#,
+			   #resPostname#,
+			   #resPhone#,
+			   #resFax#,
+			   #resAddress#,
+			   #resPostalCode#)
+	</insert>
+
+	<insert id="managementDAO.insertAirBasemetaDts"
+		parameterClass="java.util.Map">
+		
+		INSERT INTO AIR_BASEMETA_DTS
+			  (ZONE_CODE,
+			   PH_COURSE,
+			   PH_NUM,
+			   CONST_CO,
+			   INPUT_CO,
+			   RES_OFFICENAME,
+			   META_DATE,
+			   META_VERSION,
+			   SPATIAL_DATA,
+			   DIST_FORMAT_NAME,
+			   DIST_FORMAT_VERSION,
+			   DIST_OFFICENAME,
+			   DIST_POSTNAME,
+			   DIST_PHONE,
+			   QUALITY_TARGET,
+			   SCAN,
+			   FILM,
+			   DOCUMENT)
+			VALUES
+			  (#zoneCode#,
+			   #phCourse#,
+			   #phNum#,
+			   #constCo#,
+			   #inputCo#,
+			   #resOfficename#,
+			   #metaDate#,
+			   #metaVersion#,
+			   #spatialData#,
+			   #distFormatName#,
+			   #distFormatVersion#,
+			   #distOfficename#,
+			   #distPostname#,
+			   #distPhone#,
+			   #qualityTarget#,
+			   #scan#,
+			   #film#,
+			   #document#)
+	</insert>
+
+	<insert id="managementDAO.insertMetaAirmapContr"
+		parameterClass="java.util.Map">
+		
+		INSERT INTO AIR_PRODUCT_DTS
+			  (SECURITY_CDE,
+			   ZONE_CODE,
+			   PH_COURSE,
+			   PH_NUM)
+			VALUES
+			  ((SELECT A.CDE_CDE
+				FROM CMT_DETAIL_CODE_NIIM A
+				WHERE A.FLE_IDN = 'SECURITY_CDE'
+				AND A.CDE_NAM = #securityCde#),
+			   #zoneCode#,
+			   #phCourse#,
+			   #phNum#)
+	</insert>
+
+	<insert id="managementDAO.insertMetaAirmapAcqut"
+		parameterClass="java.util.Map">
+		INSERT INTO META_AIRMAP_ACQUT
+			  (CMR_NUM,
+			   CMR_TYPE,
+			   NOTE_PLANE,
+			   PH_DATE,
+			   PILOT,
+			   CMR_MAN,
+			   LENS_NUM,
+			   ZONE_CODE)
+			VALUES
+			  (#cmrNum#,
+			   #cmrType#,
+			   #notePlane#,
+			   #phDate#,
+			   #pilot#,
+			   #cmrMan#,
+			   #lensNum#,
+			   #zoneCode#)
+	</insert>
+
+	<insert id="managementDAO.insertMetaNirmapIdent"
+		parameterClass="java.util.Map">
+		INSERT INTO META_AIRMAP_IDENT
+			  (FILE_IDENTIFIER,
+			   TARGET_NAME,
+			   RESOLUTION,
+			   LANGUAGE,
+			   ZONE_CODE,
+			   PH_COURSE,
+			   PH_NUM,
+			   RES_POSTNAME,
+			   RES_PHONE,
+			   RES_FAX,
+			   RES_ADDRESS,
+			   RES_POSTAL_CODE)
+			VALUES
+			  (#fileIdentifier#,
+			   #targetName#,
+			   #resolution#,
+			   #language#,
+			   #zoneCode#,
+			   #phCourse#,
+			   #phNum#,
+			   #resPostname#,
+			   #resPhone#,
+			   #resFax#,
+			   #resAddress#,
+			   #resPostalCode#)
+	</insert>
+
+	<insert id="managementDAO.insertNirBasemetaDts"
+		parameterClass="java.util.Map">
+		
+		INSERT INTO AIR_BASEMETA_DTS
+			  (ZONE_CODE,
+			   PH_COURSE,
+			   PH_NUM,
+			   CONST_CO,
+			   INPUT_CO,
+			   RES_OFFICENAME,
+			   META_DATE,
+			   META_VERSION,
+			   SPATIAL_DATA,
+			   DIST_FORMAT_NAME,
+			   DIST_FORMAT_VERSION,
+			   DIST_OFFICENAME,
+			   DIST_POSTNAME,
+			   DIST_PHONE,
+			   QUALITY_TARGET,
+			   SCAN,
+			   FILM,
+			   DOCUMENT)
+			VALUES
+			  (#zoneCode#,
+			   #phCourse#,
+			   #phNum#,
+			   #constCo#,
+			   #inputCo#,
+			   #resOfficename#,
+			   #metaDate#,
+			   #metaVersion#,
+			   #spatialData#,
+			   #distFormatName#,
+			   #distFormatVersion#,
+			   #distOfficename#,
+			   #distPostname#,
+			   #distPhone#,
+			   #qualityTarget#,
+			   #scan#,
+			   #film#,
+			   #document#)
+	</insert>
+
+	<insert id="managementDAO.insertMetaNirmapContr"
+		parameterClass="java.util.Map">
+		
+		INSERT INTO AIR_PRODUCT_DTS
+			  (SECURITY_CDE,
+			   ZONE_CODE,
+			   PH_COURSE,
+			   PH_NUM)
+			VALUES
+			  ((SELECT A.CDE_CDE
+				FROM CMT_DETAIL_CODE_NIIM A
+				WHERE A.FLE_IDN = 'SECURITY_CDE'
+				AND A.CDE_NAM = #securityCde#),
+			   #zoneCode#,
+			   #phCourse#,
+			   #phNum#)
+	</insert>
+
+	<insert id="managementDAO.insertMetaNirmapAcqut"
+		parameterClass="java.util.Map">
+		INSERT INTO META_AIRMAP_ACQUT
+			  (CMR_NUM,
+			   CMR_TYPE,
+			   NOTE_PLANE,
+			   PH_DATE,
+			   PILOT,
+			   CMR_MAN,
+			   LENS_NUM,
+			   ZONE_CODE)
+			VALUES
+			  (#cmrNum#,
+			   #cmrType#,
+			   #notePlane#,
+			   #phDate#,
+			   #pilot#,
+			   #cmrMan#,
+			   #lensNum#,
+			   #zoneCode#)
+	</insert>
+
+
+	<!-- 통합검색(사업지구 수정) -->
+	<update id="managementDAO.updateAdjustMetaAirmapIdent"
+		parameterClass="java.util.Map">
+		UPDATE META_AIRMAP_IDENT T
+		SET T.FILE_IDENTIFIER = #fileIdentifier#,
+		T.TARGET_NAME = #targetName#,
+		T.LANGUAGE = #language#,
+		T.RES_POSTNAME = #resPostname#,
+		T.RES_PHONE = #resPhone#,
+		T.RES_FAX = #resFax#,
+		T.RES_ADDRESS = #resAddress#,
+		T.RES_POSTAL_CODE = #resPostalCode#,
+		T.RESOLUTION = #resolution#
+		WHERE T.ZONE_CODE = #zoneCode#
+		AND T.PH_COURSE = #phCourse#
+		AND T.PH_NUM = #phNum#
+	</update>
+
+	<update id="managementDAO.updateAdjustAirBasemetaDts"
+		parameterClass="java.util.Map">
+		UPDATE AIR_BASEMETA_DTS K
+		SET K.RES_OFFICENAME = #resOfficename#,
+		K.META_DATE = #metaDate#,
+		K.META_VERSION = #metaVersion#,
+		K.SPATIAL_DATA = #spatialData#,
+		K.DIST_FORMAT_NAME = #distFormatName#,
+		K.DIST_FORMAT_VERSION = #distFormatVersion#,
+		K.DIST_OFFICENAME = #distOfficename#,
+		K.DIST_POSTNAME = #distPostname#,
+		K.DIST_PHONE = #distPhone#,
+		K.QUALITY_TARGET = #qualityTarget#,
+		K.SCAN = #scan#,
+		K.FILM = #film#,
+		K.DOCUMENT = #document#
+		WHERE K.ZONE_CODE = #zoneCode#
+		AND K.PH_COURSE = #phCourse#
+		AND K.PH_NUM = #phNum#
+	</update>
+
+	<update id="managementDAO.updateAdjustAirZoneDts"
+		parameterClass="java.util.Map">
+		UPDATE AIR_ZONE_DTS P
+		SET P.SCALE = #scale#
+		WHERE P.ZONE_CODE = #zoneCode#
+
+	</update>
+
+	<update id="managementDAO.updateAdjustMetaAirmapContr"
+		parameterClass="java.util.Map">
+		UPDATE AIR_PRODUCT_DTS Q
+		SET Q.SECURITY_CDE =
+		(SELECT A.CDE_CDE
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'SECURITY_CDE'
+		AND A.CDE_NAM = #securityCde#)
+		WHERE Q.ZONE_CODE = #zoneCode#
+		AND Q.PH_COURSE = #phCourse#
+		AND Q.PH_NUM = #phNum#
+	</update>
+
+	<update id="managementDAO.updateAdjustAirOrientmapDts"
+		parameterClass="java.util.Map">
+		UPDATE AIR_ORIENTMAP_DTS R
+		SET R.MAP_NUM = #mapNum#,
+		R.MAP_NAM = #mapNam#
+		WHERE R.ZONE_CODE = #zoneCode#
+		AND R.PH_COURSE = #phCourse#
+		AND R.PH_NUM = #phNum#
+	</update>
+
+	<update id="managementDAO.updateAdjustMetaAirmapAcqut"
+		parameterClass="java.util.Map">
+		UPDATE META_AIRMAP_ACQUT U
+		SET U.CMR_NUM = #cmrNum#,
+		U.CMR_TYPE = #cmrType#,
+		U.NOTE_PLANE = #notePlane#,
+		U.PILOT = #pilot#,
+		U.CMR_MAN = #cmrMan#,
+		U.LENS_NUM = #lensNum#
+		WHERE U.ZONE_CODE = #zoneCode#
+		AND U.PH_DATE = #phDate#
+		AND U.LENS_NUM = #lensNum#
+	</update>
+	
+
+	<!-- 통합검색(항공사진 필름번호 검색) -->
+	<select id="managementDAO.selectFilmNumAir" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT D.FILM_NUM FROM AIR_COURSETEST_DTS D, AIR_ZONE_DTS C
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+	                    <![CDATA[ C.ZONE_CODE = D.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+	                    <![CDATA[ C.IMAGE_CDE NOT IN ( 'PDT009', 'PDT011' ) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="zoneCode" prepend="AND">
+	                    <![CDATA[ D.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phCourse" prepend="AND">
+	                    <![CDATA[ D.PH_COURSE = #phCourse# ]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY LPAD(D.FILM_NUM, 4)
+	</select>
+
+
+	<!-- 통합관리(항공사진촬영기록부 검색) -->
+	<select id="managementDAO.selectAirNoteListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	
+		SELECT COUNT(*) ROWCOUNT
+		FROM AIR_NOTE_DTS A, AIR_ZONE_DTS B, AIR_NOTECOURSE_DTS C,
+		AIR_COURSETEST_DTS D
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		                    <![CDATA[ A.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phCourse" prepend="AND">
+		                    <![CDATA[ D.PH_COURSE = #phCourse# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="filmNum" prepend="AND">
+		                    <![CDATA[ D.FILM_NUM = #filmNum# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ B.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ C.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ C.PH_DATE = A.PH_DATE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ C.LENS_NUM = A.LENS_NUM ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.PH_DATE = A.PH_DATE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.LENS_NUM = A.LENS_NUM ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.COURSE_COUNT = C.COURSE_COUNT ]]>
+			</isNotEmpty>
+		</dynamic>
+		
+	</select>
+	<!-- 통합관리(항공사진촬영기록부 검색) -->
+	<select id="managementDAO.selectAirNoteList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		
+		<include refid="Paging_head"/>
+		SELECT B.ZONE_NAM,
+		B.ZONE_YY,
+		A.PH_DATE,
+		A.LENS_NUM,
+		A.ZONE_CODE,
+		C.PH_COURSE,
+		D.FILM_NUM,
+		D.PH_NUM
+		FROM AIR_NOTE_DTS A, AIR_ZONE_DTS B, AIR_NOTECOURSE_DTS C,
+		AIR_COURSETEST_DTS D
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		                    <![CDATA[ A.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phCourse" prepend="AND">
+		                    <![CDATA[ D.PH_COURSE = #phCourse# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="filmNum" prepend="AND">
+		                    <![CDATA[ D.FILM_NUM = #filmNum# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ B.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ C.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ C.PH_DATE = A.PH_DATE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ C.LENS_NUM = A.LENS_NUM ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.PH_DATE = A.PH_DATE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.LENS_NUM = A.LENS_NUM ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.COURSE_COUNT = C.COURSE_COUNT ]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY LPAD(D.FILM_NUM, 4)
+		<include refid="Paging_tail"/>
+		
+	</select>
+
+	<select id="managementDAO.selectSubAirNoteList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT B.ZONE_NAM,
+		B.ZONE_YY,
+		A.PH_DATE,
+		A.ZONE_CODE,
+		A.LENS_NUM,
+		C.PH_COURSE,
+		D.FILM_NUM,
+		D.PH_NUM,
+		D.NOTE_DATE,
+		D.RPT_MAN,
+		D.COURSE_COUNT,
+		C.PH_DRCT,
+		C.PH_ANGLE,
+		A.WIND_DIRECT,
+		A.WIND_SPEED
+		FROM AIR_NOTE_DTS A,
+		AIR_ZONE_DTS B,
+		AIR_NOTECOURSE_DTS C,
+		AIR_COURSETEST_DTS D
+		WHERE D.ZONE_CODE = #zoneCode#
+		AND D.PH_COURSE = #phCourse#
+		AND D.FILM_NUM = #filmNum#
+		AND B.ZONE_CODE = A.ZONE_CODE
+		AND C.ZONE_CODE = A.ZONE_CODE
+		AND C.PH_DATE = A.PH_DATE
+		AND C.LENS_NUM = A.LENS_NUM
+		AND D.ZONE_CODE = A.ZONE_CODE
+		AND D.PH_DATE = A.PH_DATE
+		AND D.LENS_NUM = A.LENS_NUM
+		AND D.COURSE_COUNT = C.COURSE_COUNT
+		ORDER BY LPAD(D.FILM_NUM, 4)
+	</select>
+
+	<update id="managementDAO.updateAdjustAirNoteDts"
+		parameterClass="java.util.Map">
+		UPDATE AIR_NOTE_DTS A
+		SET A.WIND_DIRECT = #windDirect#,
+		A.WIND_SPEED = #windSpeed#
+		WHERE A.ZONE_CODE = #zoneCode#
+		AND A.PH_DATE = #phDate#
+		AND A.LENS_NUM = #lensNum#
+	</update>
+
+	<insert id="managementDAO.insertAirCoursetestDts"
+		parameterClass="java.util.Map">
+		INSERT INTO AIR_COURSETEST_DTS
+		  (ZONE_CODE,
+		   PH_DATE,
+		   LENS_NUM,
+		   COURSE_COUNT,
+		   FILM_NUM,
+		   PH_COURSE,
+		   PH_NUM,
+		   RPT_MAN,
+		   NOTE_DATE)
+		VALUES
+		  (#zoneCode#,
+		   #phDate#,
+		   #lensNum#,
+		   #courseCount#,
+		   #filmNum#,
+		   #phCourse#,
+		   #phNum#,
+		   #rptMan#,
+		   #noteDate#)
+	</insert>
+
+	<insert id="managementDAO.insertAirNotecourseDts"
+		parameterClass="java.util.Map">
+		INSERT INTO AIR_NOTECOURSE_DTS
+			  (ZONE_CODE,
+			   PH_DATE,
+			   LENS_NUM,
+			   COURSE_COUNT,
+			   PH_COURSE,
+			   PH_DRCT,
+			   PH_ANGLE)
+			VALUES
+			  (#zoneCode#,
+			   #phDate#,
+			   #lensNum#,
+			   #courseCount#,
+			   #phCourse#,
+			   #phDrct#,
+			   #phAngle#)
+	</insert>
+	
+	<insert id="managementDAO.insertAirNoteDts" parameterClass="java.util.Map">
+		INSERT INTO AIR_NOTE_DTS
+				  (ZONE_CODE,
+				   PH_DATE,
+				   LENS_NUM,
+				   WIND_DIRECT,
+				   WIND_SPEED)
+				VALUES
+				  (#zoneCode#,
+				  #phDate#,
+				  #lensNum#,
+				  #windDirect#,
+				  #windSpeed#)
+	</insert>
+
+
+	<insert id="managementDAO.insertNirCoursetestDts"
+		parameterClass="java.util.Map">
+		INSERT INTO AIR_COURSETEST_DTS
+		  (ZONE_CODE,
+		   PH_DATE,
+		   LENS_NUM,
+		   COURSE_COUNT,
+		   FILM_NUM,
+		   PH_COURSE,
+		   PH_NUM,
+		   RPT_MAN,
+		   NOTE_DATE)
+		VALUES
+		  (#zoneCode#,
+		   #phDate#,
+		   #lensNum#,
+		   #courseCount#,
+		   #filmNum#,
+		   #phCourse#,
+		   #phNum#,
+		   #rptMan#,
+		   #noteDate#)
+	</insert>
+
+	<insert id="managementDAO.insertNirNotecourseDts"
+		parameterClass="java.util.Map">
+		INSERT INTO AIR_NOTECOURSE_DTS
+			  (ZONE_CODE,
+			   PH_DATE,
+			   LENS_NUM,
+			   COURSE_COUNT,
+			   PH_COURSE,
+			   PH_DRCT,
+			   PH_ANGLE)
+			VALUES
+			  (#zoneCode#,
+			   #phDate#,
+			   #lensNum#,
+			   #courseCount#,
+			   #phCourse#,
+			   #phDrct#,
+			   #phAngle#)
+	</insert>
+	
+	<insert id="managementDAO.insertNirNoteDts" parameterClass="java.util.Map">
+		INSERT INTO AIR_NOTE_DTS
+				  (ZONE_CODE,
+				   PH_DATE,
+				   LENS_NUM,
+				   WIND_DIRECT,
+				   WIND_SPEED)
+				VALUES
+				  (#zoneCode#,
+				  #phDate#,
+				  #lensNum#,
+				  #windDirect#,
+				  #windSpeed#)
+	</insert>
+	
+	<update id="managementDAO.updateAdjustAirCoursetestDts"
+		parameterClass="java.util.Map">
+	UPDATE AIR_COURSETEST_DTS C
+		SET C.PH_NUM = #phNum#,
+		C.RPT_MAN = #rptMan#,
+		C.PH_COURSE = #phCourse#,
+		C.NOTE_DATE = #noteDate#
+		WHERE C.ZONE_CODE = #zoneCode#
+		AND C.PH_DATE = #phDate#
+		AND C.LENS_NUM = #lensNum#
+		AND C.COURSE_COUNT = #courseCount#
+		AND C.FILM_NUM = #filmNum#
+	</update>
+
+	<update id="managementDAO.updateAdjustAirNotecourseDts"
+		parameterClass="java.util.Map">
+	UPDATE AIR_NOTECOURSE_DTS B
+		SET B.PH_DRCT = #phDrct#,
+		B.PH_ANGLE = #phAngle#,
+		B.PH_COURSE = #phCourse#
+		WHERE B.ZONE_CODE = #zoneCode#
+		AND B.PH_DATE = #phDate#
+		AND B.LENS_NUM = #lensNum#
+		AND B.COURSE_COUNT = #courseCount#
+	</update>
+
+	<select id="managementDAO.selectFilmNumInsert" parameterClass="java.util.Map" resultClass="java.util.Map">
+		SELECT FILM_NUM
+		  FROM AIR_COURSETEST_DTS
+		 WHERE ZONE_CODE = #zoneCode#
+		   AND PH_DATE = #phDate#
+		   AND LENS_NUM = #lensNum#
+		   AND COURSE_COUNT = #courseCount#
+	</select>
+	
+	<select id="managementDAO.selectAirCameraDts" resultClass="egovMap">
+		SELECT DISTINCT (SELECT C.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM C
+		WHERE C.CDE_CDE = A.CAM_CDE
+		AND C.FLE_IDN = 'CAMERA_CDE') CAM_CDE
+		FROM AIR_CAMERA_DTS A
+	</select>
+
+	<select id="managementDAO.selectAirkeepCmpn" resultClass="egovMap">
+		SELECT DISTINCT A.KEEP_CMPN FROM AIR_CAMERA_DTS A
+		ORDER BY A.KEEP_CMPN
+	</select>
+
+	
+	<select id="managementDAO.selectAirCameraDtsListCnt" resultClass="java.lang.Integer">
+	
+		SELECT COUNT(*) ROWCOUNT
+		  FROM (
+		  
+		SELECT A.LENS_NUM,
+		A.FOCUS_DIS,
+		(SELECT C.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM C
+		WHERE C.CDE_CDE = A.CAM_CDE
+		AND C.FLE_IDN = 'CAMERA_CDE') CAM_CDE,
+		A.CMR_CMPN,
+		A.CAL_DATE,
+		A.KEEP_CMPN,
+		A.FMC,
+		A.FMC_DATE,
+		A.PAGE_1,
+		B.CMR_TYPE
+		FROM AIR_CAMERA_DTS A, META_AIRMAP_ACQUT B
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="camCde" prepend="AND">
+         <![CDATA[ A.CAM_CDE =
+	       (SELECT A.CDE_CDE
+	          FROM CMT_DETAIL_CODE_NIIM A
+	         WHERE A.FLE_IDN = 'CAMERA_CDE'
+	           AND A.CDE_NAM = #camCde#) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="keepCmpn" prepend="AND">
+				A.KEEP_CMPN = #keepCmpn#
+			</isNotEmpty>
+			AND B.LENS_NUM(+) = A.LENS_NUM
+			GROUP BY A.LENS_NUM,
+			A.FOCUS_DIS,
+			CAM_CDE,
+			A.CMR_CMPN,
+			A.CAL_DATE,
+			A.KEEP_CMPN,
+			A.FMC,
+			A.FMC_DATE,
+			A.PAGE_1,
+			B.CMR_TYPE
+		</dynamic>
+		
+		       )
+		
+	</select>
+	
+	<select id="managementDAO.selectAirCameraDtsList" resultClass="egovMap">
+	
+		<include refid="Paging_head"/>
+		SELECT A.LENS_NUM,
+		A.FOCUS_DIS,
+		(SELECT C.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM C
+		WHERE C.CDE_CDE = A.CAM_CDE
+		AND C.FLE_IDN = 'CAMERA_CDE') CAM_CDE,
+		A.CMR_CMPN,
+		A.CAL_DATE,
+		A.KEEP_CMPN,
+		A.FMC,
+		A.FMC_DATE,
+		A.PAGE_1,
+		B.CMR_TYPE
+		FROM AIR_CAMERA_DTS A, META_AIRMAP_ACQUT B
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="camCde" prepend="AND">
+         <![CDATA[ A.CAM_CDE =
+	       (SELECT A.CDE_CDE
+	          FROM CMT_DETAIL_CODE_NIIM A
+	         WHERE A.FLE_IDN = 'CAMERA_CDE'
+	           AND A.CDE_NAM = #camCde#) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="keepCmpn" prepend="AND">
+				A.KEEP_CMPN = #keepCmpn#
+			</isNotEmpty>
+			AND B.LENS_NUM(+) = A.LENS_NUM
+			GROUP BY A.LENS_NUM,
+			A.FOCUS_DIS,
+			CAM_CDE,
+			A.CMR_CMPN,
+			A.CAL_DATE,
+			A.KEEP_CMPN,
+			A.FMC,
+			A.FMC_DATE,
+			A.PAGE_1,
+			B.CMR_TYPE
+		</dynamic>
+		<include refid="Paging_tail"/>
+		
+	</select>
+
+	<update id="managementDAO.updateAdjustAirCameraDts"
+		parameterClass="java.util.Map">
+		UPDATE AIR_CAMERA_DTS
+		SET LENS_NUM = #lensNum#,
+		FOCUS_DIS = #focusDis#,
+		CAM_CDE = (SELECT A.CDE_CDE
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'CAMERA_CDE'
+		AND A.CDE_NAM = #camCde#),
+		CMR_CMPN = #cmrCmpn#,
+		CAL_DATE = #calDate#,
+		KEEP_CMPN = #keepCmpn#,
+		FMC = #fmc#,
+		FMC_DATE = #fmcDate#,
+		PAGE_1 = #page1#
+		WHERE LENS_NUM = #lensNum#
+	</update>
+	
+		<insert id="managementDAO.insertAirCameraDts"
+		parameterClass="java.util.Map">
+		
+		INSERT INTO AIR_CAMERA_DTS
+			  (LENS_NUM,
+			   FOCUS_DIS,
+			   CAM_CDE,
+			   CMR_CMPN,
+			   CAL_DATE,
+			   KEEP_CMPN,
+			   FMC,
+			   FMC_DATE,
+			   PAGE_1)
+			VALUES
+			  (#lensNum#,
+			   #focusDis#,
+			   (SELECT A.CDE_CDE
+			FROM CMT_DETAIL_CODE_NIIM A
+			WHERE A.FLE_IDN = 'CAMERA_CDE'
+			AND A.CDE_NAM = #camCde#),
+			   #cmrCmpn#,
+			  #calDate#,
+			  #keepCmpn#,
+			  #fmc#,
+			  #fmcDate#,
+			  #page1#)
+	
+	</insert>
+
+
+	<update id="managementDAO.updateAdjustProductEOAirList"
+		parameterClass="java.util.Map">
+		UPDATE AIR_PRODUCTEO_DTS
+		SET EO_X = #eoX#,
+		EO_Y = #eoY#,
+		EO_Z = #eoZ#,
+		EO_OMEGA = #eoOmega#,
+		EO_PHI = #eoPhi#,
+		EO_KAPPA = #eoKappa#,
+		CRS_IDN = #crsIdn#
+		WHERE ZONE_CODE = #zoneCode#
+		AND PH_COURSE = #phCourse#
+		AND PH_NUM = #phNum#
+
+	</update>
+	
+	<insert id="managementDAO.insertProductEOAirList" parameterClass="java.util.Map">
+	INSERT INTO AIR_PRODUCTEO_DTS
+		  (ZONE_CODE,
+		   PH_COURSE,
+		   PH_NUM,
+		   EO_X,
+		   EO_Y,
+		   EO_Z,
+		   EO_OMEGA,
+		   EO_PHI,
+		   EO_KAPPA,
+		   CRS_IDN)
+		VALUES
+		  (#zoneCode#,
+		   #phCourse#,
+		   #phNum#,
+		   #eoX#,
+		   #eoY#,
+		   #eoZ#,
+		   #eoOmega#,
+		   #eoPhi#,
+		   #eoKappa#,
+		   #crsIdn#)
+	</insert>
+	
+		<insert id="managementDAO.insertProductEONirList" parameterClass="java.util.Map">
+	INSERT INTO AIR_PRODUCTEO_DTS
+		  (ZONE_CODE,
+		   PH_COURSE,
+		   PH_NUM,
+		   EO_X,
+		   EO_Y,
+		   EO_Z,
+		   EO_OMEGA,
+		   EO_PHI,
+		   EO_KAPPA,
+		   CRS_IDN)
+		VALUES
+		  (#zoneCode#,
+		   #phCourse#,
+		   #phNum#,
+		   #eoX#,
+		   #eoY#,
+		   #eoZ#,
+		   #eoOmega#,
+		   #eoPhi#,
+		   #eoKappa#,
+		   #crsIdn#)
+	</insert>
+
+	<update id="managementDAO.updateAdjustProductAirList"
+		parameterClass="java.util.Map">
+		UPDATE AIR_PRODUCT_DTS
+		SET APH_NUM = 	#aphNum#,
+		APH_NOW =		#aphNow#,
+		FILM_NUM = 		#filmNum#,
+		FILM_NOW =		#filmNow#,
+		RPH_NUM =	 	#rphNum#,
+		RPH_NOW = 		#rphNow#,
+		MD1_NUM = 		#md1Num#,
+		MD2_NUM = 		#md2Num#,
+		REMARK = 		#remark#
+		WHERE ZONE_CODE = #zoneCode#
+		AND PH_COURSE = #phCourse#
+		AND PH_NUM = #phNum#
+
+	</update>
+	
+<insert id="managementDAO.insertProductAirList" parameterClass="java.util.Map">
+	INSERT INTO AIR_PRODUCT_DTS
+		  (ZONE_CODE,
+		   PH_COURSE,
+		   PH_NUM,
+		   APH_NUM,
+		   APH_NOW,
+		   FILM_NUM,
+		   FILM_NOW,
+		   RPH_NUM,
+		   RPH_NOW,
+		   MD1_NUM,
+		   MD2_NUM,
+		   REMARK)
+		VALUES
+		  (#zoneCode#,
+		   #phCourse#,
+		   #phNum#,
+		   #aphNum#,  
+		   #aphNow#,  
+		   #filmNum#, 
+		   #filmNow#, 
+		   #rphNum#,  
+		   #rphNow#,  
+		   #md1Num#,  
+		   #md2Num#,  
+		   #remark#)   
+	</insert>
+	
+<insert id="managementDAO.insertProductNirList" parameterClass="java.util.Map">
+	INSERT INTO AIR_PRODUCT_DTS
+		  (ZONE_CODE,
+		   PH_COURSE,
+		   PH_NUM,
+		   APH_NUM,
+		   APH_NOW,
+		   FILM_NUM,
+		   FILM_NOW,
+		   RPH_NUM,
+		   RPH_NOW,
+		   MD1_NUM,
+		   MD2_NUM,
+		   REMARK)
+		VALUES
+		  (#zoneCode#,
+		   #phCourse#,
+		   #phNum#,
+		   #aphNum#,  
+		   #aphNow#,  
+		   #filmNum#, 
+		   #filmNow#, 
+		   #rphNum#,  
+		   #rphNow#,  
+		   #md1Num#,  
+		   #md2Num#,  
+		   #remark#)   
+	</insert>	
+	
+
+	<select id="managementDAO.selectZoneNamGPS" resultClass="egovMap">
+  	  SELECT DISTINCT A.ZONE_CODE, A.ZONE_NAM
+	    FROM AIR_ZONE_DTS A, DEM_GPSCOORD_DTS B
+	   WHERE A.ZONE_CODE = B.ZONE_CODE
+	</select>
+	
+	<select id="managementDAO.selectGpsBpIdn" resultClass="egovMap">
+	  SELECT A.GPS_BP_IDN FROM DEM_GPSCOORD_DTS A
+	   WHERE A.ZONE_CODE = #zoneNamGPS#
+	</select>
+	
+	
+	<select id="managementDAO.selectGpsListCnt" resultClass="java.lang.Integer">
+		SELECT COUNT(*) ROWCOUNT
+		  FROM DEM_GPSCOORD_DTS A, AIR_ZONE_DTS B
+		  <dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.ZONE_CODE = B.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty property="zoneNamGPS" prepend="AND">
+		             <![CDATA[ A.ZONE_CODE = #zoneNamGPS# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="gpsBpIdn" prepend="AND">
+		           <![CDATA[ A.GPS_BP_IDN = #gpsBpIdn#]]>
+			</isNotEmpty>
+		</dynamic>
+
+	</select>
+	<select id="managementDAO.selectGpsList" resultClass="egovMap">
+	
+		<include refid="Paging_head"/>
+		SELECT A.ZONE_CODE,
+		       A.GPS_BP_IDN,
+		       A.INPUT_CO,
+		       A.RPT_MAN,
+		       A.BAS_NAM,
+		       A.SURV_YMD,
+		       A.OBSERVER,
+		       A.POSI,
+		       A.LATITUDE,
+		       A.NOR_VAL,
+		       A.LONGITUDE,
+		       A.EAS_VAL,
+		       A.DATUM_ELEV,
+		       A.RIG_ELEV,
+		       A.SURV_TT,
+		       A.SURV_INT,
+		       A.SURV_SAT_NUM,
+		       A.PDOP,
+		       A.RES_ANG,
+		       A.ANT_ELEV,
+		       B.ZONE_NAM,
+		       B.ZONE_YY
+		  FROM DEM_GPSCOORD_DTS A, AIR_ZONE_DTS B
+		  <dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.ZONE_CODE = B.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty property="zoneNamGPS" prepend="AND">
+		             <![CDATA[ A.ZONE_CODE = #zoneNamGPS# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="gpsBpIdn" prepend="AND">
+		           <![CDATA[ A.GPS_BP_IDN = #gpsBpIdn#]]>
+			</isNotEmpty>
+		</dynamic>
+		<include refid="Paging_tail"/>
+
+	</select>
+	
+	
+	<select id="managementDAO.selectGpsListZoneNam" resultClass="egovMap">
+	SELECT ZONE_CODE, ZONE_NAM FROM AIR_ZONE_DTS
+	ORDER BY ZONE_NAM
+	</select>
+	
+	<select id="managementDAO.selectOrientmapZoneNam" resultClass="egovMap">
+	SELECT DISTINCT A.ZONE_CODE, A.ZONE_NAM
+	  FROM AIR_ZONE_DTS A, AIR_PRODUCT_DTS C
+   WHERE A.ZONE_CODE = C.ZONE_CODE
+       AND A.IMAGE_CDE NOT IN ( 'PDT009', 'PDT011' )
+   ORDER BY A.ZONE_NAM
+	</select>
+	
+	<select id="managementDAO.selectOrientmapNirZoneNam" resultClass="egovMap">
+	SELECT DISTINCT A.ZONE_CODE, A.ZONE_NAM
+	  FROM AIR_ZONE_DTS A, AIR_PRODUCT_DTS C
+   WHERE A.ZONE_CODE = C.ZONE_CODE
+       AND A.IMAGE_CDE = 'PDT009'
+   ORDER BY A.ZONE_NAM
+	</select>
+	
+	
+	<select id="managementDAO.selectOrientmapPhCourse" resultClass="egovMap">
+  SELECT DISTINCT A.PH_COURSE, A.ZONE_CODE
+    FROM AIR_PRODUCT_DTS A
+   WHERE A.ZONE_CODE = #zoneCode#
+   ORDER BY A.PH_COURSE
+	</select>
+	
+	<select id="managementDAO.selectOrientmapPhNum" resultClass="egovMap">
+  SELECT DISTINCT A.PH_NUM
+    FROM AIR_PRODUCT_DTS A
+   WHERE A.ZONE_CODE = #zoneCode#
+   AND A.PH_COURSE = #phCourse#
+   ORDER BY A.PH_NUM
+	</select>
+	
+	
+	
+	<update id="managementDAO.updateAdjustGpsList"
+	parameterClass="java.util.Map">
+
+UPDATE DEM_GPSCOORD_DTS
+   SET INPUT_CO = #inputCo#,
+       RPT_MAN = #rptMan#,
+       BAS_NAM = #basNam#,
+       SURV_YMD = #survYmd#,
+       OBSERVER = #observer#,
+       POSI = #posi#,
+       LATITUDE = #latitude#,
+       NOR_VAL = #norVal#,
+       LONGITUDE = #longitude#,
+       EAS_VAL = #easVal#,
+       DATUM_ELEV = #datumElev#,
+       RIG_ELEV = #rigElev#,
+       SURV_TT = #survTt#,
+       SURV_INT = #survInt#,
+       SURV_SAT_NUM = #survSatNum#,
+       PDOP = #pdop#,
+       RES_ANG = #resAng#,
+       ANT_ELEV = #antElev#
+ WHERE ZONE_CODE = #zoneCode#
+   AND GPS_BP_IDN = #gpsBpIdn#
+
+</update>
+	
+
+
+<insert id="managementDAO.insertGps" parameterClass="java.util.Map">
+INSERT INTO DEM_GPSCOORD_DTS
+	  (ZONE_CODE,
+	   GPS_BP_IDN,
+	   INPUT_CO,
+	   RPT_MAN,
+	   BAS_NAM,
+	   SURV_YMD,
+	   OBSERVER,
+	   POSI,
+	   LATITUDE,
+	   NOR_VAL,
+	   LONGITUDE,
+	   EAS_VAL,
+	   DATUM_ELEV,
+	   RIG_ELEV,
+	   SURV_TT,
+	   SURV_INT,
+	   SURV_SAT_NUM,
+	   PDOP,
+	   RES_ANG,
+	   ANT_ELEV)
+	VALUES
+	  (#zoneCode#,
+	   #gpsBpIdn#,
+	   #inputCo#,
+	   #rptMan#,
+	   #basNam#,
+	   #survYmd#,
+	   #observer#,
+	   #posi#,
+	   #latitude#,
+	   #norVal#,
+	   #longitude#,
+	   #easVal#,
+	   #datumElev#,
+	   #rigElev#,
+	   #survTt#,
+	   #survInt#,
+	   #survSatNum#,
+	   #pdop#,
+	   #resAng#,
+	   #antElev#)
+	</insert>
+	
+	
+	<insert id="managementDAO.insertOrientmap" parameterClass="java.util.Map">
+		INSERT INTO AIR_ORIENTMAP_DTS
+		  (ZONE_CODE,
+		   PH_COURSE,
+		   PH_NUM,
+		   PYOJUNG_ID,
+		   MAP_NUM,
+		   MAP_NAM,
+		   COOR_X,
+		   COOR_Y,
+		   COOR_CX,
+		   COOR_CY,
+		   P_COOR_X,
+		   P_COOR_Y,
+		   P_CRS_IDN)
+		VALUES
+		  (#zoneCode#,
+		   #phCourse#,
+		   #phNum#,
+		   #pyojungId#,
+		   #mapNum#,
+		   #mapNam#,
+		   #coorX#,
+		   #coorY#,
+		   #coorCx#,
+		   #coorCy#,
+		   #pCoorX#,
+		   #PcoorY#,
+		   #pCrsIdn#)
+	</insert>
+	
+		<insert id="managementDAO.insertOrientmapNir" parameterClass="java.util.Map">
+		INSERT INTO AIR_ORIENTMAP_DTS
+		  (ZONE_CODE,
+		   PH_COURSE,
+		   PH_NUM,
+		   PYOJUNG_ID,
+		   MAP_NUM,
+		   MAP_NAM,
+		   COOR_X,
+		   COOR_Y,
+		   COOR_CX,
+		   COOR_CY,
+		   P_COOR_X,
+		   P_COOR_Y,
+		   P_CRS_IDN)
+		VALUES
+		  (#zoneCode#,
+		   #phCourse#,
+		   #phNum#,
+		   #pyojungId#,
+		   #mapNum#,
+		   #mapNam#,
+		   #coorX#,
+		   #coorY#,
+		   #coorCx#,
+		   #coorCy#,
+		   #pCoorX#,
+		   #PcoorY#,
+		   #pCrsIdn#)
+	</insert>
+
+	<delete id="managementDAO.delGps" parameterClass="java.util.Map">
+	DELETE DEM_GPSCOORD_DTS
+	 WHERE ZONE_CODE = #zoneCode#
+	   AND GPS_BP_IDN = #gpsBpIdn#
+
+	</delete>
+	
+		<delete id="managementDAO.delCmr" parameterClass="java.util.Map">
+	DELETE AIR_CAMERA_DTS WHERE LENS_NUM = #lensNum#
+	</delete>
+	
+	<delete id="managementDAO.delAirNote" parameterClass="java.util.Map">
+	DELETE AIR_NOTE_DTS
+	 WHERE ZONE_CODE = #zoneCode#
+	   AND PH_DATE = #phDate#
+	   AND LENS_NUM = #lensNum#
+
+	</delete>
+	
+		<delete id="managementDAO.delNirNote" parameterClass="java.util.Map">
+	DELETE AIR_NOTE_DTS
+	 WHERE ZONE_CODE = #zoneCode#
+	   AND PH_DATE = #phDate#
+	   AND LENS_NUM = #lensNum#
+
+	</delete>
+
+	<delete id="managementDAO.delOrient" parameterClass="java.util.Map">
+	DELETE AIR_ORIENTMAP_DTS
+	 WHERE ZONE_CODE = #zoneCode#
+	   AND PH_COURSE = #phCourse#
+	   AND PH_NUM = #phNum#
+
+	</delete>
+	
+		<delete id="managementDAO.delOrientNir" parameterClass="java.util.Map">
+	DELETE AIR_ORIENTMAP_DTS
+	 WHERE ZONE_CODE = #zoneCode#
+	   AND PH_COURSE = #phCourse#
+	   AND PH_NUM = #phNum#
+
+	</delete>
+
+	<delete id="managementDAO.delProList" parameterClass="java.util.Map">
+	DELETE AIR_PRODUCT_DTS
+	 WHERE ZONE_CODE = #zoneCode#
+	   AND PH_COURSE = #phCourse#
+	   AND PH_NUM = #phNum#
+	</delete>
+	
+		<delete id="managementDAO.delProNirList" parameterClass="java.util.Map">
+	DELETE AIR_PRODUCT_DTS
+	 WHERE ZONE_CODE = #zoneCode#
+	   AND PH_COURSE = #phCourse#
+	   AND PH_NUM = #phNum#
+	</delete>
+
+
+
+	<!-- 통합검색(DEM사진 년도 검색) -->
+	<select id="managementDAO.selectYearDEMList" resultClass="egovMap">
+		SELECT DISTINCT (T.ZONE_YY) ZONE_YY
+		FROM AIR_ZONE_DTS T, DEM_PRODUCT_DTS B
+		WHERE T.ZONE_CODE = B.ZONE_CODE
+		ORDER BY ZONE_YY DESC
+	</select>
+
+
+	<!-- 통합검색(항공사진 사업지구명 검색) -->
+	<select id="managementDAO.selectZoneNamDEM" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT DISTINCT A.ZONE_NAM, A.ZONE_CODE, A.ZONE_YY
+		FROM AIR_ZONE_DTS A, DEM_PRODUCT_DTS B
+		<dynamic prepend="WHERE">
+			<isNotEmpty  prepend="AND">
+		            <![CDATA[ A.ZONE_CODE = B.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty property="sYearDEM" prepend="AND">
+		             <![CDATA[ A.ZONE_YY >= #sYearDEM# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="eYearDEM" prepend="AND">
+		           <![CDATA[ A.ZONE_YY <= #eYearDEM#]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY A.ZONE_YY DESC
+	</select>
+	
+	<!-- 통합검색(항공사진 사업지구명 검색) -->
+	<select id="managementDAO.selectGridIntDem" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT DISTINCT GRID_INT
+		FROM DEM_PRODUCT_DTS
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		             <![CDATA[ ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="map5000Num" prepend="AND">
+		           <![CDATA[ MAP5000_NUM = #map5000Num# ]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY GRID_INT
+	</select>
+
+	<select id="managementDAO.getMap5000Num" parameterClass="String"
+		resultClass="egovMap">
+		SELECT DISTINCT A.MAP5000_NUM
+		FROM DEM_PRODUCT_DTS A
+		WHERE A.ZONE_CODE = #zoneCode#		
+	</select>
+	
+	<select id="managementDAO.getMap5000NumListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	
+		SELECT COUNT(*) ROWCOUNT
+		FROM DEM_PRODUCT_DTS A, AIR_ZONE_DTS B
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		            <![CDATA[ A.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="map5000Num" prepend="AND">
+		             <![CDATA[ A.MAP5000_NUM = #map5000Num# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="securityCde" prepend="AND">
+					<![CDATA[ A.SECURITY_CDE = #securityCde# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ B.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+		</dynamic>
+		
+	</select>
+	
+	<select id="managementDAO.getGridIntCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	SELECT COUNT(GRID_INT)
+	FROM DEM_PRODUCT_DTS
+	WHERE ZONE_CODE = #zoneCode#
+	AND MAP5000_NUM = #map5000Num#
+	</select>
+	
+	<select id="managementDAO.getMap5000NumList" parameterClass="java.util.Map"
+		resultClass="egovMap">		
+		<include refid="Paging_head"/>
+		
+		SELECT 'PDT002' IMAGE_CDE, 
+		B.ZONE_YY,
+		B.ZONE_NAM,
+		A.MAP5000_NAM,
+		A.MAP5000_NUM,
+		(SELECT T.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM T
+		WHERE T.FLE_IDN = 'SECURITY_CDE'
+		AND A.SECURITY_CDE = T.CDE_CDE) SECURITY_CDE,
+		A.DTD_OX,
+		A.SHADED_IMG_OX,
+		A.OBS_RGS_OX,
+		A.ZONE_CODE,
+		(SELECT R.RESOLUTION
+			FROM META_AIRMAP_IDENT R
+			WHERE R.ZONE_CODE = A.ZONE_CODE) RESOLUTION,
+		A.GRID_INT
+<!-- 		, -->
+<!--       	C.RES_SEQ -->
+      	
+		FROM DEM_PRODUCT_DTS A, AIR_ZONE_DTS B
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		            <![CDATA[ A.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="map5000Num" prepend="AND">
+		             <![CDATA[ A.MAP5000_NUM = #map5000Num# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="securityCde" prepend="AND">
+					<![CDATA[ A.SECURITY_CDE = #securityCde# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="gridInt" prepend="AND">
+					<![CDATA[A.GRID_INT = #gridInt# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ B.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.ZONE_CODE = C.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.MAP5000_NUM = C.MAP5000_NUM ]]>
+			</isNotEmpty>
+			ORDER BY LPAD(A.MAP5000_NUM, 8)
+		</dynamic>
+		
+		<include refid="Paging_tail"/>		
+	</select>
+
+	<select id="managementDAO.getSubMap5000NumList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT A.ZONE_CODE,
+		A.MAP5000_NUM,
+		A.NAME,
+		A.MAP5000_NAM,
+		A.ORIGIN_DATA,
+		A.ACQ_ORIGIN,
+		A.ORIGIN_FORM,
+		A.ORIGIN_YEAR,
+		A.GRID_INT,
+<!-- 		C.RES_SEQ, -->
+		A.UNIT,
+		A.INTERPOL_METHOD,
+		A.LB_X,
+		A.LB_Y,
+		A.RT_X,
+		A.RT_Y,
+		A.CRS_IDN,
+		A.COORDINATE,
+		A.ORIGIN,
+		A.ELEV_NORM,
+		A.HEIVAR_KIND,
+		A.MAX_ELEV,
+		A.MIN_ELEV,
+		A.DATA_FORM,
+		A.ACCURACY,
+		A.PRODUCER,
+		A.PUBLISHER,
+		A.REFERENCE,
+		A.PRP,
+		(SELECT T.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM T
+		WHERE T.FLE_IDN = 'SECURITY_CDE'
+		AND A.SECURITY_CDE = T.CDE_CDE) SECURITY_CDE,
+		A.DTD_OX,
+		A.SHADED_IMG_OX,
+		A.OBS_RGS_OX,
+		A.FLIGHT_PLAN_OX,
+		A.GPSINS_OX,
+		A.GPS_BP_OX,
+		A.P_LB_X,
+		A.P_LB_Y,
+		A.P_RT_X,
+		A.P_RT_Y,
+		A.P_CRS_IDN,
+		(SELECT T.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM T
+		WHERE T.FLE_IDN = 'IMAGE_CDE'
+		AND A.IMAGE_CDE = T.CDE_CDE) IMAGE_CDE,
+		B.ZONE_NAM,
+		B.ZONE_YY
+		FROM DEM_PRODUCT_DTS A, AIR_ZONE_DTS B
+		WHERE A.ZONE_CODE = #zoneCode#
+		AND A.MAP5000_NUM = #map5000Num#
+		AND A.GRID_INT = #gridInt#
+		AND B.ZONE_CODE = A.ZONE_CODE
+		AND A.ZONE_CODE = A.ZONE_CODE
+		AND A.MAP5000_NUM = A.MAP5000_NUM
+	</select>
+
+	<select id="managementDAO.getSubGridIntDem" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT GRID_INT 
+		FROM DEM_PRODUCT_DTS
+		WHERE ZONE_CODE = #zoneCode#
+		AND MAP5000_NUM = #map5000Num#
+		AND GRID_INT = #gridInt#
+	</select>
+
+	<select id="managementDAO.getSubMap5000BaseMeta" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT ZONE_CODE,
+		MAP5000_NUM,
+		FILE_IDENTIFIER,
+		LANGUAGE,
+		RES_OFFICENAME,
+		RES_POSTNAME,
+		RES_PHONE,
+		RES_FAX,
+		RES_ADDRESS,
+		RES_POSTAL_CODE,
+		META_DATE,
+		META_VERSION,
+		DIST_FORMAT_NAME,
+		DIST_FORMAT_VERSION,
+		DIST_OFFICENAME,
+		DIST_POSTNAME,
+		DIST_PHONE,
+		QUALITY_TARGET,
+		DOCUMENT,
+		TARGET_NAME,
+		SPATIAL_DATA,
+		SIGUNGU_NAM,
+		SIGUNGU_CDE
+		FROM DEM_BASEMETA_DTS A
+		WHERE A.ZONE_CODE = #zoneCode#
+		AND A.MAP5000_NUM = #map5000Num#
+
+	</select>
+	
+<!-- 	<insert id="managementDAO.insertSubGridIntDem" parameterClass="java.util.Map">
+	<selectKey type="pre" keyProperty="resSeq" resultClass="java.lang.String">
+			SELECT 	NVL(MAX(RES_SEQ), 0) + 1
+			FROM 	DEM_RESOLUTION
+			WHERE 	1 =1
+			AND 	ZONE_CODE = #zoneCode#
+			AND 	MAP5000_NUM = #map5000Num#
+		</selectKey>
+		INSERT INTO DEM_RESOLUTION
+		  (ZONE_CODE,
+		   MAP5000_NUM,
+		   GRID_INT
+		   ,
+		   RES_SEQ
+		   )
+		VALUES
+		  (#zoneCode#,
+		  #map5000Num#,
+		  #gridInt#
+		  ,
+		  #resSeq#
+		  )
+	</insert> -->
+	
+	<insert id="managementDAO.insertSubMap5000BaseMeta" parameterClass="java.util.Map">
+	INSERT INTO DEM_BASEMETA_DTS
+		  (FILE_IDENTIFIER,
+		   LANGUAGE,
+		   RES_OFFICENAME,
+		   RES_POSTNAME,
+		   RES_PHONE,
+		   RES_FAX,
+		   RES_ADDRESS,
+		   RES_POSTAL_CODE,
+		   META_DATE,
+		   META_VERSION,
+		   DIST_FORMAT_NAME,
+		   DIST_FORMAT_VERSION,
+		   DIST_OFFICENAME,
+		   DIST_POSTNAME,
+		   DIST_PHONE,
+		   QUALITY_TARGET,
+		   DOCUMENT,
+		   TARGET_NAME,
+		   SPATIAL_DATA,
+		   SIGUNGU_NAM,
+		   SIGUNGU_CDE,
+		   ZONE_CODE,
+		   MAP5000_NUM)
+		VALUES
+		  (#fileIdentifier#, 
+		   #language#,
+		   #resOfficename#,
+		   #resPostname#,
+		   #resPhone#,
+		   #resFax#,
+		   #resAddress#,
+		   #resPostalCode#,
+		   #metaDate#,
+		   #metaVersion#,
+		   #distFormatName#, 
+		   #distFormatVersion#,
+		   #distOfficename#, 
+		   #distPostname#,
+		   #distPhone#,
+		   #qualityTarget#,
+		   #document#,
+		   #targetName#,
+		   #spatialData#,
+		   #sigunguNam#,
+		   #sigunguCde#,
+		   #zoneCode#, 
+		   #map5000Num#)
+	</insert>
+	
+	<insert id="managementDAO.insertSubMap5000NumList" parameterClass="java.util.Map">
+	INSERT INTO DEM_PRODUCT_DTS
+	  (MAP5000_NUM,
+	   MAP5000_NAM,
+	   ORIGIN_DATA,
+	   ACQ_ORIGIN,
+	   ORIGIN_FORM,
+	   ORIGIN_YEAR,
+	   GRID_INT,
+	   UNIT,
+	   INTERPOL_METHOD,
+	   LB_X,
+	   LB_Y,
+	   RT_X,
+	   RT_Y,
+	   CRS_IDN,
+	   COORDINATE,
+	   ORIGIN,
+	   ELEV_NORM,
+	   HEIVAR_KIND,
+	   MAX_ELEV,
+	   MIN_ELEV,
+	   DATA_FORM,
+	   ACCURACY,
+	   PRODUCER,
+	   PUBLISHER,
+	   REFERENCE,
+	   PRP,
+	   SECURITY_CDE,
+	   DTD_OX,
+	   SHADED_IMG_OX,
+	   OBS_RGS_OX,
+	   FLIGHT_PLAN_OX,
+	   GPSINS_OX,
+	   GPS_BP_OX,
+	   P_LB_X,
+	   P_LB_Y,
+	   P_RT_X,
+	   P_RT_Y,
+	   P_CRS_IDN,
+	   IMAGE_CDE,
+	   ZONE_CODE)
+	VALUES
+	   (#map5000Num#,
+		#map5000Nam#,
+		#originData#,
+		#acqOrigin#,
+		#originForm#,
+		#originYear#,
+		#gridInt#,
+		#unit#,
+		#interpolMethod#,
+		#lbX#,
+		#lbY#,
+		#rtX#,
+		#rtY#,
+		#crsIdn#,
+		#coordinate#,
+		#origin#,
+		#elevNorm#,
+		#heivarKind#,
+		#maxElev#,
+		#minElev#,
+		#dateForm#,
+		#accuracy#,
+		#producer#,
+		#publisher#,
+		#reference#,
+		#prp#,
+		(SELECT A.CDE_CDE
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'SECURITY_CDE'
+		AND A.CDE_NAM = #securityCde#),
+		#dtdOx#,
+		#shadedImgOx#, 
+		#obsRgsOx#,
+		#flightPlanOx#,
+		#gpsinsOx#,
+		#gpsBpOx#,
+		#pLbX#,
+		#pLbY#,
+		#pRtX#,
+		#pRtY#,
+		#pCrsIdn#,
+		(SELECT A.CDE_CDE
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'IMAGE_CDE'
+		AND A.CDE_NAM = #imageCde#),
+		#zoneCode#)
+
+	</insert>
+	
+	
+	<update id="managementDAO.updateAdjustSubMap5000BaseMeta"
+		parameterClass="java.util.Map">
+		UPDATE DEM_BASEMETA_DTS
+		SET FILE_IDENTIFIER = #fileIdentifier#,
+		LANGUAGE = #language#,
+		RES_OFFICENAME = #resOfficename#,
+		RES_POSTNAME = #resPostname#,
+		RES_PHONE = #resPhone#,
+		RES_FAX = #resFax#,
+		RES_ADDRESS = #resAddress#,
+		RES_POSTAL_CODE = #resPostalCode#,
+		META_DATE = #metaDate#,
+		META_VERSION = #metaVersion#,
+		DIST_FORMAT_NAME = #distFormatName#,
+		DIST_FORMAT_VERSION = #distFormatVersion#,
+		DIST_OFFICENAME = #distOfficename#,
+		DIST_POSTNAME = #distPostname#,
+		DIST_PHONE = #distPhone#,
+		QUALITY_TARGET = #qualityTarget#,
+		DOCUMENT = #document#,
+		TARGET_NAME = #targetName#,
+		SPATIAL_DATA = #spatialData#,
+		SIGUNGU_NAM = #sigunguNam#,
+		SIGUNGU_CDE = #sigunguCde#
+		WHERE ZONE_CODE = #zoneCode#
+		AND MAP5000_NUM = #map5000Num#
+	</update>
+
+
+	<update id="managementDAO.updateAdjustSubMap5000NumList"
+		parameterClass="java.util.Map">
+		UPDATE DEM_PRODUCT_DTS
+		SET MAP5000_NAM = #map5000Nam#,
+		ORIGIN_DATA = #originData#,
+		ACQ_ORIGIN = #acqOrigin#,
+		ORIGIN_FORM = #originForm#,
+		ORIGIN_YEAR = #originYear#,
+		GRID_INT = #gridInt#,
+		UNIT = #unit#,
+		INTERPOL_METHOD = #interpolMethod#,
+		LB_X = #lbX#,
+		LB_Y = #lbY#,
+		RT_X = #rtX#,
+		RT_Y = #rtY#,
+		CRS_IDN = #crsIdn#,
+		COORDINATE = #coordinate#,
+		ORIGIN = #origin#,
+		ELEV_NORM = #elevNorm#,
+		HEIVAR_KIND = #heivarKind#,
+		MAX_ELEV = #maxElev#,
+		MIN_ELEV = #minElev#,
+		DATA_FORM = #dateForm#,
+		ACCURACY = #accuracy#,
+		PRODUCER = #producer#,
+		PUBLISHER = #publisher#,
+		REFERENCE = #reference#,
+		PRP = #prp#,
+		SECURITY_CDE = (SELECT A.CDE_CDE
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'SECURITY_CDE'
+		AND A.CDE_NAM = #securityCde#),
+		DTD_OX = #dtdOx#,
+		SHADED_IMG_OX = #shadedImgOx#,
+		OBS_RGS_OX = #obsRgsOx#,
+		FLIGHT_PLAN_OX = #flightPlanOx#,
+		GPSINS_OX = #gpsinsOx#,
+		GPS_BP_OX = #gpsBpOx#,
+		P_LB_X = #pLbX#,
+		P_LB_Y = #pLbY#,
+		P_RT_X = #pRtX#,
+		P_RT_Y = #pRtY#,
+		P_CRS_IDN = #pCrsIdn#,
+		IMAGE_CDE = (SELECT A.CDE_CDE
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'IMAGE_CDE'
+		AND A.CDE_NAM = #imageCde#)
+		WHERE ZONE_CODE = #zoneCode#
+		AND MAP5000_NUM = #map5000Num#
+	</update>
+	
+<!-- 	<update id="managementDAO.updateAdjustGridIntList"
+		parameterClass="java.util.Map">
+		UPDATE DEM_RESOLUTION SET
+		GRID_INT = #gridInt#
+		WHERE ZONE_CODE = #zoneCode#
+		AND MAP5000_NUM = #map5000Num#
+		AND RES_SEQ = #resSeq#
+	</update> -->
+
+<!-- 	<delete id="managementDAO.delGridIntDem" parameterClass="java.util.Map">
+	DELETE DEM_RESOLUTION
+	WHERE ZONE_CODE = #zoneCode#
+	AND MAP5000_NUM = #map5000Num#
+	AND RES_SEQ = #resSeq#
+	</delete>
+	 -->
+	<delete id="managementDAO.delMap5000" parameterClass="java.util.Map">
+	DELETE DEM_PRODUCT_DTS
+	 WHERE ZONE_CODE = #zoneCode#
+	   AND MAP5000_NUM = #map5000Num#
+
+	</delete>
+
+
+
+
+	<!-- 통합검색(정사영상 년도 검색) -->
+	<select id="managementDAO.selectYearListOrt" resultClass="egovMap">
+		SELECT DISTINCT (T.ZONE_YY) ZONE_YY
+		FROM AIR_ZONE_DTS T, ORT_PRODUCT_DTS B
+		WHERE T.ZONE_CODE = B.ZONE_CODE
+		ORDER BY ZONE_YY DESC
+	</select>
+
+	<!-- 통합검색(정사영상 사업지구명 검색) -->
+	<select id="managementDAO.selectZoneNamOrt" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT DISTINCT A.ZONE_NAM, A.ZONE_CODE, A.ZONE_YY
+		FROM AIR_ZONE_DTS A, ORT_PRODUCT_DTS B
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		             <![CDATA[A.ZONE_CODE = B.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty property="sYearOrt" prepend="AND">
+		             <![CDATA[ A.ZONE_YY >= #sYearOrt# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="eYearOrt" prepend="AND">
+		           <![CDATA[ A.ZONE_YY <= #eYearOrt#]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY A.ZONE_YY DESC
+	</select>
+
+	<!-- 통합검색(정사영상 도엽번호 검색) -->
+	<select id="managementDAO.getMap5000NumOrt" parameterClass="String"
+		resultClass="egovMap">
+		SELECT DISTINCT A.MAP5000_NUM
+		FROM ORT_PRODUCT_DTS A
+		WHERE A.ZONE_CODE = #zoneCode#
+		ORDER BY LPAD(A.MAP5000_NUM, 8)
+	</select>
+
+
+	<select id="managementDAO.getMap5000NumOrtListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	
+		SELECT COUNT(*) ROWCOUNT
+		FROM ORT_PRODUCT_DTS A, AIR_ZONE_DTS B, META_ORT_CONTR C 
+		<dynamic prepend="WHERE">
+			A.ZONE_CODE = #zoneCode#
+			AND
+			<isNotEmpty property="map5000Num" prepend="AND">
+		             <![CDATA[ A.MAP5000_NUM = #map5000Num# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="securityCde" prepend="AND">
+					<![CDATA[ C.SECURITY_CDE = #securityCde# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="gtypDst" prepend="AND">
+					<![CDATA[ A.GTYP_DST = #gtypDst# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ B.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">			
+		             <![CDATA[ C.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ C.MAP5000_NUM = A.MAP5000_NUM ]]>
+			</isNotEmpty>
+			<!-- 2016.10.25 민병현 : 지상표본거리 컬럼 추가. -->
+		</dynamic>
+		
+	</select>
+	<select id="managementDAO.getMap5000NumOrtList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		
+		<include refid="Paging_head"/>
+		SELECT 'PDT004' IMAGE_CDE, 
+		B.ZONE_YY,
+		B.ZONE_NAM,
+		A.MAP5000_NAM,
+		A.MAP5000_NUM,
+		A.ORIGIN_IMG,
+		A.WORK_YMD,
+		(SELECT T.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM T
+		WHERE T.FLE_IDN = 'SECURITY_CDE'
+		AND C.SECURITY_CDE = T.CDE_CDE) SECURITY_CDE,
+		A.CONST_CO,
+		A.USED_DEM,
+		A.ZONE_CODE,
+		A.GTYP_DST <!-- 2016.10.25 민병현 : 지상표본거리 컬럼 추가. -->
+		FROM ORT_PRODUCT_DTS A, AIR_ZONE_DTS B, META_ORT_CONTR C , 
+		<dynamic prepend="WHERE">
+			A.ZONE_CODE = #zoneCode#
+			AND
+			<isNotEmpty property="map5000Num" prepend="AND">
+		             <![CDATA[ A.MAP5000_NUM = #map5000Num# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="securityCde" prepend="AND">
+					<![CDATA[ C.SECURITY_CDE = #securityCde# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="gtypDst" prepend="AND">
+					<![CDATA[ A.GTYP_DST = #gtypDst# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ B.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ C.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ C.MAP5000_NUM = A.MAP5000_NUM ]]>
+			</isNotEmpty>
+
+			ORDER BY LPAD(A.MAP5000_NUM, 8)
+		</dynamic>
+		<include refid="Paging_tail"/>
+		
+	</select>
+
+	<select id="managementDAO.getSubMap5000NumOrtList"
+		parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT A.ZONE_CODE,
+		A.MAP5000_NUM,
+		A.MAP5000_NAM,
+<!-- 		A.SCALE, -->
+<!-- 		A.GTYP_DST, -->
+		A.CONST_CO,
+<!-- 		A.INPUT_CO, -->
+		A.ORIGIN,
+		A.WORK_YMD,
+		A.ORIGIN_IMG,
+		A.REFERENCE,
+		A.PRP,
+		A.COLOR_GBN,
+		A.USED_DEM,
+		A.CMR_TYPE,
+		A.SAT_NAM,
+<!-- 		A.CRS_IDN, -->
+		A.P_CRS_IDN,
+		(SELECT T.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM T
+		WHERE T.FLE_IDN = 'IMAGE_CDE'
+		AND A.IMAGE_CDE = T.CDE_CDE) IMAGE_CDE,
+		A.SCALE_RELAC,
+		(SELECT T.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM T
+		WHERE T.FLE_IDN = 'SECURITY_CDE'
+		AND A.SECURITY_CDE = T.CDE_CDE) SECURITY_CDE,
+		A.MASK_OX,
+		C.CRS_IDN,
+		A.GTYP_DST,
+<!-- 		F.RES_SEQ, -->
+		D.SCALE,
+		D.INPUT_CO,
+		E.ZONE_YY,
+		E.ZONE_NAM
+		FROM ORT_PRODUCT_DTS A,
+		META_ORT_REFRC C,
+		META_ORT_IDENT D,
+		AIR_ZONE_DTS E
+		WHERE A.ZONE_CODE = #zoneCode#
+		AND E.ZONE_CODE(+) = A.ZONE_CODE
+		AND A.MAP5000_NUM = #map5000Num#
+		AND A.GTYP_DST = #gtypDst#
+		AND C.ZONE_CODE(+) = A.ZONE_CODE
+		AND C.MAP5000_NUM(+) = A.MAP5000_NUM
+		AND D.ZONE_CODE(+) = A.ZONE_CODE
+		AND D.MAP5000_NUM(+) = A.MAP5000_NUM
+		
+	</select>
+	
+	<select id="managementDAO.getSubGtypDstOrt"
+		parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT 	GTYP_DST
+		FROM 	ORT_PRODUCT_DTS
+		WHERE 	MAP5000_NUM = #map5000Num#
+		AND 	ZONE_CODE = #zoneCode#
+		AND		GTYP_DST = #gtypDst#
+	</select>
+
+
+	<select id="managementDAO.selectSubMetaOrtList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+	SELECT NVL(MIN(A.FILE_IDENTIFIER),'') FILE_IDENTIFIER,
+	       NVL(MIN(A.LANGUAGE),'') LANGUAGE,
+	       NVL(MIN(A.SCALE),'') SCALE,
+	       NVL(MIN(A.INPUT_CO),'') INPUT_CO,
+	       NVL(MIN(A.TARGET_NAME),'') TARGET_NAME,
+	       NVL(MIN(A.ZONE_CODE),'') ZONE_CODE,
+	       NVL(MIN(A.MAP5000_NUM),'') MAP5000_NUM,
+	       NVL(MIN(A.RES_POSTNAME),'') RES_POSTNAME,
+	       NVL(MIN(A.RES_PHONE),'') RES_PHONE,
+	       NVL(MIN(A.RES_FAX),'') RES_FAX,
+	       NVL(MIN(A.RES_ADDRESS),'') RES_ADDRESS,
+	       NVL(MIN(A.RES_POSTAL_CODE),'') RES_POSTAL_CODE,
+	       NVL(MIN(B.MAP5000_NUM),'') MAP5000_NUM,
+	       NVL(MIN(B.RES_OFFICENAME),'') RES_OFFICENAME,
+	       NVL(MIN(B.META_VERSION),'') META_VERSION,
+	       NVL(MIN(B.DIST_OFFICENAME),'') DIST_OFFICENAME,
+	       NVL(MIN(B.DIST_POSTNAME),'') DIST_POSTNAME,
+	       NVL(MIN(B.DIST_PHONE),'') DIST_PHONE,
+	       NVL(MIN(B.QUALITY_TARGET),'') QUALITY_TARGET,
+	       NVL(MIN(B.DOCUMENT),'') DOCUMENT,
+	       NVL(MIN(B.SPATIAL_DATA),'') SPATIAL_DATA,
+	       NVL(MIN(B.SIGUNGU_NAM),'') SIGUNGU_NAM,
+	       NVL(MIN(B.SIGUNGU_CDE),'') SIGUNGU_CDE,
+	       NVL(MIN(C.GTYP_DST),'') GTYP_DST
+<!-- 	       , -->
+<!-- 	       NVL(MIN(C.RES_SEQ),'') RES_SEQ -->
+	  FROM META_ORT_IDENT A, ORT_BASEMETA_DTS B ,ORT_PRODUCT_DTS C
+	 WHERE A.ZONE_CODE = #zoneCode#
+	   AND A.MAP5000_NUM = #map5000Num#
+	   AND C.GTYP_DST = #gtypDst#
+	   AND A.ZONE_CODE = B.ZONE_CODE
+	   AND A.MAP5000_NUM = B.MAP5000_NUM
+	   AND A.ZONE_CODE = C.ZONE_CODE
+	   AND A.MAP5000_NUM = C.MAP5000_NUM
+
+	</select>
+
+
+
+	<update id="managementDAO.updateAdjustSubMap5000NumOrtList"
+		parameterClass="java.util.Map">
+
+		UPDATE ORT_PRODUCT_DTS A
+		SET 
+		A.CONST_CO = #constCo#,
+		A.ORIGIN = #origin#,
+		A.WORK_YMD = #workYmd#,
+		A.ORIGIN_IMG = #originImg#,
+		A.REFERENCE = #reference#,
+		A.PRP = #prp#,
+		A.COLOR_GBN = #colorGbn#,
+		A.USED_DEM = #usedDem#,
+		A.CMR_TYPE = #cmrType#,
+		A.SAT_NAM = #satNam#,
+<!-- 		A.CRS_IDN = #crsIdn#, -->
+		A.P_CRS_IDN = #pCrsIdn#,
+		A.IMAGE_CDE = (SELECT A.CDE_CDE
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'IMAGE_CDE'
+		AND A.CDE_NAM = #imageCde#),
+		A.SCALE_RELAC = #scaleRelac#
+		WHERE ZONE_CODE = #zoneCode#
+		AND MAP5000_NUM = #map5000Num#
+
+	</update>
+
+	<update id="managementDAO.updateAdjustSubMap5000NumOrtList_2"
+		parameterClass="java.util.Map">
+		UPDATE META_ORT_CONTR
+		SET SECURITY_CDE = (SELECT A.CDE_CDE
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'SECURITY_CDE'
+		AND A.CDE_NAM = #securityCde#),
+		MASK_OX = #maskOx#
+		WHERE ZONE_CODE = #zoneCode#
+		AND MAP5000_NUM = #map5000Num#
+
+	</update>
+
+	<update id="managementDAO.updateAdjustSubMap5000NumOrtList_3"
+		parameterClass="java.util.Map">
+		UPDATE META_ORT_REFRC
+		SET CRS_IDN = #crsIdn#
+		WHERE ZONE_CODE = #zoneCode#
+		AND MAP5000_NUM = #map5000Num#
+	</update>
+	
+	<update id="managementDAO.adjustSubGtypDstOrtList"
+		parameterClass="java.util.Map">
+		UPDATE ORT_PRODUCT_DTS
+		SET GTYP_DST = #gtypDst#
+		WHERE ZONE_CODE = #zoneCode#
+		AND MAP5000_NUM = #map5000Num#
+<!-- 		AND RES_SEQ = #resSeq# -->
+
+	</update>
+
+	<insert id="managementDAO.insertSubMap5000NumOrtList"
+		parameterClass="java.util.Map">
+		INSERT INTO ORT_PRODUCT_DTS
+		  (MAP5000_NAM,
+		   CONST_CO,
+		   ORIGIN,
+		   WORK_YMD,
+		   ORIGIN_IMG,
+		   REFERENCE,
+		   PRP,
+		   COLOR_GBN,
+		   USED_DEM,
+		   CMR_TYPE,
+		   SAT_NAM,
+		   P_CRS_IDN,
+		   IMAGE_CDE,
+		   SCALE_RELAC,
+		   ZONE_CODE,
+		   MAP5000_NUM)
+		VALUES
+		   (#map5000Nam#,
+			#constCo#,
+			#origin#,
+			#workYmd#,
+			#originImg#,
+			#reference#,
+			#prp#,
+			#colorGbn#, 
+			#usedDem#,
+			#cmrType#,
+			#satNam#,
+			#pCrsIdn#,
+			(SELECT A.CDE_CDE
+			FROM CMT_DETAIL_CODE_NIIM A
+			WHERE A.FLE_IDN = 'IMAGE_CDE'
+			AND A.CDE_NAM = #imageCde#),
+			#scaleRelac#,
+			#zoneCode#,
+			#map5000Num#)
+	</insert>
+	
+<!-- 	<insert id="managementDAO.insertSubGtypDstOrt"
+		parameterClass="java.util.Map">
+		<selectKey type="pre" keyProperty="resSeq" resultClass="java.lang.String">
+			SELECT 	NVL(MAX(RES_SEQ), 0) + 1
+			FROM 	ORT_PRODUCT_DTS
+			WHERE 	1 =1
+			AND 	ZONE_CODE = #zoneCode#
+			AND 	MAP5000_NUM = #map5000Num#
+		</selectKey>
+		INSERT INTO META_ORT_RESOLUTION
+		  (ZONE_CODE,
+		   MAP5000_NUM,
+		   GTYP_DST
+		   ,
+		   RES_SEQ
+		   )
+		VALUES
+		  (#zoneCode#,
+		  #map5000Num#,
+		  #gtypDst#
+		  ,
+		  #resSeq#
+		  )
+	</insert> -->
+
+	<insert id="managementDAO.insertSubMap5000NumOrtList_2"
+		parameterClass="java.util.Map">
+	INSERT INTO META_ORT_CONTR
+	  (SECURITY_CDE,
+	   MASK_OX,
+	   ZONE_CODE,
+	   MAP5000_NUM)
+	VALUES
+	  ((SELECT A.CDE_CDE
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'SECURITY_CDE'
+		AND A.CDE_NAM = #securityCde#),
+	   #maskOx#,
+	   #zoneCode#,
+	   #map5000Num#)
+	</insert>
+
+	<insert id="managementDAO.insertSubMap5000NumOrtList_3"
+		parameterClass="java.util.Map">
+
+	INSERT INTO META_ORT_REFRC
+	(CRS_IDN, ZONE_CODE, MAP5000_NUM)
+	VALUES
+	(#crsIdn_2#, #zoneCode#, #map5000Num#)
+	
+	</insert>
+	
+	<insert id="managementDAO.insertSubMetaOrtMait"
+		parameterClass="java.util.Map">
+	
+		INSERT INTO META_ORT_MAIT
+		  (META_DATE,
+		   ZONE_CODE,
+		   MAP5000_NUM)
+		VALUES
+		  (#metaDate#,
+		   #zoneCode#,
+		   #map5000Num#)
+	</insert>
+	
+		<insert id="managementDAO.insertSubMetaOrtDistr"
+		parameterClass="java.util.Map">
+	
+	INSERT INTO META_ORT_DISTR
+		  (DIST_FORMAT_NAME,
+		   DIST_FORMAT_VERSION,
+		   ZONE_CODE,
+		   MAP5000_NUM)
+		VALUES
+		  (#distFormatName#,
+		   #distFormatVersion#,
+		   #zoneCode#,
+		   #map5000Num#)
+
+	</insert>
+	
+		<insert id="managementDAO.insertSubMetaOrtIdent"
+		parameterClass="java.util.Map">
+	
+		INSERT INTO META_ORT_IDENT
+		   (FILE_IDENTIFIER,
+			LANGUAGE,
+			GTYP_DST,
+			SCALE, 
+			INPUT_CO,
+			TARGET_NAME,
+			ZONE_CODE,
+			MAP5000_NUM,
+			RES_POSTNAME,
+			RES_PHONE,
+			RES_FAX,
+			RES_ADDRESS,
+			RES_POSTAL_CODE)
+		VALUES
+		   (#fileIdentifier#,
+			#language#,
+			#gtypDst#,		
+			#scale#,
+			#inputCo#,
+			#targetName#,	
+			#zoneCode#,		
+			#map5000Num#,
+			#resPostname#,	
+			#resPhone#,		
+			#resFax#,		
+			#resAddress#,	
+			#resPostalCode#)
+	</insert>
+	<insert id="managementDAO.insertSubMetaBaseOrt"
+		parameterClass="java.util.Map">
+	
+		INSERT INTO ORT_BASEMETA_DTS
+		  (ZONE_CODE,
+		   MAP5000_NUM,
+		   RES_OFFICENAME,
+		   META_VERSION,
+<!-- 		   DIST_FORMAT_NAME, -->
+<!-- 		   DIST_FORMAT_VERSION, -->
+		   DIST_OFFICENAME,
+		   DIST_POSTNAME,
+		   DIST_PHONE,
+		   QUALITY_TARGET,
+		   DOCUMENT,
+		   SIGUNGU_NAM,
+		   SIGUNGU_CDE
+<!-- 		   META_DATE -->
+		   )
+		VALUES
+		  (#zoneCode#,		
+	       #map5000Num#,
+		   #resOfficename#, 
+	       #metaVersion#,	
+<!-- 	       #distFormatName#, -->
+<!-- 	       #distFormatVersion#, -->
+	       #distOfficename#,
+	       #distPostname#,	
+	       #distPhone#,	
+	       #qualityTarget#,	
+	       #document#,		
+	       #sigunguNam#,	
+	       #sigunguCde#
+<!-- 	       #metaDate# -->
+	       )
+	</insert>
+	
+	<update id="managementDAO.updateAdjustSubMetaBaseOrt"
+		parameterClass="java.util.Map">
+		UPDATE ORT_BASEMETA_DTS
+		SET META_VERSION = #metaVersion#,
+		DIST_OFFICENAME = #distOfficename#,
+		DIST_POSTNAME = #distPostname#,
+		DIST_PHONE = #distPhone#,
+		QUALITY_TARGET = #qualityTarget#,
+		DOCUMENT = #document#,
+		SIGUNGU_NAM = #sigunguNam#,
+		SIGUNGU_CDE = #sigunguCde#
+		WHERE ZONE_CODE = #zoneCode#
+		AND MAP5000_NUM = #map5000Num#
+	</update>
+
+	<update id="managementDAO.updateAdjustSubMetaOrtIdent"
+		parameterClass="java.util.Map">
+
+		UPDATE META_ORT_IDENT
+		SET FILE_IDENTIFIER = #fileIdentifier#,
+		LANGUAGE = #language#,
+		GTYP_DST = #gtypDst#,
+		SCALE = #scale#,
+		INPUT_CO = #inputCo#,
+		TARGET_NAME = #targetName#,
+		RES_POSTNAME = #resPostname#,
+		RES_PHONE = #resPhone#,
+		RES_FAX = #resFax#,
+		RES_ADDRESS = #resAddress#,
+		RES_POSTAL_CODE = #resPostalCode#
+		WHERE ZONE_CODE = #zoneCode#
+		AND MAP5000_NUM = #map5000Num#
+
+	</update>
+	
+	<select id="managementDAO.getGtypDstCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	SELECT COUNT(GTYP_DST)
+	FROM ORT_PRODUCT_DTS
+	WHERE 1=1
+	AND ZONE_CODE = #zoneCode#
+	AND MAP5000_NUM = #map5000Num#
+	</select>
+	
+	<select id="managementDAO.getExistToMetaOrtIdent" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	SELECT  COUNT(FILE_IDENTIFIER)
+	FROM META_ORT_IDENT
+	WHERE 1 =1
+	AND ZONE_CODE = #zoneCode#
+	AND MAP5000_NUM = #map5000Num#
+	</select>
+	
+	<!-- <delete id="managementDAO.delGtypDstOrt" parameterClass="java.util.Map">
+	DELETE META_ORT_RESOLUTION
+	 WHERE ZONE_CODE = #zoneCode#
+	   AND MAP5000_NUM = #map5000Num#
+	   AND GTYP_DST = #gtypDst#
+
+	</delete>
+ -->	
+	<delete id="managementDAO.delMap5000Ort" parameterClass="java.util.Map">
+	DELETE ORT_PRODUCT_DTS
+	 WHERE ZONE_CODE = #zoneCode#
+	   AND MAP5000_NUM = #map5000Num#
+
+	</delete>
+
+	<!-- 통합검색(LiDAR 년도 검색) -->
+	<select id="managementDAO.selectYearListLid" resultClass="egovMap">
+	SELECT DISTINCT (T.ZONE_YY) ZONE_YY
+		FROM AIR_ZONE_DTS T, LID_PRODUCT_DTS B
+		WHERE T.ZONE_CODE = B.ZONE_CODE
+		ORDER BY ZONE_YY DESC
+	</select>
+	
+	<!-- 통합검색(LiDAR 사업지구명 검색) -->
+	<select id="managementDAO.selectZoneNamLid" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT DISTINCT A.ZONE_NAM, A.ZONE_CODE, A.ZONE_YY
+		FROM AIR_ZONE_DTS A, LID_PRODUCT_DTS B
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.ZONE_CODE = B.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty property="sYearLid" prepend="AND">
+		             <![CDATA[ A.ZONE_YY >= #sYearLid# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="eYearLid" prepend="AND">
+		           <![CDATA[ A.ZONE_YY <= #eYearLid#]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY A.ZONE_YY DESC
+	</select>
+	
+		<!-- 통합검색(LiDAR 년도 검색) -->
+	<select id="managementDAO.selectLidarIdn" parameterClass="String" resultClass="egovMap">
+	SELECT T.LIDAR_IDN
+	  FROM LID_PRODUCT_DTS T
+	 WHERE T.ZONE_CODE = #zoneCode#
+	 ORDER BY T.LIDAR_IDN
+	</select>
+	
+	
+	<select id="managementDAO.selectLidListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	       SELECT COUNT(*) ROWCOUNT
+             FROM LID_PRODUCT_DTS A, AIR_ZONE_DTS B
+            <dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		             <![CDATA[ A.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="lidarIdn" prepend="AND">
+		           <![CDATA[ A.LIDAR_IDN = #lidarIdn#]]>
+			</isNotEmpty>
+			<isNotEmpty property="securityCde" prepend="AND">
+		             <![CDATA[ A.SECURITY_CDE = #securityCde# ]]>
+			</isNotEmpty>
+			<isNotEmpty  prepend="AND">
+		           <![CDATA[ A.ZONE_CODE = B.ZONE_CODE ]]>
+			</isNotEmpty>
+			</dynamic>
+	</select>
+	<select id="managementDAO.selectLidList" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		<include refid="Paging_head"/>
+	       SELECT A.ZONE_CODE,
+                  A.LIDAR_IDN,
+                  A.NAME,
+                  A.EQUIP_NAME,
+                  A.EQUIP_INFO,
+                  A.LIDARORIGIN_FORM,
+                  A.LIDARORIGIN_YMD,
+                  A.COURSE_NUM,
+                  A.REFLECT_CNT,
+                  A.COORDINATE,
+                  A.CONST_CO,
+                  A.INPUT_CO,
+                  (SELECT T.CDE_NAM
+					FROM CMT_DETAIL_CODE_NIIM T
+					WHERE T.FLE_IDN = 'SECURITY_CDE'
+					AND A.SECURITY_CDE = T.CDE_CDE) SECURITY_CDE,
+                  A.REFERENCE,
+                  A.PRP,
+                  A.CRS_IDN,
+                  B.ZONE_YY,
+                  B.ZONE_NAM
+             FROM LID_PRODUCT_DTS A, AIR_ZONE_DTS B
+            <dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		             <![CDATA[ A.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="lidarIdn" prepend="AND">
+		           <![CDATA[ A.LIDAR_IDN = #lidarIdn#]]>
+			</isNotEmpty>
+			<isNotEmpty property="securityCde" prepend="AND">
+		             <![CDATA[ A.SECURITY_CDE = #securityCde# ]]>
+			</isNotEmpty>
+			<isNotEmpty  prepend="AND">
+		           <![CDATA[ A.ZONE_CODE = B.ZONE_CODE ]]>
+			</isNotEmpty>
+			</dynamic>
+		<include refid="Paging_tail"/>
+			
+	</select>
+	
+	
+	<update id="managementDAO.updateAdjustLidList"
+		parameterClass="java.util.Map">
+UPDATE LID_PRODUCT_DTS
+   SET LIDARORIGIN_FORM = #lidaroriginForm#,
+       LIDARORIGIN_YMD  = #lidaroriginYmd#,
+       COORDINATE       = #coordinate#,
+       CONST_CO         = #constCo#,
+       INPUT_CO         = #inputCo#,
+       SECURITY_CDE     = (SELECT A.CDE_CDE
+							FROM CMT_DETAIL_CODE_NIIM A
+							WHERE A.FLE_IDN = 'SECURITY_CDE'
+							AND A.CDE_NAM = #securityCde#),
+       PRP              = #prp#,
+       CRS_IDN          = #crsIdn#,
+       NAME          = #name#
+ WHERE ZONE_CODE = #zoneCode#
+   AND LIDAR_IDN = #lidarIdn#
+
+	</update>
+	
+	
+	<insert id="managementDAO.insertLidList"
+	parameterClass="java.util.Map">
+	INSERT INTO LID_PRODUCT_DTS
+	  (LIDARORIGIN_FORM,
+	   LIDARORIGIN_YMD,
+	   COORDINATE,
+	   CONST_CO,
+	   INPUT_CO,
+	   SECURITY_CDE,
+	   PRP,
+	   CRS_IDN,
+	   ZONE_CODE,
+	   LIDAR_IDN,
+	   NAME)
+	VALUES
+	  (#lidaroriginForm#,
+	   #lidaroriginYmd#, 
+	   #coordinate#,     
+	   #constCo#,        
+	   #inputCo#,        
+	   (SELECT A.CDE_CDE                 
+	   FROM CMT_DETAIL_CODE_NIIM A          
+	   WHERE A.FLE_IDN = 'SECURITY_CDE'
+	   AND A.CDE_NAM = #securityCde#), 
+	   #prp#,                            
+	   #crsIdn#,                          
+	   #zoneCode#,
+	   #lidarIdn#,
+	   #name#)
+	   </insert>
+		
+	
+	<delete id="managementDAO.delLid" parameterClass="java.util.Map">
+	DELETE LID_PRODUCT_DTS
+	 WHERE ZONE_CODE = #zoneCode#
+	   AND LIDAR_IDN = #lidarIdn#
+
+	</delete>
+	
+	
+	<!-- 통합검색(항공사진 년도 검색) -->
+	<select id="managementDAO.selectYearListNir" resultClass="egovMap">
+    SELECT DISTINCT (T.ZONE_YY) ZONE_YY
+      FROM AIR_ZONE_DTS T, AIR_PRODUCT_DTS C
+     WHERE T.ZONE_CODE = C.ZONE_CODE
+       AND T.IMAGE_CDE = 'PDT009'
+     ORDER BY ZONE_YY DESC
+	</select>
+
+	<!-- 통합검색(항공사진 사업지구명 검색) -->
+	<select id="managementDAO.selectZoneNamNir" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT DISTINCT A.ZONE_NAM, A.ZONE_CODE, A.ZONE_YY
+		FROM AIR_ZONE_DTS A, AIR_PRODUCT_DTS C
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.ZONE_CODE = C.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.IMAGE_CDE = 'PDT009' ]]>
+			</isNotEmpty>
+			<isNotEmpty property="sYearNir" prepend="AND">
+		             <![CDATA[ A.ZONE_YY >= #sYearNir# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="eYearNir" prepend="AND">
+		           <![CDATA[ A.ZONE_YY <= #eYearNir#]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY A.ZONE_YY DESC
+	</select>
+
+	<!-- 통합검색(항공사진 코스번호 검색) -->
+	<select id="managementDAO.selectPhCourseNir" parameterClass="String"
+		resultClass="egovMap">
+		SELECT DISTINCT A.PH_COURSE
+		FROM AIR_PRODUCT_DTS A, AIR_ZONE_DTS C
+		WHERE A.ZONE_CODE = #zoneCode#
+		  AND A.ZONE_CODE = C.ZONE_CODE
+          AND C.IMAGE_CDE = 'PDT009'
+		ORDER BY LPAD(A.PH_COURSE, 4)
+	</select>
+
+	<!-- 통합검색(항공사진 사진번호 검색) -->
+	<select id="managementDAO.selectPhNumNir" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT DISTINCT A.PH_NUM
+		FROM AIR_PRODUCT_DTS A, AIR_ZONE_DTS C
+		WHERE A.ZONE_CODE = #zoneCode#
+		AND A.PH_COURSE = #phCourse#
+		AND A.ZONE_CODE = C.ZONE_CODE
+        AND C.IMAGE_CDE = 'PDT009'
+		ORDER BY LPAD(A.PH_NUM, 4)
+	</select>
+	
+	<!-- 통합검색(해상도) -->
+	<select id="managementDAO.selectResolutionNir" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT A.RESOLUTION cde_cde
+		     , A.RESOLUTION cde_nam
+		  FROM META_AIRMAP_IDENT A, AIR_ZONE_DTS C
+		 WHERE A.RESOLUTION is not null
+		<isNotEmpty property="zoneCode">
+		   AND A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		<isNotEmpty property="phCourse">
+		   AND A.PH_COURSE = #phCourse#
+		</isNotEmpty>
+		<isNotEmpty property="phNum">
+		   AND A.PH_NUM = #phNum#
+		</isNotEmpty>
+		AND A.ZONE_CODE = C.ZONE_CODE
+		 GROUP BY A.RESOLUTION
+		 ORDER BY A.RESOLUTION
+	</select>
+	
+	<!-- 통합검색(사진주점 검색) -->
+	<select id="managementDAO.selectOrientmapNirListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	
+ SELECT COUNT(*) ROWCOUNT
+		FROM (SELECT T.ZONE_CODE,
+		T.PH_COURSE,
+		T.PH_NUM,
+		T.PYOJUNG_ID,
+		T.MAP_NUM,
+		T.MAP_NAM,
+		T.COOR_X,
+		T.COOR_Y,
+		T.ORIGIN,
+		T.COOR_CX,
+		T.COOR_CY,
+		K.CRS_IDN,
+		T.P_COOR_X,
+		T.P_COOR_Y,
+		T.P_CRS_IDN
+		FROM AIR_ORIENTMAP_DTS T,
+		META_AIRMAP_REFRC K
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		          	<![CDATA[ T.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phCourse" prepend="AND">
+		          	<![CDATA[ T.PH_COURSE = #phCourse# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phNum" prepend="AND">
+		          	<![CDATA[ T.PH_NUM = #phNum# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+			        <![CDATA[ K.ZONE_CODE(+) = T.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+			        <![CDATA[ K.PH_COURSE(+) = T.PH_COURSE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+			        <![CDATA[ K.PH_NUM(+) = T.PH_NUM ]]>
+			</isNotEmpty>
+			) A,
+		</dynamic>
+		AIR_ZONE_DTS B, META_AIRMAP_IDENT C
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ B.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ B.ZONE_CODE = C.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ B.IMAGE_CDE = 'PDT009' ]]>
+			</isNotEmpty>			
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ C.PH_COURSE = A.PH_COURSE]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ C.PH_NUM = A.PH_NUM ]]>
+			</isNotEmpty>
+			<isNotEmpty property="sYearNir" prepend="AND">
+		             <![CDATA[ B.ZONE_YY >= #sYearNir# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="eYearNir" prepend="AND">
+		           <![CDATA[ B.ZONE_YY <= #eYearNir#]]>
+			</isNotEmpty>
+		</dynamic>
+		
+	</select>
+	<!-- 통합검색(사진주점 검색) -->
+	<select id="managementDAO.selectOrientmapNirList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		
+		<include refid="Paging_head"/>
+		SELECT A.*, B.ZONE_YY, B.ZONE_NAM
+		FROM (SELECT T.ZONE_CODE,
+		T.PH_COURSE,
+		T.PH_NUM,
+		T.PYOJUNG_ID,
+		T.MAP_NUM,
+		T.MAP_NAM,
+		T.COOR_X,
+		T.COOR_Y,
+		T.ORIGIN,
+		T.COOR_CX,
+		T.COOR_CY,
+		K.CRS_IDN,
+		T.P_COOR_X,
+		T.P_COOR_Y,
+		T.P_CRS_IDN
+		FROM AIR_ORIENTMAP_DTS T,
+		META_AIRMAP_REFRC K
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		          	<![CDATA[ T.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phCourse" prepend="AND">
+		          	<![CDATA[ T.PH_COURSE = #phCourse# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phNum" prepend="AND">
+		          	<![CDATA[ T.PH_NUM = #phNum# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+			        <![CDATA[ K.ZONE_CODE(+) = T.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+			        <![CDATA[ K.PH_COURSE(+) = T.PH_COURSE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+			        <![CDATA[ K.PH_NUM(+) = T.PH_NUM ]]>
+			</isNotEmpty>
+			) A,
+		</dynamic>
+		AIR_ZONE_DTS B, META_AIRMAP_IDENT C
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ B.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ B.ZONE_CODE = C.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ B.IMAGE_CDE = 'PDT009' ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ C.PH_COURSE = A.PH_COURSE]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ C.PH_NUM = A.PH_NUM ]]>
+			</isNotEmpty>
+			<isNotEmpty property="sYearNir" prepend="AND">
+		             <![CDATA[ B.ZONE_YY >= #sYearNir# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="eYearNir" prepend="AND">
+		           <![CDATA[ B.ZONE_YY <= #eYearNir#]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY B.ZONE_YY DESC,
+		LPAD(A.PH_COURSE, 4)
+		, LPAD(A.PH_NUM, 4)
+		<include refid="Paging_tail"/>
+		
+	</select>
+
+	<!-- 통합검색(사진주점상세 검색) -->
+	<select id="managementDAO.selectSubOrientmapNirList"
+		parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT T.ZONE_CODE,
+		T.PH_COURSE,
+		T.PH_NUM,
+		T.PYOJUNG_ID,
+		T.MAP_NUM,
+		T.MAP_NAM,
+		T.COOR_X,
+		T.COOR_Y,
+		T.ORIGIN,
+		T.COOR_CX,
+		T.COOR_CY,
+		K.CRS_IDN,
+		T.P_COOR_X,
+		T.P_COOR_Y,
+		T.P_CRS_IDN
+		FROM AIR_ORIENTMAP_DTS T,
+		META_AIRMAP_REFRC K, META_AIRMAP_IDENT C, AIR_ZONE_DTS D
+		WHERE T.ZONE_CODE = #zoneCode#
+		AND T.PH_COURSE = #phCourse#
+		AND T.PH_NUM = #phNum#
+		AND K.ZONE_CODE(+) = T.ZONE_CODE
+		AND K.PH_COURSE(+) = T.PH_COURSE
+		AND K.PH_NUM(+) = T.PH_NUM
+		AND T.ZONE_CODE = C.ZONE_CODE
+		AND C.PH_COURSE = T.PH_COURSE
+		AND C.PH_NUM = T.PH_NUM
+		AND D.ZONE_CODE = T.ZONE_CODE
+   		AND D.IMAGE_CDE = 'PDT009'
+	</select>
+
+	<!-- 통합검색(사진주점 수정) -->
+	<update id="managementDAO.updateAdjustOrientmapNir" parameterClass="java.util.Map">
+		UPDATE AIR_ORIENTMAP_DTS
+		SET PYOJUNG_ID = #pyojungId#,
+		MAP_NUM = #mapNum#,
+		MAP_NAM = #mapNam#,
+		COOR_X = #coorX#,
+		COOR_Y = #coorY#,
+		ORIGIN = #origin#,
+		COOR_CX = #coorCx#,
+		COOR_CY = #coorCy#,
+		P_COOR_X = #pCoorX#,
+		P_COOR_Y = #pXoorY#,
+		P_CRS_IDN = #pXrsIdn#
+		WHERE ZONE_CODE = #zoneCode#
+		AND PH_COURSE = #phCourse#
+		AND PH_NUM = #phNum#
+	</update>
+
+	
+	<!-- 통합검색(성과관리목록) -->
+	<select id="managementDAO.selectProductNirListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	
+ SELECT COUNT(*) ROWCOUNT
+		FROM (SELECT A.ZONE_CODE,
+		A.PH_COURSE,
+		A.PH_NUM,
+		A.APH_NUM,
+		A.FILM_NUM,
+		A.RPH_NUM,
+		A.NIX_OX,
+		A.SCUR_OX,
+		(SELECT T.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM T
+		WHERE T.FLE_IDN = 'SECURITY_CDE'
+		AND B.SECURITY_CDE = T.CDE_CDE) SECURITY_CDE,
+		B.MASK_OX,
+		(SELECT C.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM C, AIR_ZONE_DTS T
+		WHERE T.ZONE_CODE = A.ZONE_CODE
+		AND C.FLE_IDN = 'CAMERA_CDE'
+		AND T.CAMERA_CDE = C.CDE_CDE) CAMERA_CDE,
+		(SELECT T.ZONE_YY
+		FROM AIR_ZONE_DTS T
+		WHERE T.ZONE_CODE = A.ZONE_CODE) ZONE_YY,
+		(SELECT T.ZONE_NAM
+		FROM AIR_ZONE_DTS T
+		WHERE T.ZONE_CODE = A.ZONE_CODE) ZONE_NAM,
+		(SELECT R.RESOLUTION
+		FROM META_AIRMAP_IDENT R
+		WHERE R.ZONE_CODE = A.ZONE_CODE
+		AND R.PH_COURSE = A.PH_COURSE
+		AND R.PH_NUM = A.PH_NUM) RESOLUTION
+		FROM AIR_PRODUCT_DTS A
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		                    <![CDATA[ A.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phCourse" prepend="AND">
+		                    <![CDATA[ A.PH_COURSE = #phCourse# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phNum" prepend="AND">
+		                    <![CDATA[ A.PH_NUM = #phNum# ]]>
+			</isNotEmpty>
+		</dynamic>
+		) A, AIR_ZONE_DTS C
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		                   <![CDATA[ A.ZONE_YY >= #sYearNir# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                 <![CDATA[ A.ZONE_YY <= #eYearNir#]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                 <![CDATA[ A.ZONE_CODE = C.ZONE_CODE]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                 <![CDATA[ C.IMAGE_CDE = 'PDT009']]>
+			</isNotEmpty>
+			<isNotEmpty property="securityCde" prepend="AND">
+		                    <![CDATA[ A.SECURITY_CDE = #securityCde# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="cameraCde" prepend="AND">
+		                    <![CDATA[ A.CAMERA_CDE = #cameraCde# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="resolution" prepend="AND">
+		                    <![CDATA[ A.RESOLUTION = #resolution# ]]>
+			</isNotEmpty>
+		</dynamic>
+		
+	</select>
+	
+	<!-- 통합검색(성과관리목록) -->
+	<select id="managementDAO.selectProductNirList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		
+		<include refid="Paging_head"/>
+ SELECT A.ZONE_CODE,
+		A.PH_COURSE,
+		A.PH_NUM,
+		A.APH_NUM,
+		A.FILM_NUM,
+		A.RPH_NUM,
+		A.NIX_OX,
+		A.SCUR_OX,
+		A.SECURITY_CDE,
+		A.CAMERA_CDE,
+		A.ZONE_YY,
+		A.ZONE_NAM,
+		A.RESOLUTION
+		FROM (SELECT A.ZONE_CODE,
+		A.PH_COURSE,
+		A.PH_NUM,
+		A.APH_NUM,
+		A.FILM_NUM,
+		A.RPH_NUM,
+		A.NIX_OX,
+		A.SCUR_OX,
+		(SELECT T.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM T
+		WHERE T.FLE_IDN = 'SECURITY_CDE'
+		AND B.SECURITY_CDE = T.CDE_CDE) SECURITY_CDE,
+		B.MASK_OX,
+		(SELECT C.CDE_NAM
+		FROM CMT_DETAIL_CODE_NIIM C, AIR_ZONE_DTS T
+		WHERE T.ZONE_CODE = A.ZONE_CODE
+		AND C.FLE_IDN = 'CAMERA_CDE'
+		AND T.CAMERA_CDE = C.CDE_CDE) CAMERA_CDE,
+		(SELECT T.ZONE_YY
+		FROM AIR_ZONE_DTS T
+		WHERE T.ZONE_CODE = A.ZONE_CODE) ZONE_YY,
+		(SELECT T.ZONE_NAM
+		FROM AIR_ZONE_DTS T
+		WHERE T.ZONE_CODE = A.ZONE_CODE) ZONE_NAM,
+		(SELECT R.RESOLUTION
+		FROM META_AIRMAP_IDENT R
+		WHERE R.ZONE_CODE = A.ZONE_CODE
+		AND R.PH_COURSE = A.PH_COURSE
+		AND R.PH_NUM = A.PH_NUM) RESOLUTION
+		FROM AIR_PRODUCT_DTS A
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		                    <![CDATA[ A.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phCourse" prepend="AND">
+		                    <![CDATA[ A.PH_COURSE = #phCourse# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phNum" prepend="AND">
+		                    <![CDATA[ A.PH_NUM = #phNum# ]]>
+			</isNotEmpty>
+		</dynamic>
+		) A,  AIR_ZONE_DTS C
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		                   <![CDATA[ A.ZONE_YY >= #sYearNir# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                 <![CDATA[ A.ZONE_YY <= #eYearNir#]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                 <![CDATA[ A.ZONE_CODE = C.ZONE_CODE]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                 <![CDATA[ C.IMAGE_CDE = 'PDT009']]>
+			</isNotEmpty>
+			<isNotEmpty property="securityCde" prepend="AND">
+		                    <![CDATA[ A.SECURITY_CDE = #securityCde# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="cameraCde" prepend="AND">
+		                    <![CDATA[ A.CAMERA_CDE = #cameraCde# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="resolution" prepend="AND">
+		                    <![CDATA[ A.RESOLUTION = #resolution# ]]>
+			</isNotEmpty>
+		</dynamic>
+		<include refid="Paging_tail"/>
+		
+	</select>
+
+	<select id="managementDAO.selectSubProductNirList"
+		parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT K.ZONE_NAM,
+		T.ZONE_CODE,
+		T.PH_COURSE,
+		T.PH_NUM,
+		T.APH_NUM,
+		T.APH_NOW,
+		T.FILM_NUM,
+		T.FILM_NOW,
+		T.RPH_NUM,
+		T.RPH_NOW,
+		T.MD1_NUM,
+		T.MD2_NUM,
+		T.NIX_OX,
+		T.SCUR_OX,
+		T.SERV_OX,
+		T.REMARK
+		FROM AIR_PRODUCT_DTS T, AIR_ZONE_DTS K
+		WHERE T.ZONE_CODE = #zoneCode#
+		AND T.PH_COURSE = #phCourse#
+		AND T.PH_NUM = #phNum#
+		AND K.ZONE_CODE = T.ZONE_CODE
+		
+	</select>
+
+	<select id="managementDAO.selectSubProductEONirList"
+		parameterClass="java.util.Map" resultClass="egovMap">
+		 SELECT NVL(MIN(T.EO_X),'') EO_X,
+            NVL(MIN(T.EO_Y),'') EO_Y,
+            NVL(MIN(T.EO_Z),'') EO_Z,
+            NVL(MIN(T.EO_OMEGA),'') EO_OMEGA,
+            NVL(MIN(T.EO_PHI),'') EO_PHI,
+            NVL(MIN(T.EO_KAPPA),'') EO_KAPPA,
+            NVL(MIN(T.CRS_IDN),'') CRS_IDN
+            FROM AIR_PRODUCTEO_DTS T, AIR_ZONE_DTS C
+            WHERE T.ZONE_CODE = #zoneCode#
+            AND T.PH_COURSE = #phCourse#
+            AND T.PH_NUM = #phNum#
+            AND C.IMAGE_CDE = 'PDT009'
+            AND T.ZONE_CODE = C.ZONE_CODE
+
+
+
+	</select>
+
+	<select id="managementDAO.selectSubMetaNirList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+	SELECT NVL(MIN(T.FILE_IDENTIFIER),'') FILE_IDENTIFIER,
+	       NVL(MIN(T.TARGET_NAME),'') TARGET_NAME,
+	       NVL(MIN(T.LANGUAGE),'') LANGUAGE,
+	       NVL(MIN(K.RES_OFFICENAME),'') RES_OFFICENAME,
+	       NVL(MIN(T.RES_POSTNAME),'') RES_POSTNAME,
+	       NVL(MIN(T.RES_PHONE),'') RES_PHONE,
+	       NVL(MIN(T.RES_FAX),'') RES_FAX,
+	       NVL(MIN(T.RES_ADDRESS),'') RES_ADDRESS,
+	       NVL(MIN(T.RES_POSTAL_CODE),'') RES_POSTAL_CODE,
+	       NVL(MIN(K.META_DATE),'') META_DATE,
+	       NVL(MIN(K.META_VERSION),'') META_VERSION,
+	       NVL(MIN(P.ZONE_CODE),'') ZONE_CODE,
+	       NVL(MIN(T.PH_COURSE),'') PH_COURSE,
+	       NVL(MIN(T.PH_NUM),'') PH_NUM,
+	       NVL(MIN(P.SCALE),'') SCALE,
+	       NVL(MIN(K.SPATIAL_DATA),'') SPATIAL_DATA,
+	       NVL(MIN((SELECT T.CDE_NAM
+	          FROM CMT_DETAIL_CODE_NIIM T
+	         WHERE T.FLE_IDN = 'SECURITY_CDE'
+	           AND Q.SECURITY_CDE = T.CDE_CDE)),'') SECURITY_CDE,
+	       NVL(MIN(R.MAP_NUM),'') MAP_NUM,
+	       NVL(MIN(R.MAP_NAM),'') MAP_NAM,
+	       NVL(MIN(S.PH_DATE),'') PH_DATE,
+	       NVL(MIN(K.DIST_FORMAT_NAME),'') DIST_FORMAT_NAME,
+	       NVL(MIN(K.DIST_FORMAT_VERSION),'') DIST_FORMAT_VERSION,
+	       NVL(MIN(K.DIST_OFFICENAME),'') DIST_OFFICENAME,
+	       NVL(MIN(K.DIST_POSTNAME),'') DIST_POSTNAME,
+	       NVL(MIN(K.DIST_PHONE),'') DIST_PHONE,
+	       NVL(MIN(U.TEMP_ONE),'') TEMP_ONE,
+	       NVL(MIN(U.MAX_HUMIDITY),'') MAX_HUMIDITY,
+	       NVL(MIN(U.HIGHT_ONE),'') HIGHT_ONE,
+	       NVL(MIN(U.WEATHER),'') WEATHER,
+	       NVL(MIN(U.CMR_NUM),'') CMR_NUM,
+	       NVL(MIN(U.CMR_TYPE),'') CMR_TYPE,
+	       NVL(MIN(U.CMR_DSCRT),'') CMR_DSCRT,
+	       NVL(MIN(U.LENS_TYPE),'') LENS_TYPE,
+	       NVL(MIN(U.LENS_DSCRT),'') LENS_DSCRT,
+	       NVL(MIN(U.NOTE_PLANE),'') NOTE_PLANE,
+	       NVL(MIN(U.PLAT_DSCRT),'') PLAT_DSCRT,
+	       NVL(MIN(U.PH_DATE),'') PH_DATE,
+	       NVL(MIN(U.PILOT),'') PILOT,
+	       NVL(MIN(U.NAVIG),'') NAVIG,
+	       NVL(MIN(U.CMR_MAN),'') CMR_MAN,
+	       NVL(MIN(U.EQUIP),'') EQUIP,
+	       NVL(MIN(U.SCALE_ONE),'') SCALE_ONE,
+	       NVL(MIN(U.LENS_NUM),'') LENS_NUM,
+	       NVL(MIN(U.ZONE_CODE),'') ZONE_CODE,
+	       NVL(MIN(K.SIGUNGU_NAM),'') SIGUNGU_NAM,
+	       NVL(MIN(K.QUALITY_TARGET),'') QUALITY_TARGET,
+	       NVL(MIN(K.SCAN),'') SCAN,
+	       NVL(MIN(K.FILM),'') FILM,
+	       NVL(MIN(K.DOCUMENT),'') DOCUMENT,
+	       NVL(MIN(T.RESOLUTION),'') RESOLUTION
+	  FROM META_AIRMAP_IDENT  T,
+	       AIR_BASEMETA_DTS   K,
+	       AIR_ZONE_DTS       P,
+	       AIR_PRODUCT_DTS  Q,
+	       AIR_ORIENTMAP_DTS  R,
+	       AIR_NOTE_DTS       S,
+	       META_AIRMAP_ACQUT  U,
+	       AIR_COURSETEST_DTS V
+	 WHERE T.ZONE_CODE = #zoneCode#
+	   AND T.PH_COURSE = #phCourse#
+	   AND T.PH_NUM = #phNum#
+	   AND K.ZONE_CODE(+) = T.ZONE_CODE
+	   AND K.PH_COURSE(+) = T.PH_COURSE
+	   AND K.PH_NUM(+) = T.PH_NUM
+	   AND P.ZONE_CODE = T.ZONE_CODE(+)
+	   AND Q.PH_COURSE(+) = T.PH_COURSE
+	   AND Q.PH_NUM(+) = T.PH_NUM
+	   AND Q.ZONE_CODE(+) = T.ZONE_CODE
+	   AND R.ZONE_CODE(+) = T.ZONE_CODE
+	   AND R.PH_COURSE(+) = T.PH_COURSE
+	   AND R.PH_NUM(+) = T.PH_NUM
+	   AND V.ZONE_CODE(+) = T.ZONE_CODE
+	   AND V.PH_COURSE(+) = T.PH_COURSE
+	   AND V.PH_NUM(+) = T.PH_NUM
+	   AND U.PH_DATE(+) = V.PH_DATE
+	   AND U.LENS_NUM(+) = V.LENS_NUM
+	   AND S.ZONE_CODE(+) = V.ZONE_CODE
+	   AND S.PH_DATE(+) = V.PH_DATE
+	   AND S.LENS_NUM(+) = V.LENS_NUM
+	</select>
+	
+	<select id="managementDAO.insertphDate" parameterClass="java.util.Map"
+		resultClass="egovMap">
+    SELECT A.PH_DATE FROM AIR_NOTE_DTS a
+    WHERE A.ZONE_CODE = #zoneCode#
+	</select>
+
+	<select id="managementDAO.insertlensNum" parameterClass="java.util.Map"
+		resultClass="egovMap">
+    SELECT A.LENS_NUM FROM AIR_CAMERA_DTS A
+    ORDER BY A.LENS_NUM
+	</select>
+	
+	<!-- 통합검색(사업지구 수정) -->
+	<update id="managementDAO.updateAdjustMetaNirmapIdent"
+		parameterClass="java.util.Map">
+		UPDATE META_AIRMAP_IDENT T
+		SET T.FILE_IDENTIFIER = #fileIdentifier#,
+		T.TARGET_NAME = #targetName#,
+		T.LANGUAGE = #language#,
+		T.RES_POSTNAME = #resPostname#,
+		T.RES_PHONE = #resPhone#,
+		T.RES_FAX = #resFax#,
+		T.RES_ADDRESS = #resAddress#,
+		T.RES_POSTAL_CODE = #resPostalCode#,
+		T.RESOLUTION = #resolution#
+		WHERE T.ZONE_CODE = #zoneCode#
+		AND T.PH_COURSE = #phCourse#
+		AND T.PH_NUM = #phNum#
+	</update>
+
+	<update id="managementDAO.updateAdjustNirBasemetaDts"
+		parameterClass="java.util.Map">
+		UPDATE AIR_BASEMETA_DTS K
+		SET K.RES_OFFICENAME = #resOfficename#,
+		K.META_DATE = #metaDate#,
+		K.META_VERSION = #metaVersion#,
+		K.SPATIAL_DATA = #spatialData#,
+		K.DIST_FORMAT_NAME = #distFormatName#,
+		K.DIST_FORMAT_VERSION = #distFormatVersion#,
+		K.DIST_OFFICENAME = #distOfficename#,
+		K.DIST_POSTNAME = #distPostname#,
+		K.DIST_PHONE = #distPhone#,
+		K.QUALITY_TARGET = #qualityTarget#,
+		K.SCAN = #scan#,
+		K.FILM = #film#,
+		K.DOCUMENT = #document#
+		WHERE K.ZONE_CODE = #zoneCode#
+		AND K.PH_COURSE = #phCourse#
+		AND K.PH_NUM = #phNum#
+	</update>
+
+	<update id="managementDAO.updateAdjustNirZoneDts"
+		parameterClass="java.util.Map">
+		UPDATE AIR_ZONE_DTS P
+		SET P.SCALE = #scale#
+		WHERE P.ZONE_CODE = #zoneCode#
+
+	</update>
+
+	<update id="managementDAO.updateAdjustMetaNirmapContr"
+		parameterClass="java.util.Map">
+		UPDATE AIR_PRODUCT_DTS Q
+		SET Q.SECURITY_CDE =
+		(SELECT A.CDE_CDE
+		FROM CMT_DETAIL_CODE_NIIM A
+		WHERE A.FLE_IDN = 'SECURITY_CDE'
+		AND A.CDE_NAM = #securityCde#)
+		WHERE Q.ZONE_CODE = #zoneCode#
+		AND Q.PH_COURSE = #phCourse#
+		AND Q.PH_NUM = #phNum#
+	</update>
+
+	<update id="managementDAO.updateAdjustNirOrientmapDts"
+		parameterClass="java.util.Map">
+		UPDATE AIR_ORIENTMAP_DTS R
+		SET R.MAP_NUM = #mapNum#,
+		R.MAP_NAM = #mapNam#
+		WHERE R.ZONE_CODE = #zoneCode#
+		AND R.PH_COURSE = #phCourse#
+		AND R.PH_NUM = #phNum#
+	</update>
+
+	<update id="managementDAO.updateAdjustMetaNirmapAcqut"
+		parameterClass="java.util.Map">
+		UPDATE META_AIRMAP_ACQUT U
+		SET U.CMR_NUM = #cmrNum#,
+		U.CMR_TYPE = #cmrType#,
+		U.NOTE_PLANE = #notePlane#,
+		U.PILOT = #pilot#,
+		U.CMR_MAN = #cmrMan#,
+		U.LENS_NUM = #lensNum#
+		WHERE U.ZONE_CODE = #zoneCode#
+		AND U.PH_DATE = #phDate#
+		AND U.LENS_NUM = #lensNum#
+	</update>
+
+	<!-- 통합검색(항공사진 필름번호 검색) -->
+	<select id="managementDAO.selectFilmNumNir" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT D.FILM_NUM FROM AIR_COURSETEST_DTS D, AIR_ZONE_DTS C
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+	                    <![CDATA[ C.ZONE_CODE = D.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+	                    <![CDATA[ C.IMAGE_CDE = 'PDT009' ]]>
+			</isNotEmpty>
+			<isNotEmpty property="zoneCode" prepend="AND">
+	                    <![CDATA[ D.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phCourse" prepend="AND">
+	                    <![CDATA[ D.PH_COURSE = #phCourse# ]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY LPAD(D.FILM_NUM, 4)
+	</select>
+	
+		<!-- 통합검색(렌즈번호 검색) -->
+	<select id="managementDAO.selectlensNum" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT DISTINCT(A.LENS_NUM),
+		       B.CMR_TYPE
+		  FROM AIR_CAMERA_DTS A, META_AIRMAP_ACQUT B
+		  WHERE A.LENS_NUM = B.LENS_NUM
+	</select>
+
+
+	<!-- 통합관리(항공사진촬영기록부 검색) -->
+	<select id="managementDAO.selectNirNoteListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	
+		SELECT COUNT(*) ROWCOUNT
+		FROM AIR_NOTE_DTS A, AIR_ZONE_DTS B, AIR_NOTECOURSE_DTS C,
+		AIR_COURSETEST_DTS D
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		                    <![CDATA[ A.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phCourse" prepend="AND">
+		                    <![CDATA[ D.PH_COURSE = #phCourse# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="filmNum" prepend="AND">
+		                    <![CDATA[ D.FILM_NUM = #filmNum# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ B.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ C.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ C.PH_DATE = A.PH_DATE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ C.LENS_NUM = A.LENS_NUM ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.PH_DATE = A.PH_DATE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.LENS_NUM = A.LENS_NUM ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.COURSE_COUNT = C.COURSE_COUNT ]]>
+			</isNotEmpty>
+		</dynamic>
+		
+	</select>
+	<!-- 통합관리(항공사진촬영기록부 검색) -->
+	<select id="managementDAO.selectNirNoteList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		
+		<include refid="Paging_head"/>
+		SELECT B.ZONE_NAM,
+		B.ZONE_YY,
+		A.PH_DATE,
+		A.LENS_NUM,
+		A.ZONE_CODE,
+		C.PH_COURSE,
+		D.FILM_NUM,
+		D.PH_NUM
+		FROM AIR_NOTE_DTS A, AIR_ZONE_DTS B, AIR_NOTECOURSE_DTS C,
+		AIR_COURSETEST_DTS D
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="zoneCode" prepend="AND">
+		                    <![CDATA[ A.ZONE_CODE = #zoneCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phCourse" prepend="AND">
+		                    <![CDATA[ D.PH_COURSE = #phCourse# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="filmNum" prepend="AND">
+		                    <![CDATA[ D.FILM_NUM = #filmNum# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ B.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ C.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ C.PH_DATE = A.PH_DATE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ C.LENS_NUM = A.LENS_NUM ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.ZONE_CODE = A.ZONE_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.PH_DATE = A.PH_DATE ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.LENS_NUM = A.LENS_NUM ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		                    <![CDATA[ D.COURSE_COUNT = C.COURSE_COUNT ]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY LPAD(D.FILM_NUM, 4)
+		<include refid="Paging_tail"/>
+		
+	</select>
+
+	<select id="managementDAO.selectSubNirNoteList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT B.ZONE_NAM,
+		B.ZONE_YY,
+		A.PH_DATE,
+		A.ZONE_CODE,
+		A.LENS_NUM,
+		C.PH_COURSE,
+		D.FILM_NUM,
+		D.PH_NUM,
+		D.NOTE_DATE,
+		D.RPT_MAN,
+		D.COURSE_COUNT,
+		C.PH_DRCT,
+		C.PH_ANGLE,
+		A.WIND_DIRECT,
+		A.WIND_SPEED
+		FROM AIR_NOTE_DTS A,
+		AIR_ZONE_DTS B,
+		AIR_NOTECOURSE_DTS C,
+		AIR_COURSETEST_DTS D
+		WHERE D.ZONE_CODE = #zoneCode#
+		AND D.PH_COURSE = #phCourse#
+		AND D.FILM_NUM = #filmNum#
+		AND B.ZONE_CODE = A.ZONE_CODE
+		AND C.ZONE_CODE = A.ZONE_CODE
+		AND C.PH_DATE = A.PH_DATE
+		AND C.LENS_NUM = A.LENS_NUM
+		AND D.ZONE_CODE = A.ZONE_CODE
+		AND D.PH_DATE = A.PH_DATE
+		AND D.LENS_NUM = A.LENS_NUM
+		AND D.COURSE_COUNT = C.COURSE_COUNT
+		ORDER BY LPAD(D.FILM_NUM, 4)
+	</select>
+
+	<update id="managementDAO.updateAdjustNirNoteDts"
+		parameterClass="java.util.Map">
+		UPDATE AIR_NOTE_DTS A
+		SET A.WIND_DIRECT = #windDirect#,
+		A.WIND_SPEED = #windSpeed#
+		WHERE A.ZONE_CODE = #zoneCode#
+		AND A.PH_DATE = #phDate#
+		AND A.LENS_NUM = #lensNum#
+	</update>
+
+	<update id="managementDAO.updateAdjustNirCoursetestDts"
+		parameterClass="java.util.Map">
+		UPDATE AIR_NOTECOURSE_DTS B
+		SET B.PH_DRCT = #phDrct#,
+		B.PH_ANGLE = #phAngle#,
+		B.PH_COURSE = #phCourse#
+		WHERE B.ZONE_CODE = #zoneCode#
+		AND B.PH_DATE = #phDate#
+		AND B.LENS_NUM = #lensNum#
+		AND B.COURSE_COUNT = #courseCount#
+	</update>
+
+	<update id="managementDAO.updateAdjustNirNotecourseDts"
+		parameterClass="java.util.Map">
+		UPDATE AIR_COURSETEST_DTS C
+		SET C.PH_NUM = #phNum#,
+		C.RPT_MAN = #rptMan#,
+		C.PH_COURSE = #phCourse#,
+		C.NOTE_DATE = #noteDate#
+		WHERE C.ZONE_CODE = #zoneCode#
+		AND C.PH_DATE = #phDate#
+		AND C.LENS_NUM = #lensNum#
+		AND C.COURSE_COUNT = #courseCount#
+		AND C.FILM_NUM = #filmNum#
+	</update>
+
+	<update id="managementDAO.updateAdjustProductEONirList"
+		parameterClass="java.util.Map">
+		UPDATE AIR_PRODUCTEO_DTS
+		SET EO_X = #eoX#,
+		EO_Y = #eoY#,
+		EO_Z = #eoZ#,
+		EO_OMEGA = #eoOmega#,
+		EO_PHI = #eoPhi#,
+		EO_KAPPA = #eoKappa#,
+		CRS_IDN = #crsIdn#
+		WHERE ZONE_CODE = #zoneCode#
+		AND PH_COURSE = #phCourse#
+		AND PH_NUM = #phNum#
+
+	</update>
+
+	<update id="managementDAO.updateAdjustProductNirList"
+		parameterClass="java.util.Map">
+		UPDATE AIR_PRODUCT_DTS
+		SET APH_NUM = #aphNum#,
+		APH_NOW = #aphNow#,
+		FILM_NUM = #filmNum#,
+		FILM_NOW = #filmNow#,
+		RPH_NUM = #rphNum#,
+		RPH_NOW = #rphNow#,
+		MD1_NUM = #md1Num#,
+		MD2_NUM = #md2Num#,
+		REMARK = #remark#
+		WHERE ZONE_CODE = #zoneCode#
+		AND PH_COURSE = #phCourse#
+		AND PH_NUM = #phNum#
+
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	<select id="managementDAO.selectYearPts" parameterClass="java.util.Map"
+		resultClass="egovMap">
+	SELECT DISTINCT PRJ_YY FROM PTS_SURVEY_DTS
+	WHERE PRJ_YY IS NOT NULL
+	ORDER BY PRJ_YY DESC
+	</select>
+	
+	
+	<select id="managementDAO.selectZoneNamPts" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		 SELECT A.SURV_CODE,
+		 		A.PRJ_YY,
+		 		A.SURV_NAM
+           FROM PTS_SURVEY_DTS A
+        <dynamic prepend="WHERE">
+			<isNotEmpty property="sYearPtsCoord" prepend="AND">
+		             <![CDATA[ A.PRJ_YY >= #sYearPtsCoord# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="eYearPtsCoord" prepend="AND">
+		           <![CDATA[ A.PRJ_YY <= #eYearPtsCoord#]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY A.SURV_NAM
+	</select>
+	
+	
+	<select id="managementDAO.selectPtsListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	
+		SELECT COUNT(*) ROWCOUNT
+		  FROM PTS_SURVEY_DTS A
+		  <dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.PRJ_YY >= #sYearPts# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		           <![CDATA[ A.PRJ_YY <= #eYearPts#]]>
+			</isNotEmpty>
+		</dynamic>
+		
+	</select>
+	<select id="managementDAO.selectPtsList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		
+		<include refid="Paging_head"/>
+		SELECT A.SURV_CODE,
+		       A.SURV_NAM,
+		       A.PRJ_NAM,
+		       A.BOOK,
+		       (SELECT T.CDE_NAM
+		          FROM CMT_DETAIL_CODE_NIIM T
+		         WHERE T.FLE_IDN = 'SURVTYPE_CDE'
+		           AND A.SURVTYPE_CDE = T.CDE_CDE) SURVTYPE_CDE,
+		       A.PRJ_YY,
+		       A.PRJ_COMP,
+		       (SELECT T.CDE_NAM
+		          FROM CMT_DETAIL_CODE_NIIM T
+		         WHERE T.FLE_IDN = 'SURVWAY_CDE'
+		           AND A.SURVWAY_CDE = T.CDE_CDE) SURVWAY_CDE
+		  FROM PTS_SURVEY_DTS A
+		  <dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND">
+		             <![CDATA[ A.PRJ_YY >= #sYearPts# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+		           <![CDATA[ A.PRJ_YY <= #eYearPts#]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY A.PRJ_YY DESC
+		<include refid="Paging_tail"/>
+		
+	</select>
+	
+
+	<select id="managementDAO.selectSubPtsList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+	SELECT A.SURV_CODE,
+	       A.SURV_NAM,
+	       A.PRJ_NAM,
+	       A.BOOK,
+	       (SELECT T.CDE_NAM
+	          FROM CMT_DETAIL_CODE_NIIM T
+	         WHERE T.FLE_IDN = 'SURVTYPE_CDE'
+	           AND A.SURVTYPE_CDE = T.CDE_CDE) SURVTYPE_CDE,
+	       A.PRJ_YY,
+	       A.PRJ_COMP,
+	       (SELECT T.CDE_NAM
+		          FROM CMT_DETAIL_CODE_NIIM T
+		         WHERE T.FLE_IDN = 'SURVWAY_CDE'
+		           AND A.SURVWAY_CDE = T.CDE_CDE) SURVWAY_CDE
+	  FROM PTS_SURVEY_DTS A
+	  WHERE A.SURV_CODE = #survCode#
+		
+	</select>	
+	
+	<update id="managementDAO.updateAdjustSubPtsList"
+		parameterClass="java.util.Map">
+	UPDATE PTS_SURVEY_DTS
+	   SET SURV_NAM     = #survNam#,
+	       PRJ_NAM      = #prjNam#,
+	       BOOK         = #book#,
+	       SURVTYPE_CDE = (SELECT A.CDE_CDE
+						FROM CMT_DETAIL_CODE_NIIM A
+						WHERE A.FLE_IDN = 'SURVTYPE_CDE'
+						AND A.CDE_NAM = #survtype#),
+	       PRJ_YY       = #prjYy#,
+	       PRJ_COMP     = #prjComp#,
+	       SURVWAY_CDE  = (SELECT A.CDE_CDE
+						FROM CMT_DETAIL_CODE_NIIM A
+						WHERE A.FLE_IDN = 'SURVWAY_CDE'
+						AND A.CDE_NAM = #survwayCde#)
+	 WHERE SURV_CODE = #survCode#
+	</update>
+	
+	
+	<select id="managementDAO.selectPNum" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		SELECT A.P_NUM
+		  FROM PTS_COORD_DTS A
+		 <dynamic prepend="WHERE">
+		    <isNotEmpty property="survCode" prepend="AND">
+		             <![CDATA[  A.SURV_CODE = #survCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="survpts" prepend="AND">
+		             <![CDATA[ A.SURVPTS_CDE =
+								       (SELECT A.CDE_CDE
+								          FROM CMT_DETAIL_CODE_NIIM A
+								         WHERE A.FLE_IDN = 'SURVPTS_CDE'
+								           AND A.CDE_NAM = #survpts#) ]]>
+			</isNotEmpty>
+		</dynamic>
+		 ORDER BY A.P_NUM
+	</select>	
+	
+	
+	<select id="managementDAO.selectPtsCoordListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	
+		SELECT COUNT(*) ROWCOUNT
+		  FROM PTS_COORD_DTS A, PTS_SURVEY_DTS B
+		  <dynamic prepend="WHERE">
+		    <isNotEmpty prepend="AND">
+		             <![CDATA[  A.SURV_CODE = B.SURV_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty property="survCode" prepend="AND">
+		             <![CDATA[ A.SURV_CODE = #survCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="pNum" prepend="AND">
+		           <![CDATA[A.P_NUM = #pNum#]]>
+			</isNotEmpty>
+			<isNotEmpty property="survpts" prepend="AND">
+		             <![CDATA[ A.SURVPTS_CDE =
+								       (SELECT A.CDE_CDE
+								          FROM CMT_DETAIL_CODE_NIIM A
+								         WHERE A.FLE_IDN = 'SURVPTS_CDE'
+								           AND A.CDE_NAM = #survpts#) ]]>
+			</isNotEmpty>
+		</dynamic>
+		
+	</select>
+	
+	<select id="managementDAO.selectPtsCoordList" parameterClass="java.util.Map"
+		resultClass="egovMap">
+		
+	<include refid="Paging_head"/>
+		SELECT A.SURV_CODE,
+		       (SELECT T.CDE_NAM
+		          FROM CMT_DETAIL_CODE_NIIM T
+		         WHERE T.FLE_IDN = 'SURVPTS_CDE'
+		           AND A.SURVPTS_CDE = T.CDE_CDE) SURVPTS_CDE,
+		       A.P_NUM,
+		       A.PH_NUM,
+		       A.PNT_NAME,
+		       B.SURV_NAM,
+		       B.PRJ_NAM,
+		       A.DO,
+		       A.GUN,
+		       A.MYEON,
+		       A.RI,
+		       A.ORIGIN_GRD,
+		       A.ROUTE,
+		       A.DES,
+		       A.RPT_DATE,
+		       A.GRDCOOR_X,
+		       A.GRDCOOR_Y,
+		       A.GRDCOOR_Z,
+		       A.GRDCRS_IDN,
+		       A.P_GRDCOOR_X,
+		       A.P_GRDCOOR_Y,
+		       A.P_GRDCRS_IDN
+		  FROM PTS_COORD_DTS A, PTS_SURVEY_DTS B
+		  <dynamic prepend="WHERE">
+		    <isNotEmpty prepend="AND">
+		             <![CDATA[  A.SURV_CODE = B.SURV_CODE ]]>
+			</isNotEmpty>
+			<isNotEmpty property="survCode" prepend="AND">
+		             <![CDATA[ A.SURV_CODE = #survCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="pNum" prepend="AND">
+		           <![CDATA[A.P_NUM = #pNum#]]>
+			</isNotEmpty>
+			<isNotEmpty property="survpts" prepend="AND">
+		             <![CDATA[ A.SURVPTS_CDE =
+								       (SELECT A.CDE_CDE
+								          FROM CMT_DETAIL_CODE_NIIM A
+								         WHERE A.FLE_IDN = 'SURVPTS_CDE'
+								           AND A.CDE_NAM = #survpts#) ]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY A.P_NUM
+		<include refid="Paging_tail"/>
+		
+	</select>	
+	
+	
+	<update id="managementDAO.updateAdjustSubPtsCoordList"
+		parameterClass="java.util.Map">
+	  UPDATE PTS_COORD_DTS A                                                               
+	     SET A.PH_NUM 			=	#phNum#,	                                           
+		     A.PNT_NAME			=	#pntName#,	                                          
+			 A.DO               =   #do#, 	                                               
+			 A.GUN              =   #gun#,		                                           
+			 A.MYEON			=	#myeon#,	                                                   
+			 A.RI				=	#ri#,		                                                   
+			 A.ORIGIN_GRD		=	#originGrd#,                                                   
+			 A.ROUTE			=	#route#,                                                       
+			 A.DES				=	#des#,                                                        
+			 A.RPT_DATE			=	#rptDate#,                                                   
+			 A.GRDCOOR_X		=	#grdcoorX#,                                                   
+			 A.GRDCOOR_Y		=	#grdcoorY#,                                                   
+			 A.GRDCOOR_Z		=	#grdcoorZ#,                                                  
+			 A.GRDCRS_IDN		=	#grdcrsIdn#,                                                  
+			 A.P_GRDCOOR_X		=	#pGrdcoorX#,                                                   
+			 A.P_GRDCOOR_Y		=	#pGrdcoorY#,
+			 A.P_GRDCRS_IDN     =   #pGrdcrsIdn#                                                      
+		<dynamic prepend="WHERE">                                                                 
+			<isNotEmpty property="survCode" prepend="AND">
+		             <![CDATA[ A.SURV_CODE = #survCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty property="pNum" prepend="AND">
+		           <![CDATA[A.P_NUM = #pNum#]]>
+			</isNotEmpty>
+			<isNotEmpty property="survptsCde" prepend="AND">
+		             <![CDATA[ A.SURVPTS_CDE =
+								       (SELECT A.CDE_CDE
+								          FROM CMT_DETAIL_CODE_NIIM A
+								         WHERE A.FLE_IDN = 'SURVPTS_CDE'
+								           AND A.CDE_NAM = #survptsCde#) ]]>
+			</isNotEmpty>
+		</dynamic>
+	</update>
+	
+	<insert id="managementDAO.insertSubPtsList"
+		parameterClass="java.util.Map">
+
+		INSERT INTO PTS_SURVEY_DTS
+		  (SURV_CODE,
+		   SURV_NAM,
+		   PRJ_NAM,
+		   BOOK,
+		   PRJ_COMP,
+		   PRJ_YY,
+		   SURVTYPE_CDE,
+		   SURVWAY_CDE)
+		VALUES
+	      (#survCode#, 
+	       #survNam#,  
+	       #prjNam#, 
+	       #book#,     
+	       #prjComp#,  
+	       #prjYy#,    
+	       (SELECT A.CDE_CDE
+						FROM CMT_DETAIL_CODE_NIIM A
+						WHERE A.FLE_IDN = 'SURVTYPE_CDE'
+						AND A.CDE_NAM = #survtype#), 
+	       (SELECT A.CDE_CDE
+						FROM CMT_DETAIL_CODE_NIIM A
+						WHERE A.FLE_IDN = 'SURVWAY_CDE'
+						AND A.CDE_NAM = #survwayCde#))
+
+	</insert>
+
+	<delete id="managementDAO.delPts" parameterClass="java.util.Map">
+	DELETE PTS_SURVEY_DTS
+	 WHERE SURV_CODE = #survCode#
+	</delete>
+	
+	<insert id="managementDAO.insertSubPtsCoordList"
+		parameterClass="java.util.Map">
+
+		insert into pts_coord_dts
+		  (SURVPTS_CDE,
+		   SURV_CODE,
+		   P_NUM,
+		   PNT_NAME,
+		   PH_NUM,
+		   DO,
+		   GUN,
+		   MYEON,
+		   RI,
+		   ORIGIN_GRD,
+		   ROUTE,
+		   DES,
+		   RPT_DATE,
+		   GRDCOOR_X,
+		   GRDCOOR_Y,
+		   GRDCOOR_Z,
+		   GPSCRS_IDN,
+		   P_GRDCOOR_X,
+		   P_GRDCOOR_Y,
+		   P_GRDCRS_IDN)
+		VALUES
+		   ((SELECT A.CDE_CDE
+	          FROM CMT_DETAIL_CODE_NIIM A
+	         WHERE A.FLE_IDN = 'SURVPTS_CDE'
+	           AND A.CDE_NAM = #survptsCde#),
+			#survCode#,	
+			#pNum#,		 	
+			#pntName#,		
+			#phNum#,		
+			#do#, 	    	
+			#gun#,			
+			#myeon#,		
+			#ri#,		  
+			#originGrd#,  
+			#route#,      
+			#des#,
+			#rptDate#,
+			#grdcoorX#,
+			#grdcoorY#,
+			#grdcoorZ#,
+			#grdcrsIdn#,
+			#pGrdcoorX#,
+			#pGrdcoorY#,
+			#pGrdcrsIdn#)
+
+	</insert>
+	
+	<delete id="managementDAO.delPtsCoord" parameterClass="java.util.Map">
+	DELETE PTS_COORD_DTS
+	 WHERE SURVPTS_CDE = (SELECT A.CDE_CDE
+	          FROM CMT_DETAIL_CODE_NIIM A
+	         WHERE A.FLE_IDN = 'SURVPTS_CDE'
+	           AND A.CDE_NAM = #survptsCde#)
+	   AND SURV_CODE = #survCode#
+	   AND P_NUM = #pNum#
+	</delete>
+	
+	<select id="managementDAO.getSurvCode" parameterClass="java.util.Map"
+	resultClass="egovMap">
+	SELECT SURV_CODE FROM PTS_SURVEY_DTS
+	</select>	
+	
+	
+	<!-- AT성과 상세조회 -->
+	<select id="managementDAO.getSubProductAtList" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT
+		    A.ZONE_CODE,
+		    A.ZONE_NAM,
+		    A.ZONE_YY,
+		    (
+		        SELECT
+		            CDE_NAM
+		        FROM
+		            CMT_DETAIL_CODE
+		        WHERE
+		            CDE_CDE = A.IMAGE_CDE
+		    ) CDE_NAM,
+		    (
+		        SELECT
+		            CDE_NAM
+		        FROM
+		            CMT_DETAIL_CODE
+		        WHERE
+		                FLE_IDN = 'PROJECTTYPE_CDE'
+		            AND CDE_CDE = A.PROJECTTYPE_CDE
+		    ) PROJECT_TYPE,
+		    A.PRJ_NAM,
+		    B.FILE_CNT,
+		    B.FILE_SIZE_GB
+		FROM
+		    AIR_ZONE_DTS A
+		    LEFT JOIN (
+		        SELECT
+		            ZONE_CODE,
+		            COUNT(*)                                            AS FILE_CNT,
+		            ROUND(SUM(ATPDT_FILE_SIZE) / 1024 / 1024 / 1024, 2) AS FILE_SIZE_GB
+		        FROM
+		            AIR_ATPDT_FILE_INFO
+		        GROUP BY
+		            ZONE_CODE
+		    ) B ON A.ZONE_CODE = B.ZONE_CODE
+		WHERE
+		    A.ZONE_CODE = #zoneCode#
+	</select>
+</sqlMap>

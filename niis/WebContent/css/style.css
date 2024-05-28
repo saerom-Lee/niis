@@ -1,0 +1,127 @@
+/* 2016 DESITIVE LEE SANG YOUN */
+@charset "utf-8";
+@import url("default.css");
+@import url("layout.css");
+@import url("common.css");
+@import url("board.css");
+@import url("popup.css");
+
+/* �??�� 2?��?�� ?��?�� */
+.twoDepthMenu {}
+.twoDepthMenu h2.tit {background:#133f4a; height:50px; line-height:50px; text-align:center; font-size:19px; color:#fff;}
+.twoDepthMenu h3.tit {background:#306a7e; height:49px; line-height:48px; padding-left:45px; font-size:16px; color:#fff; border-bottom:1px solid #133f4a; position:relative;}
+#pageUp h3.tit {padding-left:25px;}
+#pageUp .twoDepthMenu .top {margin-bottom:20px;}
+#pageUp .twoDepthMenu .paging {margin-top:25px;}
+.twoDepthMenu .btnPageUpClose {position:absolute; top:0; right:0; width:50px; height:50px; background:url(/niis/images/sub/btn_close.gif) center center no-repeat; text-indent:-9999px;}
+.twoDepthMenu .btnRegist {position:absolute; top:8px; right:50px;}
+
+
+.twoDepthMenu .top {padding-bottom:10px;}
+.twoDepthMenu .bottom {height:73px; position:absolute; bottom:0; left:0; width:100%; text-align:center; padding-top:10px;}
+.twoDepthMenu .bottom a img{transition:all 0.3s;}
+.twoDepthMenu .bottom a:hover img {transition:all 0.3s; box-shadow: 0px 2px 3px rgba(0,0,0,0.4);}
+.twoDepthMenu .parentWrap {padding:15px 23px}
+.twoDepthMenu .btnCloseOpen {display:block; position:absolute; top:0; left:0; width:100%; height:52px; background:url(/niis/images/sub/btn_close.png) 22px 21px no-repeat;}
+.twoDepthMenu .btnCloseOpen.active {background:url(/niis/images/sub/btn_open.png) 22px 22px no-repeat;}
+.twoDepthMenu .searchDivBtn {display:block; background:#2a8095; text-align:center; color:#fff; font-size:16px; height:40px; margin-top:10px; line-height:36px; border-radius:3px; transition:all 0.3s;}
+.twoDepthMenu .searchDivBtn:hover {transition:all 0.3s; box-shadow: 0px 2px 3px rgba(0,0,0,0.4); background:#306a7e;}
+.twoDepthMenu .selectTab {position:relative;}
+.twoDepthMenu .selectTab .selectBtn {position:absolute; top:-42px; right:50px; width:90px;}
+.twoDepthMenu .selectTab .selectBtn .selectTit {background:#388ca5; border:1px solid #6dbacd; color:#fff;}
+.twoDepthMenu .selectTab .selectBtn .selectTit:after {background:url(/niis/images/board/bg_select_on.png) 0 0 no-repeat;}
+.twoDepthMenu .selectTab .selectBtn .selectTit.focus:after {background:url(/niis/images/board/bg_select_active.png) 0 0 no-repeat;}
+.twoDepthMenu .selectTab .selectBtn .selectTit.focus {border-color:#306a7e; transition:all 0.3s; box-shadow: 0px 2px 3px rgba(0,0,0,0.3); color:#333;}
+.twoDepthMenu .btnServiceGuide {position:absolute; top:0; right:0; width:49px; height:49px; text-align:center;}
+.twoDepthMenu .btnServiceGuide img {display:inline-block; padding-top:8px;}
+/* .twoDepthMenu .btnServiceGuideWrap .btnServiceGuide {position:absolute; top:-50px; right:112px;} */
+.twoDepthMenu .btnServiceGuideWrap .btnServiceGuide {position:absolute; top:0px; right:0px; z-index:3; display:none;}
+
+.scroll {height:0px; overflow:hidden;}
+.twoDepthMenu .sortToggle a {float:left; background:#fff; border:1px solid #c2ccd9; height:32px; line-height:30px; width:78px; text-align:center; border-radius:3px; margin:0 0 3px 2px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.07); color:#1d222c; cursor:pointer;}
+.twoDepthMenu .sortToggle a.last {margin-right:0; width:77px;}
+.twoDepthMenu .sortToggle a.active {background:#133f4a; border:1px solid #133f4a; color:#fff; transition:all 0.3s;}
+
+.twoDepthMenu .sortToggle li {float:left; background:#fff; border:1px solid #c2ccd9; height:32px; line-height:30px; width:78px; text-align:center; border-radius:3px; margin:0 0 3px 2px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.07); color:#1d222c; cursor:pointer;}
+.twoDepthMenu .sortToggle li.last {margin-right:0; width:77px;}
+.twoDepthMenu .sortToggle li.active {background:#133f4a; border:1px solid #133f4a; color:#fff; transition:all 0.3s;}
+.twoDepthMenu .search {position:relative; margin-bottom:10px;}
+.twoDepthMenu .search a {background:#2a8095; display:inline-block; height:27px; vertical-align:middle; padding:0 18px 0 16px; padding-top:7px; color:#fff; border-radius:0 3px 3px 0; font-size:16px; position:absolute; right:0; top:0; transition:all 0.3s; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);}
+.twoDepthMenu .search a:hover {transition:all 0.3s; box-shadow: 0px 2px 3px rgba(0,0,0,0.4); background:#306a7e;}
+.twoDepthMenu .topAppList {overflow:hidden; background:#fff; border:1px solid #c2ccd9; border-radius:3px; height:98px; width:330px; /* position:absolute; top:9px; z-index:10; */}
+.twoDepthMenu .topAppList a {display:block; height:32px; line-height:32px; border-bottom:1px solid #e5eaf0; transition:all 0.3s; padding-left:20px;}
+.twoDepthMenu .topAppList a:hover {background:#f1f9fa;}
+.twoDepthMenu .topAppList .last a {border-bottom:none;}
+.territoryBuffer {background:#d6e3e9; margin-top:10px; height:28px; border-radius:3px; padding:13px 70px 0 75px;position:relative;}
+.territoryBuffer dt {position:absolute; top:12px; left:12px; color:#000;}
+.territoryBuffer dd p {position:absolute; top:12px; right:10px; color:#2a8095; font-weight:600;}
+.territoryBuffer dd p input {padding:0; margin:0; width:40px; font-size:13px; height:14px; line-height:14px; text-align:right; color:#2a8095; font-weight:600; position:relative; top:1px; margin-right:2px;}
+.territoryBuffer dd p input {border:none; background:none; box-shadow:none;}
+.territoryBuffer dd p input:focus {border:none; background:none; box-shadow:none;}
+.areaBuffer {background:#acb6ba; width:100%; position:relative; height:7px; border-radius:99px;}
+.areaBuffer .ui-slider-range {background:#29b0db; /*background:url(/niis/images/sub/bg_buffer.gif) 0 0 no-repeat;  border-radius:99px; margin-top:5px; */ height:100%; }
+.areaBuffer .ui-slider-handle {width:9px; height:16px; position:absolute; top:-5px; left:0px; margin-left:-3px; background:#193f49;  cursor:pointer; box-shadow:0px 2px 3px rgba(0,0,0,0.5);}
+.areaBuffer .ui-slider-handle:focus {outline:0;}
+.areaBuffer .ui-slider-handle:hover {background:#477986;}
+.areaBuffer .ui-state-active {background:#5997a7;}
+.btnTwoDepthMenuClose {width:52px; height:50px; background:url(/niis/images/common/btn_two_depth_menu_close.gif) 0 0 no-repeat; float:left; cursor:pointer;}
+.btnTwoDepthMenuClose:hover {background:url(/niis/images/common/btn_two_depth_menu_close_on.gif) 0 0 no-repeat;}
+.btnTwoDepthMenuClose.active {background:url(/niis/images/common/btn_two_depth_menu_open.gif) 0 0 no-repeat;}
+.btnTwoDepthMenuClose.active:hover {background:url(/niis/images/common/btn_two_depth_menu_open_on.gif) 0 0 no-repeat;}
+.notice h3.tit {padding-left:25px;}
+
+/* �??��?��?�� */
+.mapArea .mapTit {background:#366674; height:50px; position:relative;}
+.mapArea .mapTit h3 {padding-top:16px; font-size:16px; color:#fff; margin-left:70px; margin-right:20px;}
+.mapArea .mapTit h3 img {padding-right:5px;}
+.mapArea .mapTit ul {position:absolute; top:0; right:0;}
+.mapArea .mapTit ul li {float:left; margin-left:1px; overflow:hidden; background:#295463;}
+.mapArea .mapTit ul li a img {transition:all 1s;}
+.mapArea .mapTit ul li a {display:block; height:50px; }
+.mapArea .mapTit ul li.over a {background:#36add0;}
+.mapArea .mapTit ul li a:active  {box-shadow:inset 1px 1px 1px rgba(0,0,0,0.5);}
+.mapArea .mapTit ul li a:active img {position:relative; top:2px; left:1px; transition:all 1s;}
+
+/* 조회 */
+.appList {background:#fff; border-radius:3px; overflow:hidden; margin:0 10px 0 10px; margin:0 24px 0 24px; border:1px solid #c2ccd9; color:#132a4b;}
+.appList li {height:43px; line-height:43px; padding-left:20px; border-bottom:1px solid #e5eaf0; position:relative; transition:all 0.3s;}
+.appList li:hover {background:#f1f9fa; transition:all 0.3s;}
+.appList a {position:absolute; top:7px; right:20px; width:43px; height:28px; line-height:27px; border:1px solid #c2ccd9; text-align:center; color:#84a0a7; border-radius:2px; font-weight:600; font-size:12px; transition:all 0.3s;}
+.appList a:hover {border-color:#2a8095; color:#2a8095; box-shadow:0px 1px 2px rgba(0,0,0,0.3); transition:all 0.3s;}
+
+/* 공�??��?�� 리스?�� */
+.boardList {background:#fff; border-radius:3px; overflow:hidden; margin:0 10px 0 10px; margin:0 24px 0 24px; border:1px solid #c2ccd9;}
+.boardList li a {display:block; height:43px; line-height:43px; padding-left:20px; border-bottom:1px solid #e5eaf0; position:relative; transition:all 0.3s; color:#132a4b; font-size:15px;}
+.boardList li a:hover {background:#f1f9fa; transition:all 0.3s;}
+.boardList li strong {display:block; height:43px; line-height:43px; padding-left:20px; border-bottom:1px solid #e5eaf0; position:relative; transition:all 0.3s; color:#132a4b; background:#daf1f5; position:relative;}
+.boardList li strong:after {content:">"; display:block; position:absolute; top:0; right:24px; font-size:20px; font-weight:400;}
+
+/* ?��?��?��?�� */
+.serviceGuideInner {padding:30px !important;}
+.serviceGuideInner h4 {font-size:18px; color:#444; padding-bottom:20px; font-weight:600;}
+.serviceGuideInner h5 {font-size:16px; color:#444; padding-bottom:10px; padding-top:10px;}
+.serviceGuideInner p {padding-bottom:10px;}
+
+/* 조회결과 ?��?��?�� */
+.noData {position:relative; background:#fff; margin:0 24px; border: 1px solid #c2ccd9; border-radius: 3px; color: #306a7e; text-align:center;}
+.noData .inner {padding-top:70px;}
+.noData .inner p {padding-top:30px; font-size:16px;}
+.noData .inner img {-webkit-animation:rotation 10s infinite linear; }
+@-webkit-keyframes rotation {
+	from {transform: rotate(0deg);}
+	to   {transform: rotate(359deg);}
+}
+
+
+/* ?��비스 �??��?�� */
+.ServiceGuideWrap {position:absolute; top:0; left:0; width:100%; height:100%; z-index:100000; background: url(../images/common/bg_guide_mask.png) 0 0 repeat; display:none;}
+.ServiceGuideWrap dl {position:absolute; border-radius:3px; overflow:hidden;}
+.ServiceGuideWrap dl dt {float:left; background:#145648; color:#fff; padding:5px 15px; /* margin-right:5px; */ font-weight:600;}
+.ServiceGuideWrap dl dd {float:left;background:#2a6d5c; color:#fff; padding:5px 15px;}
+/* .ServiceGuideWrap .close {position:absolute; bottom:32px; right:30px; color:#fff;} */
+.ServiceGuideWrap .close {position:fixed; bottom:32px; right:30px; color:#fff; border:1px solid #1c745d;/*  background:#000; */}
+.ServiceGuideWrap .close a {color:#fff; font-size:30px; line-height:1; height:34px; display:block; padding-right:10px;}
+.ServiceGuideWrap .close a img {padding-right:3px; position:relative; top:0px;}
+.ServiceGuideWrap .close p {font-size:16px; padding-top:10px;}
+.ServiceGuideWrap .close p input {margin-right:5px; position:relative; top:2px;}
+                                   

@@ -1,0 +1,82 @@
+@charset "utf-8";
+
+/*** 헤더 ***/
+#header h1 {padding:35px 0 41px 25px;}
+#header .utilMenu {width:240px; height:214px; border-radius:7px; overflow:hidden; margin:0 auto; box-shadow:0px 2px 7px rgba(0,0,0,0.3); margin-bottom:21px;}
+#header .utilMenu .info {background:#195467; height:99px; border-bottom:1px solid #357e95;text-align:center;}
+#header .utilMenu .info p {padding:22px 0 10px 0; font-size:17px;}
+#header .utilMenu .info li {display:inline; padding:0 4px;}
+#header .utilMenu .iden {background:#19667f; height:114px;}
+#header .utilMenu .iden li {width:79px; border-right:1px solid #357e95; float:left; font-weight:600; position:relative;}
+#header .utilMenu .iden li:after {content:""; display:block; width:25px; height:25px; position:absolute; top:18px;right:-13px; background:url(../images/common/bg_h_util.gif) 0 0 no-repeat;}
+#header .utilMenu .iden li.last {width:80px; border-right:none;}
+#header .utilMenu .iden li.last:after {display:none;}
+#header .utilMenu .iden li a {display:block; height:92px; text-align:center; padding-top:22px; transition:all 0.5s;}
+#header .utilMenu .iden li a span {display:block; padding-top:23px; font-size:24px; font-weight:400; color:#aaa;}
+#header .utilMenu .iden li a.active {box-shadow:inset 0px 0px 10px rgba(16,69,86,0.7); transition:all 0.5s;}
+#header .gnb {width:240px; margin:0 auto;}
+#header .gnb > li { overflow:hidden; width:240px; height:46px; margin-bottom:15px; background:#176d86; border-radius:5px; transition:all 0.5s; position:relative;}
+#header .gnb > li:after {content:""; display:block; width:21px; height:21px; position:absolute; top:12px; left:13px; transition:all 0.5s;}
+#header .gnb > li > a {display:block; width:240px; height:37px; padding-top:9px; padding-left:44px; font-size:20px; background-position:160px 15px; transition:all 0.5s;}
+#header .gnb > li.active {height:auto; background-color:#104556; /* transition:all 0.5s; */}
+#header .gnb > li.menu_1:after {background:url(../images/common/bul_gnb_1.png) 0px 0px no-repeat;}
+#header .gnb > li.menu_2:after {background:url(../images/common/bul_gnb_2.png) 0px 0px no-repeat;}
+#header .gnb > li.menu_1.active:after { background:url(../images/common/bul_gnb_1_active.png) 0px 0px no-repeat;}
+#header .gnb > li.menu_2.active:after {background:url(../images/common/bul_gnb_2_active.png) 0px 0px no-repeat;}
+#header .gnb > li.active:after {transform: rotate(360deg);}
+#header .gnb > li.active > a {background:url(../images/common/bg_gnb_active.png) 214px 15px no-repeat; }
+#header .gnb > li > ul {padding:7px 0;}
+#header .gnb > li > ul > li {padding:0 0 10px 40px; }
+#header .gnb > li > ul > li > a {color:#9ac0cb; transition:all 0.5s;}
+#header .gnb > li > ul > li > a:hover {text-decoration:underline;}
+#header .gnb > li > ul > li.active > a {color:#fff; transition:all 0.5s;}
+
+/*** 푸터 ***/
+#footer h3 {font-size:18px; padding:10px 0;}
+#footer h3 a {transition:all 0.3s;}
+#footer h3 a:hover {/* text-shadow:2px 2px 2px rgba(0,0,0,0.4); */ color:#46c0e3; transition:all 0.3s;}
+#footer ul {font-size:14px; line-height:1.5; padding:5px 0 30px 0;}
+#footer li {padding-left:5px;}
+#footer li img {position:relative; top:5px; padding-left:5px;}
+#footer li a {transition:all 0.3s;}
+#footer li a:hover {text-decoration:underline; /* text-shadow:2px 2px 2px rgba(0,0,0,0.4); */ color:#46c0e3; transition:all 0.3s;}
+#footer .copyright {font-size:12px;}
+
+/**/
+.contTit {height:50px; background:#366674; position:relative; margin-bottom:20px;}
+.contTit h3 {color:#fff; font-weight:600; font-size:17px; padding-top:13px;/*  margin-left:70px; */padding-left:28px; float:left;}
+.contTit .selectWrap {position:absolute; top:8px; right:20px;  width:130px;}
+.contTit .selectWrap .selectTit {background:#388ca5; border:1px solid #6dbacd; color:#fff;}
+.contTit .selectWrap .selectTit:after {background:url(../images/board/bg_select_on.png) 0 0 no-repeat;}
+.contTit .selectWrap .selectTit.focus:after {background:url(../images/board/bg_select_active.png) 0 0 no-repeat;}
+.contTit .selectWrap .selectTit.focus {border-color:#306a7e; transition:all 0.3s; box-shadow: 0px 2px 3px rgba(0,0,0,0.3); color:#333;}
+
+/** 스크롤 디자인 **/
+/* 기본속성 */
+.mCustomScrollbar {-ms-touch-action:none; touch-action:none;}
+.mCustomScrollBox {direction: ltr; height: 100%; max-width: 100%; outline: medium none; overflow: hidden; position: relative;}
+.mCustomScrollBox .mCSB_container{overflow: hidden;width: auto;height: auto;}
+.mCSB_scrollTools .mCSB_draggerContainer {position: absolute; top: 0; left: 0; bottom: 0; right: 0; height: auto;}
+/* 위치및 넓이,크기 */
+.mCSB_scrollTools {margin:0px 0; position:absolute;  height:auto; left:auto; right:5px; top:5px; bottom:5px;width:9px; margin:0px 0;}
+/* 마우스 나갔을시 숨김 효과 */
+.mCSB_scrollTools { /* opacity: 0; filter: "alpha(opacity=0)"; -ms-filter: "alpha(opacity=0)"; */ }
+.mCSB_scrollTools, 
+.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar, 
+.mCSB_scrollTools .mCSB_buttonUp,
+.mCSB_scrollTools .mCSB_buttonDown,
+.mCSB_scrollTools .mCSB_buttonLeft,
+.mCSB_scrollTools .mCSB_buttonRight{-webkit-transition: opacity .2s ease-in-out, background-color .2s ease-in-out; -moz-transition: opacity .2s ease-in-out, background-color .2s ease-in-out; -o-transition: opacity .2s ease-in-out, background-color .2s ease-in-out;transition: opacity .2s ease-in-out, background-color .2s ease-in-out;}
+/* 스크롤 통로 */
+.mCSB_scrollTools .mCSB_draggerRail {width:9px; height:100%; margin:0 auto; -webkit-border-radius: 16px; -moz-border-radius: 16px; border-radius: 16px; background-color: #566372;  background-color: rgba(86,99,114,0.3)}
+/* 스크롤바 */
+.mCSB_scrollTools .mCSB_dragger{cursor:pointer;width:100%; z-index:1; height:70px; /* 스크롤 최소값 */}
+/*스크롤바 드래그 기본 속성*/
+.mCSB_dragger_bar{position: relative; width:9px; height: 100%; margin: 0 auto; -webkit-border-radius: 16px; -moz-border-radius: 16px; border-radius: 16px; text-align: center;}
+/*스크롤바 기본 속성*/
+.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {background-color:#6185b4; filter: "alpha(opacity=100)"; -ms-filter: "alpha(opacity=100)"; }
+/*박스에 호버 스크롤 */
+.mCustomScrollbar:hover .mCSB_scrollTools { opacity:1; filter: "alpha(opacity=100)"; -ms-filter: "alpha(opacity=100)"; }
+/*마우스 휠돌릴시 스크롤*/
+.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar,
+.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar {background-color: #284a76; /* background-color: rgba(82,144,244,1); */}

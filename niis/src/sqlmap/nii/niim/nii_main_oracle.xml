@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_main">
+
+	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap" />
+	
+	<select id="mainDAO.getCommonCode" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT CDE_CDE
+		     , CDE_NAM 
+		  FROM CMT_DETAIL_CODE_NIIM 
+		 WHERE FLE_IDN = #cdeCde#
+		   AND CDE_CHK = 'Y'
+		
+	</select>
+	
+	
+	<select id="mainDAO.getMainReqCnt" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT (
+		        SELECT COUNT(*)
+		          FROM ITR_USR_INFO_NIIM
+		         WHERE ST = 'A'
+		       ) USR_TOT_REQ_CNT
+		     , (
+		        SELECT COUNT(*)
+		          FROM IMG_SUPPLY_APP_NIIM     A
+		             , USR_IMG_SUPPLY_APP_NIIM B
+		         WHERE A.SUP_IDN = B.SUP_IDN
+		           AND A.DEL_YN = 'N'
+		           AND B.APPROVAL_CDE = '0'
+		       ) APP_TOT_REQ_CNT
+		  FROM DUAL
+	
+	</select>
+	
+	
+	<select id="mainDAO.getMainApply" parameterClass="java.util.Map" resultClass="egovMap">
+	<![CDATA[
+		SELECT U.USR_MGNO
+		     , NVL(SUM(CASE WHEN APPROVAL_CDE IN ('0', '1', '8', '10', '11', '12', '13', '14', '15', '16', '17', '30', '40') THEN 1 ELSE 0 END), 0) APPLY_WAIT
+		     , NVL(SUM(CASE WHEN APPROVAL_CDE IN ('2', '3', '4' ,'7', '50') THEN 1 ELSE 0 END), 0) APPLY_APP
+		     , NVL(SUM(CASE WHEN APPROVAL_CDE IN ('5', '6') THEN 1 ELSE 0 END), 0) APPLY_REJ
+		     , NVL(SUM(CASE WHEN APPROVAL_CDE IN ('4', '7') THEN 1 ELSE 0 END), 0) APPLY_COMP
+		  FROM ITR_USR_INFO_NIIM U
+		     , (
+		        SELECT B.*
+		          FROM IMG_SUPPLY_APP_NIIM     A
+		             , USR_IMG_SUPPLY_APP_NIIM B
+		         WHERE A.SUP_IDN = B.SUP_IDN
+		           AND A.DEL_YN = 'N'
+		           AND B.USR_MGNO = #usrMgno#
+		       ) I
+		 WHERE U.USR_MGNO = I.USR_MGNO(+)
+		   AND U.USR_MGNO = #usrMgno#
+		 GROUP BY U.USR_MGNO
+	]]>
+	</select>
+	
+	
+	<select id="mainDAO.getMainBoard" parameterClass="java.util.Map" resultClass="egovMap">
+	<![CDATA[
+		SELECT T.*
+		  FROM (
+		        SELECT ROW_NUMBER() OVER(ORDER BY BOARD_SEQ DESC) NUM
+		             , BOARD_CATE 
+		             , BOARD_SEQ 
+		             , TITLE
+		             , (CASE WHEN CREATE_DT > SYSDATE - 7 THEN 'Y' ELSE 'N' END) NEW_YN
+		          FROM CMT_BOARD_NIIM
+		         WHERE DEL_YN = 'N'
+		           AND BOARD_CATE = #boardCate#
+		           AND PARENT_SEQ = -1
+		       ) T
+		 WHERE T.NUM <= #cnt#
+	]]>	
+	</select>
+	
+	
+	<select id="mainDAO.getMainPopup" parameterClass="java.util.Map" resultClass="egovMap">
+	<![CDATA[
+		SELECT P.BOARD_CATE
+		     , P.BOARD_SEQ
+		     , P.TITLE POP_TITLE
+		     , P.POP_BEGIN_DT
+		     , P.POP_END_DT
+		     , P.POP_POS_CDE
+		     , P.POP_POS_X
+		     , P.POP_POS_Y
+		     , P.IMG_URL
+		     , P.POP_GBN_CDE
+		     , B.TITLE
+		     , B.CONTENTS
+		  FROM CMT_BOARD_NIIM B
+		     , CMT_POPUP_NIIM P
+		 WHERE B.BOARD_CATE = P.BOARD_CATE
+		   AND B.BOARD_SEQ  = P.BOARD_SEQ
+		   AND B.DEL_YN     = 'N'
+		   AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN P.POP_BEGIN_DT AND P.POP_END_DT
+	]]>
+	</select>
+	
+</sqlMap>

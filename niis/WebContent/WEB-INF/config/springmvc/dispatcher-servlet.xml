@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xmlns:task="http://www.springframework.org/schema/task"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        					http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        					http://www.springframework.org/schema/context 
+        					http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        					http://www.springframework.org/schema/task
+        					http://www.springframework.org/schema/task/spring-task.xsd
+        					http://www.springframework.org/schema/mvc 
+        					http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+    <context:component-scan base-package="org.nii.niis">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+    </context:component-scan>
+    
+    <mvc:annotation-driven></mvc:annotation-driven>
+    
+    <context:annotation-config />
+
+	<bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"></bean>
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="jacksonMessageConverter" />
+			</list>
+		</property>
+	</bean>
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+	    	<mvc:mapping path="/**"/>
+	    	<mvc:exclude-mapping path="/waterMark/StoFileUpload.do"/>
+	    	<mvc:exclude-mapping path="/supply/*"/>
+    		<bean class="org.nii.niis.common.interceptor.SessionCheckInterceptor" />
+    	</mvc:interceptor>
+    	
+    <!-- 	<mvc:interceptor>
+	    	<mvc:mapping path="/**"/>
+    		<bean class="org.nii.niis.common.interceptor.SessionCheckInterceptor" />
+    	</mvc:interceptor>
+    	 -->
+    	<!-- <mvc:interceptor>
+	    	<mvc:mapping path="/**"/>
+    		<bean class="org.nii.niis.niim.common.LoginCheckInterceptor" />
+    	</mvc:interceptor> -->
+    	
+	</mvc:interceptors>
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="webBindingInitializer">
+            <bean class="org.nii.niis.common.egov.EgovBindingInitializer"/>
+        </property>
+    </bean>
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+    
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+    <!-- 쿠키를 이용한 Locale 이용시 <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/> -->
+    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="language" />
+    </bean>
+
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="defaultErrorView" value="cmmn/egovError"/>
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.springframework.dao.DataAccessException">common/error/dataAccessFailure</prop>
+                <prop key="org.springframework.transaction.TransactionException">common/error/transactionFailure</prop>
+                <prop key="egovframework.rte.fdl.cmmn.exception.EgovBizException">common/error/egovError</prop>
+                <prop key="org.springframework.security.AccessDeniedException">common/error/egovError</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="1"
+	    p:viewClass="org.springframework.web.servlet.view.JstlView"
+	    p:prefix="/WEB-INF/jsp/niis/" p:suffix=".jsp"/>
+
+    <!-- For Pagination Tag -->
+    <bean id="imageRenderer" class="org.nii.niis.common.egov.EgovImgPaginationRenderer"/>
+
+    <bean id="paginationManager" class="egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager">
+        <property name="rendererType">
+            <map>
+                <entry key="image" value-ref="imageRenderer"/>
+            </map>
+        </property>
+    </bean>
+	<!-- /For Pagination Tag -->
+
+    <bean id="jsonView" class="net.sf.json.spring.web.servlet.view.JsonView">
+	    <property name="contentType" value="application/json;charset=UTF-8" />
+	</bean>
+	<bean id="beanNameResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0" />
+	
+	<!-- 파일업로드 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- <property name="maxUploadSize"><value>10000000</value></property> -->
+	</bean>
+	
+	<bean id="scheduler" class="org.nii.niis.niim.util.Scheduler" />
+	
+	<task:scheduler id="expiredAppScheduler" pool-size="2"/>
+	<task:scheduled-tasks scheduler="expiredAppScheduler" >
+		<!--//운영-->
+		<task:scheduled ref="scheduler" method="expiredAppUpt" cron="0 5 0 * * *" />
+		<!-- <task:scheduled ref="scheduler" method="expiredFileDelete" cron="0 35 * * * *" /> -->
+		<!-- <task:scheduled ref="scheduler" method="watermarkEmb" cron="0 0/1 * * * *"/> -->
+		<!--//운영
+		//개발 테스트용
+		<task:scheduled ref="scheduler" method="expiredAppUpt" cron="0 0/1 * * * *" /> 
+		<task:scheduled ref="scheduler" method="watermarkEmb" cron="0 0/1 * * * *"/>
+		<task:scheduled ref="scheduler" method="expiredFileDelete" cron="0 0/1 * * * *" />
+		//개발 테스트용-->
+	</task:scheduled-tasks>
+	
+</beans>

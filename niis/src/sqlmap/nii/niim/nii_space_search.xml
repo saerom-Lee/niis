@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="SpaceSearch">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<resultMap id="searchAreaSidoVO" class="org.nii.niis.niim.service.SearchAreaVO">
+		<result property="ctprvn_nm"   		column="ctprvn_nm"/>
+		<result property="admcd"       		column="admcd"/>
+		<result property="annox" 			column="annox"/>
+		<result property="annoy"       		column="annoy"/>
+	</resultMap>
+	
+	<resultMap id="searchAreaSigunguVO" class="org.nii.niis.niim.service.SearchAreaVO">
+		<result property="signgu_nm"   		column="signgu_nm"/>
+		<result property="admcd"       		column="admcd"/>
+		<result property="annox" 			column="annox"/>
+		<result property="annoy"       		column="annoy"/>
+	</resultMap>
+	
+	<resultMap id="searchAreaDongVO" class="org.nii.niis.niim.service.SearchAreaVO">
+		<result property="dong_nm"   		column="dong_nm"/>
+		<result property="admcd"       		column="admcd"/>
+		<result property="annox" 			column="annox"/>
+		<result property="annoy"       		column="annoy"/>
+	</resultMap>
+	
+	<resultMap id="addressSidoSearchVO" class="org.nii.niis.niim.service.AddressSearchVO">
+		<result property="admcd"       		column="admcd"/>
+		<result property="ctprvn_nm"   		column="ctprvn_nm"/>
+		<result property="wkb_geometry"		column="wkb_geometry" jdbcType="BLOB"/>
+		<result property="annox" 			column="annox"/>
+		<result property="annoy"       		column="annoy"/>
+	</resultMap>
+	
+	<resultMap id="addressSigunguSearchVO" class="org.nii.niis.niim.service.AddressSearchVO">
+		<result property="admcd"       		column="admcd"/>
+		<result property="signgu_nm"   		column="signgu_nm"/>
+		<result property="wkb_geometry"		column="wkb_geometry" jdbcType="BLOB"/>
+		<result property="annox" 			column="annox"/>
+		<result property="annoy"       		column="annoy"/>
+	</resultMap>
+	
+	<resultMap id="addressDongSearchVO" class="org.nii.niis.niim.service.AddressSearchVO">
+		<result property="admcd"       		column="admcd"/>
+		<result property="dong_nm"   		column="dong_nm"/>
+		<result property="wkb_geometry"		column="wkb_geometry" jdbcType="BLOB"/>
+		<result property="annox" 			column="annox"/>
+		<result property="annoy"       		column="annoy"/>
+	</resultMap>
+	
+	<resultMap id="indexMapVO" class="org.nii.niis.niim.service.IndexMapVO">
+		<result property="objectid"       	column="objectid"/>
+		<result property="map_nam"   		column="map_nam"/>
+		<result property="wkb_geometry"		column="wkb_geometry" jdbcType="BLOB"/>
+		<result property="xmin" 			column="xmin"/>
+		<result property="ymin"       		column="ymin"/>
+		<result property="xmax" 			column="xmax"/>
+		<result property="ymax"       		column="ymax"/>
+	</resultMap>
+	
+	<resultMap id="indexMap5000VO" class="org.nii.niis.niim.service.IndexMapVO">
+		<result property="objectid"       	column="objectid"/>
+		<result property="map_nam"   		column="map_nam"/>
+		<result property="map_num"   		column="map_num"/>
+		<result property="wkb_geometry"		column="wkb_geometry" jdbcType="BLOB"/>
+	</resultMap>
+
+	<select id="spaceSearchDAO.selectAreaListSido"  resultMap="searchAreaSidoVO">
+		<![CDATA[	
+	 		SELECT 
+				SUBSTR(SIDO.CTPRVN_CD,1,2) AS ADMCD,
+				SIDO.CTP_KOR_NM AS CTPRVN_NM, 
+				SDE.ST_X(SDE.ST_CENTROID(SIDO.SHAPE)) ANNOX,
+				SDE.ST_Y(SDE.ST_CENTROID(SIDO.SHAPE)) ANNOY
+			 FROM NGII_MAP.TL_SCCO_CTPRVN SIDO 
+			 ORDER BY SIDO.CTP_KOR_NM
+		]]>
+	</select>
+	
+
+	<select id="spaceSearchDAO.selectAreaListSigungu" resultMap="searchAreaSigunguVO">	
+	 		<![CDATA[	
+			SELECT 
+				SUBSTR(SIGUNGU.SIG_CD,1,5) AS ADMCD,
+				CASE WHEN SUBSTR(SIGUNGU.SIG_CD,5,1) <> 0 
+				THEN 
+					LTRIM((SELECT SIG_KOR_NM FROM NGII_MAP.TL_SCCO_SIG S WHERE SUBSTR(SIGUNGU.SIG_CD,5,1) = 0 AND SUBSTR(SIGUNGU.SIG_CD,1,4) = SUBSTR(SIGUNGU.SIG_CD,1,4)) || ' ' || SIGUNGU.SIG_KOR_NM) 
+				ELSE 
+					SIGUNGU.SIG_KOR_NM 
+				END AS SIGNGU_NM,
+				SDE.ST_X(SDE.ST_CENTROID(SIGUNGU.SHAPE)) ANNOX,
+				SDE.ST_Y(SDE.ST_CENTROID(SIGUNGU.SHAPE)) ANNOY
+			 FROM NGII_MAP.TL_SCCO_SIG SIGUNGU
+			 WHERE SHAPE IS NOT NULL
+			  ]]>
+			<isNotEmpty property="sidoCode" prepend="AND">
+				SIGUNGU.SIG_CD LIKE SUBSTR(#sidoCode#,0,2)||'%' 
+			</isNotEmpty>
+			 AND SHAPE IS NOT NULL
+			 AND SIGUNGU.SIG_CD IS NOT NULL
+			 ORDER BY SIG_KOR_NM
+			
+	</select>
+	
+		
+	<select id="spaceSearchDAO.selectAreaListDong" resultMap="searchAreaDongVO">
+	 		SELECT 
+				SUBSTR(DONG.EMD_CD,1,8) AS ADMCD, 
+				DONG.EMD_KOR_NM as DONG_NM,
+				SDE.ST_X(SDE.ST_CENTROID(DONG.SHAPE)) ANNOX,
+				SDE.ST_Y(SDE.ST_CENTROID(DONG.SHAPE)) ANNOY
+			 FROM NGII_MAP.TL_SCCO_EMD DONG
+			 WHERE SHAPE IS NOT NULL
+			<isNotEmpty property="sigunguCode" prepend="AND">
+				DONG.EMD_CD LIKE SUBSTR(#sigunguCode#,0,5)||'%' 
+			</isNotEmpty>
+			 AND SHAPE IS NOT NULL
+			 AND DONG.EMD_CD IS NOT NULL
+			 ORDER BY DONG.EMD_KOR_NM 
+	</select>
+	
+	<select id="spaceSearchDAO.selectAreaListLi" resultClass="java.util.HashMap">
+		SELECT DISTINCT BJD_CD, LI_NM
+		FROM ROAD_ADDR_JIBUN_INFO@DL_SMART
+		WHERE SIDO_NM = #sido#
+			AND SGG_NM = #sig#
+			AND EMD_NM = #emd#
+		ORDER BY LI_NM
+	</select>
+	
+	<!-- <select id="spaceSearchDAO.selectAreaListDong" resultMap="searchAreaDongVO">
+	 		SELECT 
+				DONG_CDE as admcd,
+				DONG_NAM as dong_nm,
+				COOR_X as annox,
+				COOR_Y as annoy
+			 FROM NGII_AIR_DONG_AS@LK_NGIAIR
+			 WHERE SHAPE IS NOT NULL
+			<isNotEmpty property="sigunguCode" prepend="AND">
+				DONG_CDE LIKE SUBSTR(#sigunguCode#,0,5)||'%' 
+			</isNotEmpty>
+			 AND SHAPE IS NOT NULL
+			 AND DONG_CDE IS NOT NULL
+			 ORDER BY DONG_NAM 
+	</select> -->
+	
+	<!-- 행정구역 경계 시도 -->
+	<select id="addressSidoSearchDAO.getAddressArea" resultMap="addressSidoSearchVO">	
+	 		SELECT 
+				SUBSTR(SIDO.CTPRVN_CD,1,2) AS ADMCD, 
+				SIDO.CTP_KOR_NM AS CTPRVN_NM,
+				SDE.ST_X(SDE.ST_CENTROID(SIDO.SHAPE)) ANNOX,
+				SDE.ST_Y(SDE.ST_CENTROID(SIDO.SHAPE)) ANNOY,
+				SDE.ST_ASBINARY(SIDO.SHAPE) WKB_GEOMETRY
+			 FROM NGII_MAP.TL_SCCO_CTPRVN SIDO
+			 WHERE SHAPE IS NOT NULL
+			<isNotEmpty property="admcd" prepend="AND">
+				SUBSTR(SIDO.CTPRVN_CD,1,2) = #admcd#
+			</isNotEmpty>
+			 and SIDO.CTPRVN_CD IS NOT NULL
+			 order by SIDO.CTP_KOR_NM 
+	</select>
+	
+	<!-- 행정구역 경계 시군구 -->
+	<select id="addressSigunguSearchDAO.getAddressArea" resultMap="addressSigunguSearchVO">
+	 		SELECT 
+				SUBSTR(SIGUNGU.SIG_CD,1,5) AS ADMCD,
+				SIGUNGU.SIG_KOR_NM as SIGNGU_NM,
+				SDE.ST_X(SDE.ST_CENTROID(SIGUNGU.SHAPE)) ANNOX,
+				SDE.ST_Y(SDE.ST_CENTROID(SIGUNGU.SHAPE)) ANNOY,
+				SDE.ST_ASBINARY(SIGUNGU.SHAPE) WKB_GEOMETRY
+			 FROM NGII_MAP.TL_SCCO_SIG SIGUNGU  
+			 WHERE SHAPE IS NOT NULL
+			<isNotEmpty property="admcd" prepend="AND">
+				SUBSTR(SIGUNGU.SIG_CD,1,5) = #admcd#
+			</isNotEmpty>
+			 and SIGUNGU.SIG_CD IS NOT NULL
+			 order by SIGUNGU.SIG_KOR_NM 
+	</select>
+	
+	<!-- 행정구역 경계 동 -->
+	<select id="addressDongSearchDAO.getAddressArea" resultMap="addressDongSearchVO">	
+	 		SELECT 
+				SUBSTR(DONG.EMD_CD,1,8) AS ADMCD,
+				DONG.EMD_KOR_NM as DONG_NM,
+				SDE.ST_X(SDE.ST_CENTROID(DONG.SHAPE)) ANNOX,
+				SDE.ST_Y(SDE.ST_CENTROID(DONG.SHAPE)) ANNOY,
+				SDE.ST_ASBINARY(DONG.SHAPE) WKB_GEOMETRY
+			 FROM NGII_MAP.TL_SCCO_EMD DONG 
+			 WHERE SHAPE IS NOT NULL
+			<isNotEmpty property="admcd" prepend="AND">
+				SUBSTR(DONG.EMD_CD,1,8) = #admcd#
+			</isNotEmpty>
+			 and DONG.EMD_CD IS NOT NULL
+			 order by DONG.EMD_KOR_NM 
+	</select>
+	
+	<!-- 도엽 -->
+	<select id="addressSearchDAO.getIndexMapArea" resultMap="indexMapVO">
+			SELECT OBJECTID,
+			       NAME AS MAP_NAM,
+			       NUM AS MAP_NUM,
+				   SDE.ST_MINX(SHAPE) XMIN, 
+				   SDE.ST_MINY(SHAPE) YMIN, 
+				   SDE.ST_MAXX(SHAPE) XMAX, 
+				   SDE.ST_MAXY(SHAPE) YMAX, 
+			       SDE.ST_ASBINARY(SHAPE) AS WKB_GEOMETRY
+			  FROM INDEX_ALL_050000@DL_NGIIMAP T
+			 WHERE T.NAME = #selectKey#
+			 
+			 <!--SELECT OBJECTID,
+			       MAP_NAM,
+			       MAP_NUM,
+			       XMIN,
+			       YMIN,
+			       XMAX,
+			       YMAX,
+			       SDO_UTIL.TO_WKBGEOMETRY(SHAPE) AS WKB_GEOMETRY
+			  FROM NGII_AIR_I50000_AS@LK_NGIAIR T
+			 WHERE T.MAP_NAM = #selectKey#-->
+	</select>
+	
+<!-- 1:5000 도엽 -->
+	<select id="addressSearchDAO.getIndexMap5000" resultMap="indexMap5000VO">
+			SELECT objectid,
+			       map5000_na as map_nam,
+			       map5000_nu as map_num,
+			       SDO_UTIL.TO_WKBGEOMETRY(SHAPE) AS wkb_geometry
+			  FROM NGII_AIR_I5000_AS@LK_NGIAIR
+			<dynamic prepend="WHERE">
+				<isNotEmpty property="minx" prepend="AND">
+					<![CDATA[ sdo_geom.sdo_min_mbr_ordinate(SDO_GEOM.SDO_MBR(SHAPE) ,1) >= #minx#	 ]]>	
+				</isNotEmpty>
+				<isNotEmpty property="miny" prepend="AND">
+					<![CDATA[ sdo_geom.sdo_min_mbr_ordinate(SDO_GEOM.SDO_MBR(SHAPE) ,2) >= #miny#	 ]]>			
+				</isNotEmpty>
+				<isNotEmpty property="maxx" prepend="AND">
+					<![CDATA[ sdo_geom.sdo_max_mbr_ordinate(SDO_GEOM.SDO_MBR(SHAPE) ,1) <= #maxx#	 ]]>	
+				</isNotEmpty>
+				<isNotEmpty property="maxy" prepend="AND">
+					<![CDATA[ sdo_geom.sdo_max_mbr_ordinate(SDO_GEOM.SDO_MBR(SHAPE) ,2) <= #maxy#	 ]]>			
+				</isNotEmpty>
+			</dynamic>
+	</select>
+</sqlMap>

@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_supply">
+
+	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap" />
+	
+	<sql id="Download_path_info">
+	<![CDATA[
+     , (#urlInfo#
+        || '?filePath='
+        || #supplyImgPath# 
+        || '/' 
+        || T.SUP_IDN 
+        || T.FILE_PATH
+        || '&fileName=' 
+        || T.FILE_NAME) DOWNLOAD_URL
+     , 0 FILE_SIZE
+     , (T.FILE_PATH 
+        || T.FILE_NAME) PRINT_FILE_NAME
+	]]>
+	</sql>
+	
+	
+	<select id="supplyDAO.getDownloadAirList" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT 'PDT001' IMAGE_CDE
+		     , SUP_IDN
+		     , TO_CHAR(TRUNC(NUM) + 1) AS GROUP_NUM
+		     , MAX(ZONE_NAM) KEEP (DENSE_RANK FIRST ORDER BY NUM) ZONE_NAM
+		     , MAX(PH_COURSE) KEEP (DENSE_RANK FIRST ORDER BY NUM) PH_COURSE
+		     , MAX(PH_NUM) KEEP (DENSE_RANK FIRST ORDER BY NUM) PH_NUM
+		     , COUNT(NUM) CNT
+		     , (SELECT META_YN FROM USR_IMG_SUPPLY_APP_NIIM WHERE SUP_IDN = T.SUP_IDN) META_YN
+		     , DECODE(SUM(CASE WHEN DOWNLOAD_YN = 'N' THEN 1 ELSE 0 END), 0, 'N', 'Y') DOWNLOAD_APP
+		  FROM (
+		        SELECT (ROW_NUMBER() OVER(ORDER BY A.ZONE_CODE DESC, A.PH_COURSE, TO_NUMBER(REGEXP_REPLACE(A.PH_NUM, '[^0-9]')), A.PH_NUM) - 1) / #imageDownloadLimit# NUM
+		             , T.SUP_IDN
+		             , E.ZONE_NAM
+		             , T.ZONE_CODE
+		             , T.PH_COURSE
+		             , T.PH_NUM
+		             , NVL(T.DOWNLOAD_YN, 'N') DOWNLOAD_YN
+		          FROM AIR_BASEMETA_DTS A
+		             , STO_AIRLOC_DTS B
+		             , CMT_STORAGE_CDE C
+		             , STO_INFO_DTS D
+		             , AIR_ZONE_DTS E
+		             , META_AIRMAP_IDENT F
+		             , AIR_PRODUCT_DTS G
+		             , USR_AIR_SUPPLYITEM_APP_NIIM T
+		         WHERE A.ZONE_CODE   = B.ZONE_CODE
+		           AND A.PH_COURSE   = B.PH_COURSE
+		           AND A.PH_NUM      = B.PH_NUM
+		           AND A.ZONE_CODE   = E.ZONE_CODE
+		           AND A.ZONE_CODE   = F.ZONE_CODE
+		           AND A.PH_COURSE   = F.PH_COURSE
+		           AND A.PH_NUM      = F.PH_NUM
+		           AND A.ZONE_CODE   = G.ZONE_CODE
+		           AND A.PH_COURSE   = G.PH_COURSE
+		           AND A.PH_NUM      = G.PH_NUM
+		           AND B.STORAGE_CDE = C.CODE_CDE
+		           AND B.STO_IDN     = D.STO_IDN
+		           AND NVL(E.IMAGE_CDE, 'PDT001') = 'PDT001'
+		           AND F.XMIN IS NOT NULL
+		           AND A.ZONE_CODE  = T.ZONE_CODE
+		           AND A.PH_COURSE  = T.PH_COURSE
+		           AND A.PH_NUM     = T.PH_NUM
+		           AND T.SUP_IDN    = #supIdn#
+		           AND B.STORAGE_CDE = 'AIR001'
+		       ) T
+		 GROUP BY SUP_IDN
+		        , TRUNC(NUM)
+	
+	</select>
+	
+	<select id="supplyDAO.getDownloadAirLibList" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT /* supplyDAO.getDownloadAirLibList */ 
+			T.IMAGE_CDE
+		     , SUP_IDN
+		     , TO_CHAR(TRUNC(NUM) + 1) AS GROUP_NUM
+		     , MAX(ZONE_NAM) KEEP (DENSE_RANK FIRST ORDER BY NUM) ZONE_NAM
+		     , MAX(PH_COURSE) KEEP (DENSE_RANK FIRST ORDER BY NUM) PH_COURSE
+		     , MAX(PH_NUM) KEEP (DENSE_RANK FIRST ORDER BY NUM) PH_NUM
+		     , COUNT(NUM) CNT
+		     , (SELECT META_YN FROM USR_IMG_SUPPLY_APP_NIIM WHERE SUP_IDN = T.SUP_IDN) META_YN
+		     , DECODE(SUM(CASE WHEN DOWNLOAD_YN = 'N' THEN 1 ELSE 0 END), 0, 'N', 'Y') DOWNLOAD_APP
+		  FROM (
+		        SELECT (ROW_NUMBER() OVER(ORDER BY A.ZONE_CODE DESC, A.PH_COURSE, TO_NUMBER(REGEXP_REPLACE(A.PH_NUM, '[^0-9]')), A.PH_NUM) - 1) / #imageDownloadLimit# NUM
+		             , T.SUP_IDN
+		             , E.ZONE_NAM
+		             , T.ZONE_CODE
+		             , T.PH_COURSE
+		             , T.PH_NUM
+		             , NVL(T.DOWNLOAD_YN, 'N') DOWNLOAD_YN
+		             , E.IMAGE_CDE
+		          FROM AIR_BASEMETA_DTS A
+		             , STO_AIRLOC_DTS B
+		             , CMT_STORAGE_CDE C
+		             , STO_INFO_DTS D
+		             , AIR_ZONE_DTS E
+		             , META_AIRMAP_IDENT F
+		             , AIR_PRODUCT_DTS G
+		             , USR_AIR_SUPPLYITEM_APP_NIIM T
+		         WHERE A.ZONE_CODE   = B.ZONE_CODE
+		           AND A.PH_COURSE   = B.PH_COURSE
+		           AND A.PH_NUM      = B.PH_NUM
+		           AND A.ZONE_CODE   = E.ZONE_CODE
+		           AND A.ZONE_CODE   = F.ZONE_CODE
+		           AND A.PH_COURSE   = F.PH_COURSE
+		           AND A.PH_NUM      = F.PH_NUM
+		           AND A.ZONE_CODE   = G.ZONE_CODE
+		           AND A.PH_COURSE   = G.PH_COURSE
+		           AND A.PH_NUM      = G.PH_NUM
+		           AND B.STORAGE_CDE = C.CODE_CDE
+		           AND B.STO_IDN     = D.STO_IDN
+		           AND NVL(E.IMAGE_CDE, 'PDT011') = 'PDT011'
+		           AND F.XMIN IS NOT NULL
+		           AND A.ZONE_CODE  = T.ZONE_CODE
+		           AND A.PH_COURSE  = T.PH_COURSE
+		           AND A.PH_NUM     = T.PH_NUM
+		           AND T.SUP_IDN    = #supIdn#
+		       ) T
+		 GROUP BY SUP_IDN
+		        , TRUNC(NUM)
+				, T.IMAGE_CDE
+	</select>
+	
+	
+	<select id="supplyDAO.getDownloadDemList" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT 'PDT002' IMAGE_CDE
+		     , SUP_IDN
+		     , TO_CHAR(TRUNC(NUM) + 1) AS GROUP_NUM
+		     , MAX(ZONE_NAM) KEEP (DENSE_RANK FIRST ORDER BY NUM) ZONE_NAM
+		     , MAX(MAP5000_NUM) KEEP (DENSE_RANK FIRST ORDER BY NUM) MAP5000_NUM
+		     , MAX(GRID_INT) KEEP (DENSE_RANK FIRST ORDER BY NUM) GRID_INT
+		     , COUNT(NUM) CNT
+		     , (SELECT META_YN FROM USR_IMG_SUPPLY_APP_NIIM WHERE SUP_IDN = T.SUP_IDN) META_YN
+		     , DECODE(SUM(CASE WHEN DOWNLOAD_YN = 'N' THEN 1 ELSE 0 END), 0, 'N', 'Y') DOWNLOAD_APP
+		  FROM (
+		        SELECT (ROW_NUMBER() OVER(ORDER BY A.ZONE_CODE DESC, A.MAP5000_NUM, F.GRID_INT) - 1) / #imageDownloadLimit# NUM
+		             , T.SUP_IDN
+		             , E.ZONE_NAM
+		             , T.ZONE_CODE
+		             , T.MAP5000_NUM
+		             , T.GRID_INT
+		             , NVL(T.DOWNLOAD_YN, 'N') DOWNLOAD_YN
+		          FROM DEM_BASEMETA_DTS A
+		             , STO_DEMLOC_DTS B
+		             , CMT_STORAGE_CDE C
+		             , STO_INFO_DTS D
+		             , AIR_ZONE_DTS E
+		             , DEM_PRODUCT_DTS F
+		             , USR_DEM_SUPPLYITEM_APP_NIIM T
+		         WHERE A.ZONE_CODE   = B.ZONE_CODE
+		           AND A.MAP5000_NUM = B.MAP5000_NUM
+		           AND A.ZONE_CODE   = E.ZONE_CODE
+		           AND A.ZONE_CODE   = F.ZONE_CODE
+		           AND A.MAP5000_NUM = F.MAP5000_NUM
+		           AND B.STORAGE_CDE = C.CODE_CDE
+		           AND B.STO_IDN     = D.STO_IDN
+		           AND LENGTH(A.MAP5000_NUM) IN (5, 6, 7, 8)
+<!-- 		           AND E.IMAGE_CDE   = 'PDT002' -->
+		           AND A.ZONE_CODE   = T.ZONE_CODE
+		           AND A.MAP5000_NUM = T.MAP5000_NUM
+		           AND T.SUP_IDN     = #supIdn#
+		       ) T
+		 GROUP BY SUP_IDN
+		        , TRUNC(NUM)
+	
+	</select>
+	
+	
+	<select id="supplyDAO.getDownloadOrtList" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT 'PDT004' IMAGE_CDE
+		     , SUP_IDN
+		     , TO_CHAR(TRUNC(NUM) + 1) AS GROUP_NUM
+		     , MAX(ZONE_NAM) KEEP (DENSE_RANK FIRST ORDER BY NUM) ZONE_NAM
+		     , MAX(MAP5000_NUM) KEEP (DENSE_RANK FIRST ORDER BY NUM) MAP5000_NUM
+		     , MAX(GTYP_DST) KEEP (DENSE_RANK FIRST ORDER BY NUM) GTYP_DST
+		     , COUNT(NUM) CNT
+		     , (SELECT META_YN FROM USR_IMG_SUPPLY_APP_NIIM WHERE SUP_IDN = T.SUP_IDN) META_YN
+		     , DECODE(SUM(CASE WHEN DOWNLOAD_YN = 'N' THEN 1 ELSE 0 END), 0, 'N', 'Y') DOWNLOAD_APP
+		  FROM (
+		        SELECT (ROW_NUMBER() OVER(ORDER BY A.ZONE_CODE DESC, A.MAP5000_NUM, H.GTYP_DST) - 1) / #imageDownloadLimit# NUM
+		             , T.SUP_IDN
+		             , E.ZONE_NAM
+		             , T.ZONE_CODE
+		             , T.MAP5000_NUM
+		             , T.GTYP_DST
+		             , NVL(T.DOWNLOAD_YN, 'N') DOWNLOAD_YN
+		          FROM ORT_BASEMETA_DTS A
+		             , STO_ORTLOC_DTS B
+		             , CMT_STORAGE_CDE C
+		             , STO_INFO_DTS D
+		             , AIR_ZONE_DTS E
+		             , META_ORT_IDENT F
+		             , ORT_PRODUCT_DTS H
+		             , USR_ORT_SUPPLYITEM_APP_NIIM T
+		         WHERE A.ZONE_CODE   = B.ZONE_CODE
+		           AND A.MAP5000_NUM = B.MAP5000_NUM
+		           AND A.ZONE_CODE   = E.ZONE_CODE
+		           AND A.ZONE_CODE   = F.ZONE_CODE
+		           AND A.MAP5000_NUM = F.MAP5000_NUM
+		           AND A.ZONE_CODE   = H.ZONE_CODE
+		           AND A.MAP5000_NUM = H.MAP5000_NUM
+		           AND B.STORAGE_CDE = C.CODE_CDE
+		           AND B.STO_IDN     = D.STO_IDN
+<!-- 		           AND E.IMAGE_CDE   = 'PDT004' -->
+		           AND F.XMIN IS NOT NULL
+		           AND H.SECURITY_CDE IS NOT NULL
+		           AND A.ZONE_CODE   = T.ZONE_CODE
+		           AND A.MAP5000_NUM = T.MAP5000_NUM
+		           AND T.SUP_IDN     = #supIdn#
+		       ) T
+		 GROUP BY SUP_IDN
+		        , TRUNC(NUM)
+	
+	</select>
+	
+	
+	<select id="supplyDAO.getAirFileList" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT SUP_IDN
+		     , KEY_VAL1
+		     , KEY_VAL2
+		     , KEY_VAL3
+		
+		<include refid="Download_path_info"/>
+		
+		  FROM (
+		        SELECT ROW_NUMBER() OVER(ORDER BY A.ZONE_CODE DESC, A.PH_COURSE, TO_NUMBER(REGEXP_REPLACE(A.PH_NUM, '[^0-9]')), A.PH_NUM) NUM
+		             , T.SUP_IDN
+		             , T.ZONE_CODE KEY_VAL1
+		             , T.PH_COURSE KEY_VAL2
+		             , T.PH_NUM AS KEY_VAL3
+		
+		<include refid="Air_supply_file_path"/>
+		
+		          FROM AIR_BASEMETA_DTS A
+		             , STO_AIRLOC_DTS B
+		             , CMT_STORAGE_CDE C
+		             , STO_INFO_DTS D
+		             , AIR_ZONE_DTS E
+		             , META_AIRMAP_IDENT F
+		             , AIR_PRODUCT_DTS G
+		             , USR_AIR_SUPPLYITEM_APP_NIIM T
+		         WHERE A.ZONE_CODE   = B.ZONE_CODE
+		           AND A.PH_COURSE   = B.PH_COURSE
+		           AND A.PH_NUM      = B.PH_NUM
+		           AND A.ZONE_CODE   = E.ZONE_CODE
+		           AND A.ZONE_CODE   = F.ZONE_CODE
+		           AND A.PH_COURSE   = F.PH_COURSE
+		           AND A.PH_NUM      = F.PH_NUM
+		           AND A.ZONE_CODE   = G.ZONE_CODE
+		           AND A.PH_COURSE   = G.PH_COURSE
+		           AND A.PH_NUM      = G.PH_NUM
+		           AND B.STORAGE_CDE = C.CODE_CDE
+		           AND B.STO_IDN     = D.STO_IDN
+		           AND NVL(E.IMAGE_CDE, 'PDT001') = 'PDT001'
+		           AND F.XMIN IS NOT NULL
+		           AND A.ZONE_CODE  = T.ZONE_CODE
+		           AND A.PH_COURSE  = T.PH_COURSE
+		           AND A.PH_NUM     = T.PH_NUM
+		           AND B.STORAGE_CDE = 'AIR001'
+		           AND T.SUP_IDN    = #supIdn#
+		       ) T
+		 WHERE TRUNC((NUM - 1) / #imageDownloadLimit#) + 1 = #group#
+		
+	</select>
+	
+	<select id="supplyDAO.getAirLibFileList" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT/* supplyDAO.getAirLibFileList */
+			 SUP_IDN
+		     , KEY_VAL1
+		     , KEY_VAL2
+		     , KEY_VAL3
+		
+		<include refid="Download_path_info"/>
+		
+		  FROM (
+		        SELECT ROW_NUMBER() OVER(ORDER BY A.ZONE_CODE DESC, A.PH_COURSE, TO_NUMBER(REGEXP_REPLACE(A.PH_NUM, '[^0-9]')), A.PH_NUM) NUM
+		             , T.SUP_IDN
+		             , T.ZONE_CODE KEY_VAL1
+		             , T.PH_COURSE KEY_VAL2
+		             , T.PH_NUM AS KEY_VAL3
+		
+		<include refid="AirLib_supply_file_path"/>
+		
+		          FROM AIR_BASEMETA_DTS A
+		             , STO_AIRLOC_DTS B
+		             , CMT_STORAGE_CDE C
+		             , STO_INFO_DTS D
+		             , AIR_ZONE_DTS E
+		             , META_AIRMAP_IDENT F
+		             , AIR_PRODUCT_DTS G
+		             , USR_AIR_SUPPLYITEM_APP_NIIM T
+		         WHERE A.ZONE_CODE   = B.ZONE_CODE
+		           AND A.PH_COURSE   = B.PH_COURSE
+		           AND A.PH_NUM      = B.PH_NUM
+		           AND A.ZONE_CODE   = E.ZONE_CODE
+		           AND A.ZONE_CODE   = F.ZONE_CODE
+		           AND A.PH_COURSE   = F.PH_COURSE
+		           AND A.PH_NUM      = F.PH_NUM
+		           AND A.ZONE_CODE   = G.ZONE_CODE
+		           AND A.PH_COURSE   = G.PH_COURSE
+		           AND A.PH_NUM      = G.PH_NUM
+		           AND B.STORAGE_CDE = C.CODE_CDE
+		           AND B.STO_IDN     = D.STO_IDN
+		           AND NVL(E.IMAGE_CDE, 'PDT011') = 'PDT011'
+		           AND F.XMIN IS NOT NULL
+		           AND A.ZONE_CODE  = T.ZONE_CODE
+		           AND A.PH_COURSE  = T.PH_COURSE
+		           AND A.PH_NUM     = T.PH_NUM
+		           AND T.SUP_IDN    = #supIdn#
+		       ) T
+		 WHERE TRUNC((NUM - 1) / #imageDownloadLimit#) + 1 = #group#
+		
+	</select>
+	
+	
+	<select id="supplyDAO.getDemFileList" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT SUP_IDN
+		     , KEY_VAL1
+		     , KEY_VAL2
+		     , KEY_VAL3
+		     
+		<include refid="Download_path_info"/>
+		
+		  FROM (
+		        SELECT ROW_NUMBER() OVER(ORDER BY A.ZONE_CODE DESC, A.MAP5000_NUM, F.GRID_INT) NUM
+		             , T.SUP_IDN
+		             , T.ZONE_CODE KEY_VAL1
+		             , T.MAP5000_NUM KEY_VAL2
+		             , T.GRID_INT KEY_VAL3
+		
+		<include refid="Dem_supply_file_path"/>
+		
+		          FROM DEM_BASEMETA_DTS A
+		             , STO_DEMLOC_DTS B
+		             , CMT_STORAGE_CDE C
+		             , STO_INFO_DTS D
+		             , AIR_ZONE_DTS E
+		             , DEM_PRODUCT_DTS F
+		             , USR_DEM_SUPPLYITEM_APP_NIIM T
+		         WHERE A.ZONE_CODE   = B.ZONE_CODE
+		           AND A.MAP5000_NUM = B.MAP5000_NUM
+		           AND A.ZONE_CODE   = E.ZONE_CODE
+		           AND A.ZONE_CODE   = F.ZONE_CODE
+		           AND A.MAP5000_NUM = F.MAP5000_NUM
+		           AND B.STORAGE_CDE = C.CODE_CDE
+		           AND B.STO_IDN     = D.STO_IDN
+		           AND LENGTH(A.MAP5000_NUM) IN (5, 6, 7, 8)
+<!-- 		           AND E.IMAGE_CDE   = 'PDT002' -->
+		           AND A.ZONE_CODE   = T.ZONE_CODE
+		           AND A.MAP5000_NUM = T.MAP5000_NUM
+		           AND T.SUP_IDN     = #supIdn#
+		       ) T
+		 WHERE TRUNC((NUM - 1) / #imageDownloadLimit#) + 1 = #group#
+		
+	</select>
+	
+	
+	<select id="supplyDAO.getOrtFileList" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT SUP_IDN
+		     , KEY_VAL1
+		     , KEY_VAL2
+		     , KEY_VAL3
+		
+		<include refid="Download_path_info"/>
+		
+		  FROM (
+		        SELECT ROW_NUMBER() OVER(ORDER BY A.ZONE_CODE DESC, A.MAP5000_NUM, H.GTYP_DST) NUM
+		             , T.SUP_IDN
+		             , T.ZONE_CODE KEY_VAL1
+		             , T.MAP5000_NUM KEY_VAL2
+		             , T.GTYP_DST KEY_VAL3
+		
+		<include refid="Ort_supply_file_path"/>
+		
+		          FROM ORT_BASEMETA_DTS A
+		             , STO_ORTLOC_DTS B
+		             , CMT_STORAGE_CDE C
+		             , STO_INFO_DTS D
+		             , AIR_ZONE_DTS E
+		             , META_ORT_IDENT F
+		             , ORT_PRODUCT_DTS H
+		             , USR_ORT_SUPPLYITEM_APP_NIIM T
+		         WHERE A.ZONE_CODE   = B.ZONE_CODE
+		           AND A.MAP5000_NUM = B.MAP5000_NUM
+		           AND A.ZONE_CODE   = E.ZONE_CODE
+		           AND A.ZONE_CODE   = F.ZONE_CODE
+		           AND A.MAP5000_NUM = F.MAP5000_NUM
+		           AND A.ZONE_CODE   = H.ZONE_CODE
+		           AND A.MAP5000_NUM = H.MAP5000_NUM
+		           AND B.STORAGE_CDE = C.CODE_CDE
+		           AND B.STO_IDN     = D.STO_IDN
+<!-- 		           AND E.IMAGE_CDE   = 'PDT004' -->
+		           AND F.XMIN IS NOT NULL
+		           AND H.SECURITY_CDE IS NOT NULL
+		           AND A.ZONE_CODE   = T.ZONE_CODE
+		           AND A.MAP5000_NUM = T.MAP5000_NUM
+		           AND T.SUP_IDN     = #supIdn#
+		       ) T
+		 WHERE TRUNC((NUM - 1) / #imageDownloadLimit#) + 1 = #group#
+		
+	</select>
+	
+	
+	<select id="supplyDAO.getAirMetaList" parameterClass="java.util.Map" resultClass="egovMap">
+	<![CDATA[
+		SELECT SUP_IDN
+	         , (#urlInfo#
+	            || '?filePath='
+	            || #supplyImgPath# 
+	            || '/' 
+	            || T.SUP_IDN 
+	            || T.FILE_PATH
+	            || '&fileName=') DOWNLOAD_URL
+	         , 0 FILE_SIZE
+	         , T.FILE_PATH PRINT_FILE_NAME
+		  FROM (
+		        SELECT ROW_NUMBER() OVER(ORDER BY S.ZONE_CODE DESC) NUM
+		             , S.SUP_IDN
+		             , ('' 
+		                || #airMetaPath#
+		                || '/' 
+		                || S.ZONE_CODE
+		                || '/') AS FILE_PATH
+		          FROM AIR_BASEMETA_DTS M
+		             , USR_AIR_SUPPLYITEM_APP_NIIM S
+		         WHERE S.ZONE_CODE = M.ZONE_CODE
+		           AND S.PH_COURSE = M.PH_COURSE
+		           AND S.PH_NUM    = M.PH_NUM
+		           AND S.SUP_IDN   = #supIdn#
+		           AND EXISTS (
+		                       SELECT 1 
+		                         FROM USR_IMG_SUPPLY_APP_NIIM
+		                        WHERE META_YN = 'Y'
+		                          AND SUP_IDN = S.SUP_IDN
+		                      )
+		         GROUP BY S.SUP_IDN
+		                , S.ZONE_CODE
+		       ) T
+	]]>
+	</select>
+	
+	<select id="supplyDAO.getDemMetaList" parameterClass="java.util.Map" resultClass="egovMap">
+	<![CDATA[
+		SELECT SUP_IDN
+	         , (#urlInfo#
+	            || '?filePath='
+	            || #supplyImgPath# 
+	            || '/' 
+	            || T.SUP_IDN 
+	            || T.FILE_PATH
+	            || '&fileName=') DOWNLOAD_URL
+	         , 0 FILE_SIZE
+	         , T.FILE_PATH PRINT_FILE_NAME
+		  FROM (
+		        SELECT ROW_NUMBER() OVER(ORDER BY SUBSTR(S.ZONE_CODE, 1, 4) DESC, LENGTH(S.MAP5000_NUM), SUBSTR(S.MAP5000_NUM, 1, 5)) NUM
+		             , S.SUP_IDN
+		             , ('' 
+		                || #demMetaPath#
+		                || '/' 
+		                || SUBSTR(S.ZONE_CODE, 1, 4)
+		                || '/'
+		                || DECODE(LENGTH(S.MAP5000_NUM), 5, '50K', 6, '25K', 7, '10K', 8, '5K')
+		                || '/'
+		                || SUBSTR(S.MAP5000_NUM, 1, 5)
+		                || '/') AS FILE_PATH
+		          FROM DEM_BASEMETA_DTS M
+		             , USR_DEM_SUPPLYITEM_APP_NIIM S
+		             , DEM_PRODUCT_DTS R
+		         WHERE S.ZONE_CODE   = M.ZONE_CODE
+		           AND S.MAP5000_NUM = M.MAP5000_NUM
+		           AND S.ZONE_CODE   = R.ZONE_CODE
+		           AND S.MAP5000_NUM = R.MAP5000_NUM
+		           AND S.GRID_INT    = R.GRID_INT
+		           AND S.SUP_IDN     = #supIdn#
+		           AND LENGTH(S.MAP5000_NUM) IN (5, 6, 7, 8)
+		           AND EXISTS (
+		                       SELECT 1 
+		                         FROM USR_IMG_SUPPLY_APP_NIIM
+		                        WHERE META_YN = 'Y'
+		                          AND SUP_IDN = S.SUP_IDN
+		                      )
+		         GROUP BY S.SUP_IDN
+		                , SUBSTR(S.ZONE_CODE, 1, 4)
+		                , LENGTH(S.MAP5000_NUM)
+		                , SUBSTR(S.MAP5000_NUM, 1, 5)
+		       ) T
+	]]>
+	</select>
+	
+	
+	<select id="supplyDAO.getOrtMetaList" parameterClass="java.util.Map" resultClass="egovMap">
+	<![CDATA[
+		SELECT SUP_IDN
+	         , (#urlInfo#
+	            || '?filePath='
+	            || #supplyImgPath# 
+	            || '/' 
+	            || T.SUP_IDN 
+	            || T.FILE_PATH
+	            || '&fileName=') DOWNLOAD_URL
+	         , 0 FILE_SIZE
+	         , T.FILE_PATH PRINT_FILE_NAME
+		  FROM (
+		        SELECT ROW_NUMBER() OVER(ORDER BY SUBSTR(S.ZONE_CODE, 1, 4) DESC, SUBSTR(S.MAP5000_NUM, 1, 5)) NUM
+		             , S.SUP_IDN
+		             , ('' 
+		                || #ortMetaPath#
+		                || '/' 
+		                || SUBSTR(S.ZONE_CODE, 1, 4)
+		                || '/'
+		                || SUBSTR(S.MAP5000_NUM, 1, 5)
+		                || '/') AS FILE_PATH
+		          FROM ORT_BASEMETA_DTS M
+		             , USR_ORT_SUPPLYITEM_APP_NIIM S
+		             , ORT_PRODUCT_DTS R
+		         WHERE S.ZONE_CODE   = M.ZONE_CODE
+		           AND S.MAP5000_NUM = M.MAP5000_NUM
+		           AND S.ZONE_CODE   = R.ZONE_CODE
+		           AND S.MAP5000_NUM = R.MAP5000_NUM
+		           AND S.GTYP_DST    = R.GTYP_DST
+		           AND S.SUP_IDN     = #supIdn#
+		           AND EXISTS (
+		                       SELECT 1 
+		                         FROM USR_IMG_SUPPLY_APP_NIIM
+		                        WHERE META_YN = 'Y'
+		                          AND SUP_IDN = S.SUP_IDN
+		                      )
+		         GROUP BY S.SUP_IDN
+		                , SUBSTR(S.ZONE_CODE, 1, 4)
+		                , SUBSTR(S.MAP5000_NUM, 1, 5)
+		       ) T
+	]]>
+	</select>
+	
+	
+	<update id="supplyDAO.uptAirImgDownState" parameterClass="java.util.Map">
+	
+		UPDATE USR_AIR_SUPPLYITEM_APP_NIIM T
+		   SET DOWNLOAD_YN = 'Y'
+		 WHERE SUP_IDN = #supIdn#
+		   AND EXISTS (
+		               SELECT 1
+		                 FROM (
+		                       SELECT (ROW_NUMBER() OVER(ORDER BY A.ZONE_CODE DESC, A.PH_COURSE, TO_NUMBER(REGEXP_REPLACE(A.PH_NUM, '[^0-9]')), A.PH_NUM) - 1) / #imageDownloadLimit# NUM
+		                            , T.SUP_IDN
+		                            , T.USR_MGNO
+		                            , T.ITEM_ID
+		                         FROM AIR_BASEMETA_DTS A
+		                            , STO_AIRLOC_DTS B
+		                            , CMT_STORAGE_CDE C
+		                            , STO_INFO_DTS D
+		                            , AIR_ZONE_DTS E
+		                            , META_AIRMAP_IDENT F
+		                            , AIR_PRODUCT_DTS G
+		                            , USR_AIR_SUPPLYITEM_APP_NIIM T
+		                        WHERE A.ZONE_CODE   = B.ZONE_CODE
+		                          AND A.PH_COURSE   = B.PH_COURSE
+		                          AND A.PH_NUM      = B.PH_NUM
+		                          AND A.ZONE_CODE   = E.ZONE_CODE
+		                          AND A.ZONE_CODE   = F.ZONE_CODE
+		                          AND A.PH_COURSE   = F.PH_COURSE
+		                          AND A.PH_NUM      = F.PH_NUM
+		                          AND A.ZONE_CODE   = G.ZONE_CODE
+		                          AND A.PH_COURSE   = G.PH_COURSE
+		                          AND A.PH_NUM      = G.PH_NUM
+		                          AND B.STORAGE_CDE = C.CODE_CDE
+		                          AND B.STO_IDN     = D.STO_IDN
+		                          AND E.IMAGE_CDE IN ('PDT001','PDT011')
+		                          AND F.XMIN IS NOT NULL
+		                          AND A.ZONE_CODE  = T.ZONE_CODE
+		                          AND A.PH_COURSE  = T.PH_COURSE
+		                          AND A.PH_NUM     = T.PH_NUM
+		                          AND T.SUP_IDN    = #supIdn#
+		                       )
+		                WHERE TRUNC(NUM) + 1  = #group#
+		                  AND SUP_IDN  = T.SUP_IDN
+		                  AND USR_MGNO = T.USR_MGNO
+		                  AND ITEM_ID  = T.ITEM_ID
+		              )
+	
+	</update>
+	
+	<update id="supplyDAO.uptDemImgDownState" parameterClass="java.util.Map">
+	
+		UPDATE USR_DEM_SUPPLYITEM_APP_NIIM T
+		   SET DOWNLOAD_YN = 'Y'
+		 WHERE SUP_IDN = #supIdn#
+		   AND EXISTS (
+		               SELECT 1
+		                 FROM (
+		                       SELECT (ROW_NUMBER() OVER(ORDER BY A.ZONE_CODE DESC, A.MAP5000_NUM, F.GRID_INT) - 1) / #imageDownloadLimit# NUM
+		                            , T.SUP_IDN
+		                            , T.USR_MGNO
+		                            , T.ITEM_ID
+		                         FROM DEM_BASEMETA_DTS A
+		                            , STO_DEMLOC_DTS B
+		                            , CMT_STORAGE_CDE C
+		                            , STO_INFO_DTS D
+		                            , AIR_ZONE_DTS E
+		                            , DEM_PRODUCT_DTS F
+		                            , USR_DEM_SUPPLYITEM_APP_NIIM T
+		                        WHERE A.ZONE_CODE   = B.ZONE_CODE
+		                          AND A.MAP5000_NUM = B.MAP5000_NUM
+		                          AND A.ZONE_CODE   = E.ZONE_CODE
+		                          AND A.ZONE_CODE   = F.ZONE_CODE
+		                          AND A.MAP5000_NUM = F.MAP5000_NUM
+		                          AND B.STORAGE_CDE = C.CODE_CDE
+		                          AND B.STO_IDN     = D.STO_IDN
+		                          AND LENGTH(A.MAP5000_NUM) IN (5, 6, 7, 8)
+<!-- 		                          AND E.IMAGE_CDE   = 'PDT002' -->
+		                          AND A.ZONE_CODE   = T.ZONE_CODE
+		                          AND A.MAP5000_NUM = T.MAP5000_NUM
+		                          AND T.SUP_IDN     = #supIdn#
+		                       )
+		                WHERE TRUNC(NUM) + 1  = #group#
+		                  AND SUP_IDN  = T.SUP_IDN
+		                  AND USR_MGNO = T.USR_MGNO
+		                  AND ITEM_ID  = T.ITEM_ID
+		              )
+	
+	</update>
+	
+	<update id="supplyDAO.uptOrtImgDownState" parameterClass="java.util.Map">
+	
+		UPDATE USR_ORT_SUPPLYITEM_APP_NIIM T
+		   SET DOWNLOAD_YN = 'Y'
+		 WHERE SUP_IDN = #supIdn#
+		   AND EXISTS (
+		               SELECT 1
+		                 FROM (
+		                       SELECT (ROW_NUMBER() OVER(ORDER BY A.ZONE_CODE DESC, A.MAP5000_NUM, H.GTYP_DST) - 1) / #imageDownloadLimit# NUM
+		                            , T.SUP_IDN
+		                            , T.USR_MGNO
+		                            , T.ITEM_ID
+		                         FROM ORT_BASEMETA_DTS A
+		                            , STO_ORTLOC_DTS B
+		                            , CMT_STORAGE_CDE C
+		                            , STO_INFO_DTS D
+		                            , AIR_ZONE_DTS E
+		                            , META_ORT_IDENT F
+		                            , ORT_PRODUCT_DTS H
+		                            , USR_ORT_SUPPLYITEM_APP_NIIM T
+		                        WHERE A.ZONE_CODE   = B.ZONE_CODE
+		                          AND A.MAP5000_NUM = B.MAP5000_NUM
+		                          AND A.ZONE_CODE   = E.ZONE_CODE
+		                          AND A.ZONE_CODE   = F.ZONE_CODE
+		                          AND A.MAP5000_NUM = F.MAP5000_NUM
+		                          AND A.ZONE_CODE   = H.ZONE_CODE
+		                          AND A.MAP5000_NUM = H.MAP5000_NUM
+		                          AND B.STORAGE_CDE = C.CODE_CDE
+		                          AND B.STO_IDN     = D.STO_IDN
+<!-- 		                          AND E.IMAGE_CDE   = 'PDT004' -->
+		                          AND F.XMIN IS NOT NULL
+		                          AND H.SECURITY_CDE IS NOT NULL
+		                          AND A.ZONE_CODE   = T.ZONE_CODE
+		                          AND A.MAP5000_NUM = T.MAP5000_NUM
+		                          AND H.GTYP_DST    = T.GTYP_DST
+		                          AND T.SUP_IDN     = #supIdn#
+		                       )
+		                WHERE TRUNC(NUM) + 1  = #group#
+		                  AND SUP_IDN  = T.SUP_IDN
+		                  AND USR_MGNO = T.USR_MGNO
+		                  AND ITEM_ID  = T.ITEM_ID
+		              )
+	
+	</update>
+	
+	
+	<select id="supplyDAO.getDownloadAppCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	
+		SELECT (SELECT COUNT(*) FROM USR_AIR_SUPPLYITEM_APP_NIIM WHERE SUP_IDN = #supIdn# AND NVL(DOWNLOAD_YN, 'N') = 'N') + 
+		       (SELECT COUNT(*) FROM USR_DEM_SUPPLYITEM_APP_NIIM WHERE SUP_IDN = #supIdn# AND NVL(DOWNLOAD_YN, 'N') = 'N') +
+		       (SELECT COUNT(*) FROM USR_ORT_SUPPLYITEM_APP_NIIM WHERE SUP_IDN = #supIdn# AND NVL(DOWNLOAD_YN, 'N') = 'N') CNT
+		  FROM DUAL
+	
+	</select>
+	
+</sqlMap>

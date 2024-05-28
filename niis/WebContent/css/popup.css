@@ -1,0 +1,97 @@
+@charset "utf-8";
+
+
+/*** 레이어팝업 ***/
+body {/* overflow:hidden; */}
+#mask {position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:9998; display:none;}
+.layer {position:absolute; top:-9999px; left:50%; box-shadow:0px 3px 18px rgba(0,0,0,0.6); border-radius:7px; overflow:hidden; z-index:9999; display:none; width:460px;}
+.layer > .tit {height:55px; line-height:55px; padding:0 60px; background:#2f5c6b; background: linear-gradient(to bottom, #366674 0%,#295463 99%); font-size:18px; font-weight:600; text-align:center; color:#fff;}
+.layer > .tit .btnLayerClose {position:absolute; top:0px; right:0px; height:55px; width:54px; text-align:center;}
+.layer > .tit .btnLayerClose img {display:inline-block; padding-top:20px;}
+.layer .con {background:#f8fafb; padding:20px;}
+.layer .con .txt {font-size:16px; text-align:center; padding-top:20px; color:#555;}
+.layer .con .txt .block {line-height:2;}
+
+.layerOpenFix {top:0; left:0;}
+
+
+/*공개제한 공간정보 이용 서약서 팝업*/
+.useLayer {position:fixed; top:15%; left:25%; overflow: auto; box-shadow:0px 3px 18px rgba(0,0,0,0.6); border-radius:7px; z-index:9999; display:none; width:610px;}
+.useLayer > .tit {height:55px; line-height:55px; padding:0 60px; background:#2f5c6b; background: linear-gradient(to bottom, #366674 0%,#295463 99%); font-size:18px; font-weight:600; text-align:center; color:#fff;}
+.useLayer > .tit .btnLayerClose {position:absolute; top:0px; right:0px; height:55px; width:54px; text-align:center;}
+.useLayer > .tit .btnLayerClose img {display:inline-block; padding-top:20px;}
+.useLayer .con {background:#f8fafb; padding:20px;}
+.useLayer .con .txt {font-size:20px; text-align:left; padding-top:20px; color:#555;}
+.useLayer .con .importantTxt {font-size:16px; text-align:left; padding-top:20px; color:#555;}
+.useLayer .con .txt .block {line-height:2;}
+
+
+/* .layerAlert > .con p.txt {font-size:18px;} */
+
+.layer .con {max-height:650px; overflow:auto;}
+
+/* 회원가입 */
+#membership {}
+
+/* 가입대기 */
+#membershipWait .con {padding-top:165px; background:#f8fafb url(/niis/images/login/bg_membership_wait.gif) center 25px no-repeat;}
+
+
+/* 가입보류 */
+#membershipPending .con {padding-top:180px; background:#f8fafb url(/niis/images/login/bg_membership_pending.gif) center 25px no-repeat;}
+#membershipPending .titTxt {padding-bottom:16px; font-size:16px; color:#333; text-align:center;}
+#membershipPending .reason {text-align:center; background:#fff; border-radius:7px; height:40px; line-height:39px; font-weight:600; color:#e45e29;}
+
+/* 정보수정 */
+#myInfoModify {}
+
+/* 시스템 종료 */
+#logoutCheckPop .con {text-align:center; padding-top:160px; background:#f8fafb url(/niis/images/popup/bg_count.gif) center 25px no-repeat;}
+#logoutCheckPop .count {text-align:center; background:#fff; border-radius:7px; height:40px; line-height:39px; font-weight:600; color:#e45e29; margin-top:12px;}
+#extendLoginPop .con {text-align:center; padding-top:160px; background:#f8fafb url(/niis/images/popup/bg_count.gif) center 25px no-repeat;}
+#extendLoginPop .count {text-align:center; background:#fff; border-radius:7px; height:40px; line-height:39px; font-weight:600; color:#e45e29; margin-top:12px;}
+
+/* 전체신청 */
+#totalApplication {width:700px;}
+#totalApplication .totalApplicationTit {height:38px; border-bottom:1px solid #bbc5ca; margin-bottom:5px; position:relative;}
+#totalApplication .totalApplicationTit h4 {font-size:24px; font-weight:600; color:#2a8095;}
+#totalApplication .totalApplicationTit h4 span {font-size:16px; color:#555; padding-left:5px;}
+#totalApplication .totalApplicationTit p {position:absolute; top:12px; right:0; color:#555;}
+#totalApplication .labelTxt {position:relative; top:3px;}
+
+/* #commonPop {width:700px;} */
+#commonPop .totalApplicationTit {height:38px; border-bottom:1px solid #bbc5ca; margin-bottom:5px; position:relative;}
+#commonPop .totalApplicationTit h4 {font-size:24px; font-weight:600; color:#2a8095;}
+#commonPop .totalApplicationTit h4 span {font-size:16px; color:#555; padding-left:5px;}
+#commonPop .totalApplicationTit p {position:absolute; top:12px; right:0; color:#555;}
+#commonPop .labelTxt {position:relative; top:3px;}
+
+/* 반려 */
+#returnReason .con {padding-top:180px; background:#f8fafb url(/niis/images/popup/bg_return_reason.gif) center 25px no-repeat;}
+#returnReason .titTxt {padding-bottom:16px; font-size:16px; color:#333; text-align:center;}
+#returnReason .reason {text-align:center; background:#fff; border-radius:7px; height:40px; line-height:39px; font-weight:600; color:#e45e29;}
+
+/* 이용안내 팝업 */
+#serviceGuideLayer .con {position:relative;}
+/* #serviceGuideLayer .serviceGuideMenu {width:328px; background:#fff; border:1px solid #c2ccd9; border-radius:3px; height:400px; overflow:hidden; box-shadow: 2px 2px 3px rgba(0,0,0,0.5);}
+#serviceGuideLayer .serviceGuideMenu .mCustomScrollbar {} */
+#serviceGuideLayer .con {padding:0 0 50px 0;}
+#serviceGuideLayer .serviceGuideMenu {padding:20px; box-shadow: 3px 0px 5px rgba(0,0,0,0.7); position:relative; z-index:5; width:330px;}
+#serviceGuideLayer .serviceGuideMenu .mCustomScrollbar {width:328px; background:#fff; border:1px solid #c2ccd9; border-radius:3px; height:400px; overflow:hidden; box-shadow: 1px 1px 3px rgba(0,0,0,0.5);}
+/* #serviceGuideLayer .serviceGuideMenu .mCustomScrollbar {width:328px; background:#fff; border:1px solid #c2ccd9; border-radius:3px; height:482px; overflow:hidden; box-shadow: 1px 1px 3px rgba(0,0,0,0.5);} */
+
+
+#serviceGuideLayer .serviceGuideMenu li a {display:block; height:43px; line-height:43px; padding-left:20px; border-bottom:1px solid #e5eaf0; position:relative; transition:all 0.3s; color:#132a4b; font-size:15px;}
+#serviceGuideLayer .serviceGuideMenu li a:hover {background:#f1f9fa; transition:all 0.3s;}
+#serviceGuideLayer .serviceGuideMenu li strong {display:block; height:43px; line-height:43px; padding-left:20px; border-bottom:1px solid #e5eaf0; position:relative; transition:all 0.3s; color:#132a4b; background:#daf1f5; position:relative;}
+#serviceGuideLayer .serviceGuideMenu li strong:after {content:">"; display:block; position:absolute; top:0; right:24px; font-size:20px; font-weight:400;}
+
+#serviceGuideLayer .serviceGuideMenuContent {position:absolute; top:0; left:370px; height:442px; width:730px; overflow:hidden;}
+/* #serviceGuideLayer .serviceGuideMenuContent {position:absolute; top:0; left:370px; height:524px; width:730px; overflow:hidden;} */
+#serviceGuideLayer .serviceGuideMenuContent li {display:none;}
+#serviceGuideLayer .serviceGuideMenuContent li.active {display:block;}
+#serviceGuideLayer .serviceGuideMenuContent .serviceGuideTxt {position:absolute; bottom:0; left:0; width:100%; background:#000; background:rgba(0,0,0,0.7); padding:25px 36px; box-sizing:border-box; color:#fff; font-size:16px; line-height:1.5; border-top:1px solid #000;}
+#serviceGuideLayer .serviceGuideMenuContent .serviceGuideTxt .num {position:absolute; top:-20px; left:10px; background:#306a7e; border-radius:99px; width:40px; height:40px; text-align:center; line-height:38px; font-size:22px; font-weight:600;}
+#serviceGuideLayer .serviceGuideMenuContent .btnServiceGuideMenuControl .prev {position:absolute; top:170px; left:20px; font-size:32px; font-weight:600; color:#fff; border-radius:3px; width:50px; height:50px; background:#000; background:rgba(0,0,0,0.7); box-sizing:border-box; padding:8px 0 0 15px; line-height:1;}
+#serviceGuideLayer .serviceGuideMenuContent .btnServiceGuideMenuControl .next {position:absolute; top:170px; right:20px; font-size:32px; font-weight:600; color:#fff; border-radius:3px; width:50px; height:50px; background:#000; background:rgba(0,0,0,0.7); box-sizing:border-box; padding:8px 0 0 15px; line-height:1;}
+#serviceGuideLayer .dontSeeYouAgain {position:absolute; bottom:0; height:40px; text-align:right; background:#f8fafb; width:100%; z-index:8; box-sizing:border-box; border-top:1px solid #999; padding:10px 25px 0 0; font-size:16px; color:#333;}

@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>INNORIX InnoEX(Enterprise eXchange) Uplaod</title>
+    </head>
+<body>
+
+    <form id="writeForm" name="writeForm" action="./result.jsp" method="post">
+        test input:<br />
+        <input id="testInput" name="testInput" type="text" style="width:546px; height:25px" /><br /><br />
+    </form>
+
+    <div id="uploadControl"></div><br />
+
+    <input type="button" value="파일추가" onclick="innorix.api.openFileDialog('uploadControl');" />
+    <input type="button" value="폴더추가" onclick="innorix.api.openFolderDialog('uploadControl', true);" />
+    <input type="button" value="업로드 시작" onclick="innorix.api.upload('uploadControl');" />
+
+    <script type="text/javascript" src="../../common/innorix.config.js"></script>
+    <script type="text/javascript">
+        // 컨트롤 설치확인
+        if (innorix.api.isPluginInstalled() == false) {
+            innorix.api.goToInstallPage("../../common/install/install.html"); // 컨트롤 설치안내 웹 페이지로 전환
+        }
+
+        // 컨트롤 이벤트 리스너
+        innorix.event = {
+            loadComplete    : function(controlId, param) { // 컨트롤 로딩 완료
+
+            },
+            uploadCancel    : function(controlId, param) { // 업로드 취소
+
+            },
+            uploadError     : function(controlId, param) { // 업로드 에러
+
+            },
+            uploadComplete  : function(controlId, param) { // 업로드 완료
+                innorix.util.addFormData("writeForm", param);       // writeForm 객체에 업로드 완료된 파일 정보를 추가
+                innorix.util.formSubmit("writeForm", "result.jsp"); // writeForm 객체를 result.jsp URL로 Form Submit
+            }
+        }
+
+        // 컨트롤 생성
+        innorix.api.create({
+            uploadControl: {                                    // 컨트롤 id
+                product         : "innoexu",                    // innoex 업로드
+                uploadUrl       : "./upload.jsp?param=value",   // 업로드 url
+                limitExtension  : ["exe", "msi", "cab"],        // 정의된 확장자 파일 제외
+                maxFileSize     : 1024 * 1024 * 1024 * 5,       // 첨부가능 파일 전체 크기(bytes)
+                maxTotalSize    : 1024 * 1024 * 1024 * 5,       // 첨부가능 1개 파일 크기(bytes)
+                maxFileCount    : 10                            // 첨부가능 파일 전체 개수
+            /* --- 추가 속성 ---
+                allowExtension  : ["txt", "doc", "xls"],        // 정의된 확장자 파일 허용
+                charset         : "utf-8",                      // 캐릭터셋 설정, utf-8 | euc-kr
+                controlType     : "default",                    // 컨트롤 타입, default | bigfile1 | bigfile2 | htmlAlike
+                width           : 550,                          // 컨트롤 너비(pixel)
+                height          : 200,                          // 컨트롤 높이(pixel)
+                contextMenu     : true,                         // 마우스 오른쪽 버튼 클릭 컨텍스트 메뉴 활성                
+                dropZone        : true                          // 파일 드랍존 활성
+            */
+            }
+        });
+    </script>
+
+</body>
+</html>

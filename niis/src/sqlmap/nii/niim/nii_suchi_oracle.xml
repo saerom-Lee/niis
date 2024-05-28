@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_suchi_oracle">
+
+	<!-- 수치지도 공통 컬럼 -->
+	<sql id="suchi_info_column">
+		map_ser_no,
+        map_history_no,
+        map_sht_no,
+        open_dvsn_cd,
+        (
+	        case
+	            when open_dvsn_cd = '01' then '공개'
+	            when open_dvsn_cd = '02' then 
+	                case 
+	                	when scale_cd not in ('01', '09') then '공개' 
+	                	else '공개제한'
+	                end
+	        end
+        ) open_dvsn_nm,
+        map_sht_nm,
+        product_year,
+		scale_cd,
+        (
+            SELECT
+                cd_type_nm
+            FROM
+                common_cd_tbl@lk_mms ms
+            WHERE
+                cd_kind = '21'
+                and ms.cd_type = mi.scale_cd
+        ) scale_nm,
+        'GRS80' AS projection,
+        (
+            SELECT
+                COUNT(*)
+            FROM
+                map_history_tbl@lk_mms mh
+            WHERE
+                mh.map_sht_no = mi.map_sht_no
+                AND mh.map_ser_no = mi.map_ser_no
+        ) child_cnt
+	</sql>
+	
+	<!-- 수치지도 공통 조건 -->
+	<sql id="where">
+		<isNotEmpty property="admcd">
+			<isEqual property="tableNm" compareValue="TL_SCCO_CTPRVN">
+				SDE.ST_INTERSECTS(SHAPE, (
+					SELECT SHAPE 
+					FROM NGII_MAP.TL_SCCO_CTPRVN 
+					WHERE CTPRVN_CD LIKE #admcd# || '%'
+				)) = 1
+			</isEqual>
+			<isEqual property="tableNm" compareValue="TL_SCCO_SIG">
+				SDE.ST_INTERSECTS(SHAPE, (
+					SELECT SHAPE 
+					FROM NGII_MAP.TL_SCCO_SIG 
+					WHERE SIG_CD LIKE #admcd# || '%'
+				)) = 1
+			</isEqual>
+			<isEqual property="tableNm" compareValue="TL_SCCO_EMD">
+				SDE.ST_INTERSECTS(SHAPE, (
+					SELECT SHAPE 
+					FROM NGII_MAP.TL_SCCO_EMD 
+					WHERE EMD_CD LIKE #admcd# || '%'
+				)) = 1
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty property="geometry">
+			SDE.ST_INTERSECTS(SHAPE, SDE.ST_GEOMETRY(#geometry#, ( SELECT DISTINCT(SDE.ST_SRID(SHAPE)) FROM NGII_MAP.INDEX_005000_V1 ))) = 1
+		</isNotEmpty>
+		<isGreaterEqual property="xmin" compareValue="1">
+			SDE.ST_INTERSECTS(SHAPE, (SELECT SDE.ST_GEOMFROMTEXT('POLYGON  (($xmin$ $ymin$, $xmax$ $ymin$, $xmax$ $ymax$, $xmin$ $ymax$, $xmin$ $ymin$))', ( SELECT DISTINCT(SDE.ST_SRID(SHAPE)) FROM NGII_MAP.INDEX_005000_V1 )) FROM DUAL )) = 1
+		</isGreaterEqual>
+		<isGreaterThan property="radius" compareValue="0">
+			AND SQRT(POWER((SDE.ST_MAXY(SHAPE) + SDE.ST_MINY(SHAPE))/2 - (#ymax# + #ymin#)/2, 2) + POWER((SDE.ST_MAXX(SHAPE) + SDE.ST_MINX(SHAPE))/2 - (#xmax# + #xmin#)/2, 2)) &lt;= #radius#
+		</isGreaterThan>
+	</sql>
+	
+	<!-- 수치지도 1.0: 1000 이력 조건 -->
+	<sql id="where_history_suchi1_1000">
+		num = map_sht_no
+		AND map_kind_cd = '01'
+		AND scale_cd = '01'
+		AND coord_dvsn_cd = '01'
+		AND open_dvsn_cd IN ('01', '02')
+	</sql>
+	
+	<!-- 수치지도 1.0: 2500 이력 조건 -->
+	<sql id="where_history_suchi1_2500">
+		num = map_sht_no
+		AND map_kind_cd = '01'
+		AND scale_cd = '09'
+		AND coord_dvsn_cd = '01'
+		AND open_dvsn_cd IN ('01', '02')
+	</sql>
+	
+	<!-- 수치지도 1.0: 5000 이력 조건 -->
+	<sql id="where_history_suchi1_5000">
+		num = map_sht_no
+		AND map_kind_cd = '01'
+		AND scale_cd = '02'
+		AND coord_dvsn_cd = '01'
+		AND open_dvsn_cd = '02'
+	</sql>
+	
+	<!-- 수치지도 1.0: 25000 이력 조건 -->
+	<sql id="where_history_suchi1_25000">
+		num = map_sht_no
+		AND map_kind_cd = '01'
+		AND scale_cd = '03'
+		AND coord_dvsn_cd = '01'
+		AND open_dvsn_cd = '02'
+	</sql>
+	
+	<!-- 수치지도 1.0: 250000 이력 조건 -->
+	<sql id="where_history_suchi1_250000">
+		num = map_sht_no
+		AND map_kind_cd = '01'
+		AND scale_cd = '05'
+		AND coord_dvsn_cd = '01'
+		AND open_dvsn_cd = '02'
+	</sql>
+	
+	<!-- 수치지도 2.0: 1000 이력 조건 -->
+	<sql id="where_history_suchi2_1000">
+		num = map_sht_no
+		AND map_kind_cd = '04'
+		AND scale_cd = '01'
+		AND coord_dvsn_cd = '01'
+		AND open_dvsn_cd IN ('01', '02')
+	</sql>
+	
+	<!-- 수치지도 2.0: 2500 이력 조건 -->
+	<sql id="where_history_suchi2_2500">
+		num = map_sht_no
+		AND map_kind_cd = '04'
+		AND scale_cd = '09'
+		AND coord_dvsn_cd = '01'
+		AND open_dvsn_cd IN ('01', '02')
+	</sql>
+	
+	<!-- 수치지도 2.0: 5000 이력 조건 -->
+	<sql id="where_history_suchi2_5000">
+		num = map_sht_no
+		AND map_kind_cd = '04'
+		AND scale_cd = '02'
+		AND coord_dvsn_cd = '01'
+		AND open_dvsn_cd = '02'
+	</sql>
+	
+	<!-- 토지특성도: 1000 이력 조건 -->
+	<sql id="where_history_land_1000">
+		num = map_sht_no
+		AND map_kind_cd = '02'
+		AND scale_cd = '01'
+		AND coord_dvsn_cd = '02'
+		AND open_dvsn_cd = '02'
+	</sql>
+	
+	<!-- 토지특성도: 5000 이력 조건 -->
+	<sql id="where_history_land_5000">
+		num = map_sht_no
+		AND map_kind_cd = '02'
+		AND scale_cd = '02'
+		AND coord_dvsn_cd = '02'
+		AND open_dvsn_cd = '02'
+	</sql>
+</sqlMap>

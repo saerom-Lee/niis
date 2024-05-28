@@ -1,0 +1,1372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_apply">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	
+	<sql id="Where_dbApply">
+    	<isNotNull prepend="AND" removeFirstPrepend="true">
+    		<isNotEmpty property="srchReqDate1">
+    			REQ_DATE &gt;= #srchReqDate1#
+    		</isNotEmpty>
+    	</isNotNull>
+        <isNotNull prepend="AND" removeFirstPrepend="true">
+        	<isNotEmpty property="srchReqDate2">
+            	REQ_DATE &lt;= #srchReqDate2#
+            </isNotEmpty>
+        </isNotNull>
+        <isNotNull prepend="AND" removeFirstPrepend="true">
+    		<isNotEmpty property="srchSupDate1">
+    			SUP_DATE &gt;= #srchSupDate1#   
+    		</isNotEmpty>
+    	</isNotNull>
+        <isNotNull prepend="AND" removeFirstPrepend="true">
+        	<isNotEmpty property="srchSupDate2">
+            	SUP_DATE &lt;= #srchSupDate2#
+            </isNotEmpty>
+        </isNotNull>
+        <isNotNull prepend="AND" removeFirstPrepend="true">
+    		<isNotEmpty property="srchApName">
+    			AP_NAME = #srchApName#   
+    		</isNotEmpty>
+    	</isNotNull>
+    	<isNotNull prepend="AND" removeFirstPrepend="true">
+    		<isNotEmpty property="srchConName">
+    			CON_NAME = #srchConName#   
+    		</isNotEmpty>
+    	</isNotNull>
+        <isNotNull prepend="AND" removeFirstPrepend="true">
+    		<isNotEmpty property="srchSystemCde">
+    			DECODE(USR_MGNO, NULL, '0', '1') = #srchSystemCde#
+    		</isNotEmpty>
+    	</isNotNull>
+    	<isNotNull prepend="AND" removeFirstPrepend="true">
+    		<isNotEmpty property="srchApprovalCde">
+    			APPROVAL_CDE = #srchApprovalCde#
+    		</isNotEmpty>
+    	</isNotNull>
+    	<isNotNull prepend="AND" removeFirstPrepend="true">
+    		<isNotEmpty property="usrMgno">
+    			USR_MGNO = #usrMgno#
+    		</isNotEmpty>
+    	</isNotNull>
+	</sql>
+	
+	<select id="applyDAO.getDbAppListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+		
+		SELECT COUNT(*) 
+		  FROM IMG_SUPPLY_APP_NIIM A
+		     , USR_IMG_SUPPLY_APP_NIIM B
+		 WHERE NVL(DEL_YN, 'N') != 'Y'
+		   AND A.SUP_IDN = B.SUP_IDN(+)
+		<include refid="Where_dbApply"/>
+	
+	</select>
+	
+	<select id="applyDAO.getDbAppList" parameterClass="java.util.Map" resultClass="egovMap">
+		
+		<include refid="Paging_head"/>
+		SELECT ROW_NUMBER() OVER(ORDER BY A.SUP_IDN DESC) NUM
+		     , DECODE(B.USR_MGNO, NULL, '0', '1') SYSTEM_CDE
+		     , (
+			    SELECT CDE_NAM
+                  FROM CMT_DETAIL_CODE_NIIM
+                 WHERE FLE_IDN = 'SYSTEM_CDE'
+                   AND CDE_CDE = DECODE(B.USR_MGNO, NULL, '0', '1')
+               ) SYSTEM_NAM
+		     , A.SUP_IDN
+			 , TO_CHAR(TO_DATE(A.REQ_DATE), 'YYYY-MM-DD') REQ_DATE
+			 , TO_CHAR(TO_DATE(A.SUP_DATE), 'YYYY-MM-DD') SUP_DATE
+			 , A.AP_NAME
+		     , A.AP_POST
+		     , A.AP_DEPARTMENT
+		     , A.AP_POSITION
+		     , decrypt(A.AP_TEL) AP_TEL
+		     , A.MGR_NAME
+		     , A.MGR_POSITION
+		     , decrypt(A.MGR_TEL) MGR_TEL
+		     , A.PURPOSE
+		     , A.SEC_DATA_MNG_PLAN
+		     , A.SUBCONT_NAME
+		     , A.SUBCONT_SR_NAME
+		     , decrypt(A.SUBCONT_SR_TEL) SUBCONT_SR_TEL
+		     , A.SUBCONT_MGR_NAME
+		     , decrypt(A.SUBCONT_MGR_TEL) SUBCONT_MGR_TEL
+		     , A.AGREE_YN
+		     , A.CON_NAME
+		     , A.CON_POSITION
+			 , B.APPROVAL_CDE
+		     , (
+			    SELECT CDE_NAM
+                  FROM CMT_DETAIL_CODE_NIIM
+                 WHERE FLE_IDN = 'APPROVAL_CDE'
+                   AND CDE_CDE = B.APPROVAL_CDE 
+               ) APPROVAL_NAM
+             , B.META_YN
+             , DECODE(B.META_YN, 'Y', '포함', 'N', '미포함', '') META_NAM
+             , (CASE WHEN B.APPROVAL_CDE IN ('5', '6') THEN TO_CHAR(B.LAST_CHANGE_DT, 'YYYY-MM-DD') ELSE TO_CHAR(TO_DATE(A.SUP_DATE), 'YYYY-MM-DD') END) COMP_DATE
+             , (CASE WHEN B.APPROVAL_CDE IN ('5', '6') 
+                     THEN (
+                           SELECT MAX(U.USR_NM) 
+                             FROM ITR_USR_INFO_NIIM U
+                                , USR_IMG_SUPPLY_APP_HIST_NIIM H
+                            WHERE U.USR_MGNO = H.CREATE_USR
+                              AND H.USR_MGNO = B.USR_MGNO
+                              AND H.SUP_IDN  = B.SUP_IDN
+                              AND H.APPROVAL_CDE = '5'
+                          )
+                     ELSE A.CON_NAME 
+                 END) COMP_NAME
+		  FROM IMG_SUPPLY_APP_NIIM A
+		     , USR_IMG_SUPPLY_APP_NIIM B
+		 WHERE NVL(DEL_YN, 'N') != 'Y'
+		   AND A.SUP_IDN = B.SUP_IDN(+)
+		<include refid="Where_dbApply"/>
+		<include refid="Paging_tail"/>
+	
+	</select>
+	
+	
+	<select id="applyDAO.getDbAppDetail" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT A.SUP_IDN
+			 , TO_CHAR(TO_DATE(A.REQ_DATE), 'YYYY-MM-DD') REQ_DATE
+			 , TO_CHAR(TO_DATE(A.SUP_DATE), 'YYYY-MM-DD') SUP_DATE
+			 , A.AP_NAME
+		     , A.AP_POST
+		     , A.AP_DEPARTMENT
+		     , A.AP_POSITION
+		     , decrypt(A.AP_TEL) AP_TEL
+		     , A.MGR_NAME
+		     , A.MGR_POSITION
+		     , decrypt(A.MGR_TEL) MGR_TEL
+<!-- 		     , A.PURPOSE -->
+			 , (SELECT 		SUBSTR(CN_DC,10) AS CN_DC
+                  FROM 		TC_CMMN_DETAIL_CODE@LK_NLIP
+                  WHERE 	CODE_ID = A.PURPOSE
+                    AND 	DETAIL_CODE_ID = A.DETAIL_PURPOSE ) 	AS PURPOSE
+             , (SELECT 		DETAIL_CODE_NM
+                  FROM 		TC_CMMN_DETAIL_CODE@LK_NLIP
+                  WHERE 	CODE_ID = A.PURPOSE
+                    AND 	DETAIL_CODE_ID = A.DETAIL_PURPOSE ) 	AS DETAIL_PURPOSE
+             , A.ETC
+		     , A.SEC_DATA_MNG_PLAN
+		     , A.SUBCONT_NAME
+		     , A.SUBCONT_SR_NAME
+		     , decrypt(A.SUBCONT_SR_TEL) SUBCONT_SR_TEL
+		     , A.SUBCONT_MGR_NAME
+		     , decrypt(A.SUBCONT_MGR_TEL) SUBCONT_MGR_TEL
+		     , A.AGREE_YN
+		     , A.CON_NAME
+		     , A.CON_POSITION
+			 , B.APPROVAL_CDE
+			 , B.IIM_APPROVAL_CDE
+			 , B.MAP_APPROVAL_CDE
+		     , (
+			    SELECT CDE_NAM
+                  FROM CMT_DETAIL_CODE_NIIM
+                 WHERE FLE_IDN = 'APPROVAL_CDE'
+                   AND CDE_CDE = B.APPROVAL_CDE 
+               ) APPROVAL_NAM
+             , B.REJECT_CAUSE
+             , B.META_YN 
+             , DECODE(B.META_YN, 'Y', '포함', 'N', '미포함', '') META_NAM
+             , (CASE WHEN B.APPROVAL_CDE IN ('5', '6') THEN TO_CHAR(B.LAST_CHANGE_DT, 'YYYY-MM-DD') ELSE TO_CHAR(TO_DATE(A.SUP_DATE), 'YYYY-MM-DD') END) COMP_DATE
+             , (CASE WHEN B.APPROVAL_CDE IN ('5', '6') 
+                     THEN (
+                           SELECT MAX(U.USR_NM) 
+                             FROM ITR_USR_INFO_NIIM U
+                                , USR_IMG_SUPPLY_APP_HIST_NIIM H
+                            WHERE U.USR_MGNO = H.CREATE_USR
+                              AND H.USR_MGNO = B.USR_MGNO
+                              AND H.SUP_IDN  = B.SUP_IDN
+                              AND H.APPROVAL_CDE = '5'
+                          )
+                     ELSE A.CON_NAME 
+                 END) COMP_NAME
+		  FROM IMG_SUPPLY_APP_NIIM A
+		     , USR_IMG_SUPPLY_APP_NIIM B
+		 WHERE A.SUP_IDN = #supIdn#
+		   AND A.SUP_IDN = B.SUP_IDN(+)
+	
+	</select>
+	
+	
+	<!-- at 신청목적 상세 리스트 -->
+	<select id="applyDAO.getAtDetailList" parameterClass="java.util.Map" resultClass="egovMap">
+                SELECT	  'atCde'										  AS IMAGE_CDE  	<!-- 신청목적 상세 구분 -->
+	           			, (SELECT 	DTS.ZONE_NAM
+                 		     FROM 	AIR_ZONE_DTS      	DTS
+               			    WHERE 	DTS.ZONE_CODE 	= 	AT.ZONE_CODE	) AS ZONE_NAM
+           		 FROM 	USR_AT_SUPPLYITEM_APP_NIIM  AT
+           		WHERE 	SUP_IDN = #supIdn#
+	</select>
+	<!-- air 신청목적 상세 리스트 -->
+	<select id="applyDAO.getAirDetailList" parameterClass="java.util.Map" resultClass="egovMap">
+                SELECT 	  'PDT001'										  AS IMAGE_CDE		<!-- 신청목적 상세 구분 -->
+                		, (SELECT 	DTS.ZONE_NAM
+                 		     FROM 	AIR_ZONE_DTS      	DTS
+               			    WHERE 	DTS.ZONE_CODE 	= 	AIR.ZONE_CODE	) AS ZONE_NAM
+                        ,  PH_COURSE									  AS PH_COURSE
+                        ,  PH_NUM										  AS PH_NUM
+                        
+           		 FROM 	USR_AIR_SUPPLYITEM_APP_NIIM  AIR
+           		WHERE 	SUP_IDN = #supIdn#
+	</select>
+	<!-- dem 신청목적 상세 리스트 -->
+	<select id="applyDAO.getDemDetailList" parameterClass="java.util.Map" resultClass="egovMap">
+         	   SELECT 	 'PDT002'										  AS IMAGE_CDE		<!-- 신청목적 상세 구분 -->
+         	   		   , (SELECT 	DTS.ZONE_NAM
+                 		    FROM 	AIR_ZONE_DTS      	DTS
+               			   WHERE 	DTS.ZONE_CODE 	= 	DEM.ZONE_CODE	) AS ZONE_NAM
+                        ,  MAP5000_NUM									  AS MAP5000_NUM
+                        ,  GRID_INT										  AS GRID_INT
+           		 FROM 	USR_DEM_SUPPLYITEM_APP_NIIM  DEM
+           		WHERE 	SUP_IDN = #supIdn#
+	</select>
+	<!-- ort 신청목적 상세 리스트 -->
+	<select id="applyDAO.getOrtDetailList" parameterClass="java.util.Map" resultClass="egovMap">
+       	       SELECT 	 'PDT004'										  AS IMAGE_CDE		<!-- 신청목적 상세 구분 -->
+       	       		   , (SELECT 	DTS.ZONE_NAM
+             		        FROM 	AIR_ZONE_DTS      	DTS
+           			       WHERE 	DTS.ZONE_CODE 	= 	ORT.ZONE_CODE	) AS ZONE_NAM
+                        ,  MAP5000_NUM									  AS MAP5000_NUM
+                        ,  GTYP_DST										  AS GTYP_DST
+       		     FROM 	USR_ORT_SUPPLYITEM_APP_NIIM  ORT
+       		    WHERE 	SUP_IDN = #supIdn#	
+	</select>
+	<!-- 수치지형도 신청목적 상세 리스트 -->
+	<select id="applyDAO.getMapDetailList" parameterClass="java.util.Map" resultClass="egovMap">
+       	        SELECT 	  'PDT008'										        		AS IMAGE_CDE	
+       	        		 <!-- 지도종류 -->	
+                         , ( SELECT 
+	                        		  ( SELECT 	CD_TYPE_NM
+							              FROM 	COMMON_CD_TBL@LK_MMS 
+							             WHERE 	CD_KIND    = '11'
+							               AND 	CD_TYPE    =  HIS.MAP_KIND_CD
+							               AND 	CD_KIND_NM = 'map_kind_cd'
+	                                   )    
+                             FROM 	  MAP_HISTORY_TBL@LK_MMS HIS
+                            WHERE 	  HIS.MAP_SER_NO 		= MAP.MAP_SER_NO
+                              AND 	  HIS.MAP_HISTORY_NO 	= MAP.MAP_HISTORY_NO
+                              AND 	  HIS.MAP_SHT_NO 		= MAP.MAP_SHT_NO
+                           )                                                    		AS HISTORY_MAP_KIND_NM 
+                        , (	SELECT 
+	                        		  ( SELECT 	CD_TYPE_NM
+							              FROM 	COMMON_CD_TBL@LK_MMS 
+							             WHERE 	CD_KIND    = '11'
+							               AND 	CD_TYPE    =  INFO.MAP_KIND_CD
+							               AND 	CD_KIND_NM = 'map_kind_cd'
+	                                   )    
+                             FROM 	  MAP_INFO_TBL@LK_MMS INFO
+                            WHERE 	  INFO.MAP_SER_NO 		= MAP.MAP_SER_NO
+                              AND 	  INFO.MAP_HISTORY_NO 	= MAP.MAP_HISTORY_NO
+                              AND 	  INFO.MAP_SHT_NO 		= MAP.MAP_SHT_NO
+                           )                                                    		AS INFO_MAP_KIND_NM    
+                           
+                        <!-- 축척 -->   
+                        , (	SELECT 
+	                        		  ( SELECT 	CD_TYPE_NM
+							              FROM 	COMMON_CD_TBL@LK_MMS 
+							             WHERE 	CD_KIND    = '21'
+							               AND 	CD_TYPE    =  HIS.SCALE_CD
+							               AND 	CD_KIND_NM = 'map_scale'
+	                                   )    
+                             FROM 	  MAP_HISTORY_TBL@LK_MMS HIS
+                            WHERE 	  HIS.MAP_SER_NO 		= MAP.MAP_SER_NO
+                              AND 	  HIS.MAP_HISTORY_NO 	= MAP.MAP_HISTORY_NO
+                              AND 	  HIS.MAP_SHT_NO 		= MAP.MAP_SHT_NO
+                           )                                                   		 	AS HISTORY_SCALE_NM 
+                        , (	SELECT 
+	                        		  ( SELECT 	CD_TYPE_NM
+							              FROM 	COMMON_CD_TBL@LK_MMS 
+							             WHERE 	CD_KIND    = '21'
+							               AND 	CD_TYPE    =  INFO.SCALE_CD
+							               AND 	CD_KIND_NM = 'map_scale'
+	                                   )    
+                             FROM 	  MAP_INFO_TBL@LK_MMS INFO
+                            WHERE 	  INFO.MAP_SER_NO 		= MAP.MAP_SER_NO
+                              AND 	  INFO.MAP_HISTORY_NO 	= MAP.MAP_HISTORY_NO
+                              AND 	  INFO.MAP_SHT_NO 		= MAP.MAP_SHT_NO
+                           )                                                   		 	AS INFO_SCALE_NM  
+                        <!-- 도엽번호 -->      
+                        , MAP.MAP_SHT_NO   
+						<!-- 고시번호 -->               
+						, (SELECT     NOTICE_NO
+                             FROM     MAP_HISTORY_TBL@LK_MMS HIS
+                            WHERE 	  HIS.MAP_SER_NO 		= MAP.MAP_SER_NO
+                              AND 	  HIS.MAP_HISTORY_NO 	= MAP.MAP_HISTORY_NO
+                              AND 	  HIS.MAP_SHT_NO 		= MAP.MAP_SHT_NO
+                        )                                                               AS HISTORY_NOTICE_NO
+                        , (SELECT     NOTICE_NO
+                             FROM     MAP_INFO_TBL@LK_MMS INFO
+                            WHERE 	  INFO.MAP_SER_NO 		= MAP.MAP_SER_NO
+                              AND 	  INFO.MAP_HISTORY_NO 	= MAP.MAP_HISTORY_NO
+                              AND 	  INFO.MAP_SHT_NO 		= MAP.MAP_SHT_NO
+                        )                                                               AS INFO_NOTICE_NO
+                        <!-- 제작연도 -->
+                        , (SELECT     PRODUCT_YEAR
+                             FROM     MAP_HISTORY_TBL@LK_MMS HIS
+                            WHERE 	  HIS.MAP_SER_NO 		= MAP.MAP_SER_NO
+                              AND 	  HIS.MAP_HISTORY_NO 	= MAP.MAP_HISTORY_NO
+                              AND 	  HIS.MAP_SHT_NO 		= MAP.MAP_SHT_NO
+                        )                                                               AS HISTORY_PRODUCT_YEAR
+                        , (SELECT     PRODUCT_YEAR
+                             FROM     MAP_INFO_TBL@LK_MMS INFO
+                            WHERE 	  INFO.MAP_SER_NO 		= MAP.MAP_SER_NO
+                              AND 	  INFO.MAP_HISTORY_NO 	= MAP.MAP_HISTORY_NO
+                              AND 	  INFO.MAP_SHT_NO 		= MAP.MAP_SHT_NO
+                        )                                                               AS INFO_PRODUCT_YEAR    
+                        <!-- 지도이력번호 
+                        			0  : MAP_INFO_TBL 
+                        	0보다 큰 숫자 : MAP_HISTORY_TBL	-->     
+                        , MAP.MAP_HISTORY_NO
+       		     FROM 	USR_MAP_SUPPLYITEM_APP_NIIM  MAP
+       		    WHERE 	MAP.SUP_IDN		 = #supIdn#
+	</select>
+	
+	
+	
+	<select id="applyDAO.getDbAppReqList" parameterClass="java.util.Map" resultClass="egovMap">
+		
+		SELECT T.SUP_IDN
+             , T.IMAGE_CDE
+             , (
+			    SELECT CDE_NAM
+                  FROM CMT_DETAIL_CODE_NIIM
+                 WHERE FLE_IDN = 'IMAGE_CDE'
+                   AND CDE_CDE = T.IMAGE_CDE 
+               ) IMAGE_NAM
+             , T.ITEM_ID
+             , SUBSTR(T.ZONE_CODE, 1, 4) PRJ_YY
+             , T.ZONE_CODE
+             , Z.ZONE_NAM
+             , T.PH_COURSE
+             , T.PH_NUM
+             <!-- , T.PH_COUNT -->
+             <!-- , T.PH_COST -->
+             , T.PROD_CDE
+             , (
+			    SELECT CDE_NAM
+                  FROM CMT_DETAIL_CODE_NIIM
+                 WHERE FLE_IDN = 'AIRPROD_CDE'
+                   AND CDE_CDE = T.PROD_CDE 
+               ) PROD_NAM
+             , T.POS_DESC
+             , T.SECURITY
+             , T.MAP5000_NUM
+             , T.RESOLUTION
+             , T.MARK_INDEX
+             , T.FILE_NAM
+		  FROM (
+		<isEqual property="airGbn" compareValue="air">
+		        SELECT A.SUP_IDN
+		             , A.IMAGE_CDE
+		             , A.ITEM_ID
+		             , SUBSTR(A.ZONE_CODE, 1, 4) PRJ_YY
+		             , A.ZONE_CODE
+		             , A.PH_COURSE
+		             , A.PH_NUM
+		             <!-- , PH_COUNT -->
+		             <!-- , PH_COST -->
+		             , A.PROD_CDE
+		             , A.POS_DESC
+		             , '' SECURITY
+		             , '' MAP5000_NUM
+		             , '' RESOLUTION
+		             , A.MARK_INDEX
+		             , B.FILE_NAM
+		          FROM AIR_SUPPLYITEM_APP_NIIM A
+		             , STO_AIRLOC_DTS B
+		         WHERE A.ZONE_CODE = B.ZONE_CODE
+		           AND A.PH_COURSE = B.PH_COURSE
+		           AND A.PH_NUM = B.PH_NUM
+		           AND EXISTS (
+		                       SELECT 1
+		                         FROM IMG_SUPPLY_DTS_NIIM
+		                        WHERE SUP_IDN   = #supIdn#
+		                          AND SUP_IDN   = A.SUP_IDN
+		                          AND IMAGE_CDE = A.IMAGE_CDE
+		                      )
+		</isEqual>
+		<isEmpty property="selDbAppGbn"> 
+		        UNION ALL
+		</isEmpty>
+		<isEqual property="demGbn" compareValue="dem">
+		        SELECT D.SUP_IDN
+		             , D.IMAGE_CDE
+		             , D.ITEM_ID
+		             , SUBSTR(D.ZONE_CODE, 1, 4) PRJ_YY
+		             , D.ZONE_CODE
+		             , '' PH_COURSE
+		             , '' PH_NUM
+		             <!-- , MAP_COUNT PH_COUNT -->
+		             <!-- , MAP_COST PH_COST -->
+		             , D.PROD_CDE
+		             , '' POS_DESC
+		             , '' SECURITY
+		             , D.MAP5000_NUM
+		             , D.GRID_INT
+		             , NULL MARK_INDEX
+		             , B.FILE_NAM
+		          FROM DEM_SUPPLYITEM_APP_NIIM D
+		             , STO_DEMLOC_DTS B
+		             , DEM_PRODUCT_DTS R
+		         WHERE D.ZONE_CODE = B.ZONE_CODE
+		           AND D.MAP5000_NUM = B.MAP5000_NUM
+		           AND D.ZONE_CODE = R.ZONE_CODE
+		           AND D.MAP5000_NUM = R.MAP5000_NUM
+		           AND D.GRID_INT = R.GRID_INT
+		           AND EXISTS (
+		                       SELECT 1
+		                         FROM IMG_SUPPLY_DTS_NIIM
+		                        WHERE SUP_IDN   = #supIdn#
+		                          AND SUP_IDN   = D.SUP_IDN
+		                          AND IMAGE_CDE = D.IMAGE_CDE
+		                      )
+		</isEqual>
+		<isEmpty property="selDbAppGbn">
+		        UNION ALL
+		</isEmpty>
+		<isEqual property="ortGbn" compareValue="ort">
+		        SELECT O.SUP_IDN
+		             , O.IMAGE_CDE
+		             , O.ITEM_ID
+		             , SUBSTR(O.ZONE_CODE, 1, 4) PRJ_YY
+		             , O.ZONE_CODE
+		             , '' PH_COURSE
+		             , '' PH_NUM
+		             <!-- , MAP_COUNT PH_COUNT -->
+		             <!-- , MAP_COST PH_COST -->
+		             , O.PROD_CDE
+		             , '' POS_DESC
+		             , '' SECURITY
+		             , O.MAP5000_NUM
+		             , O.GTYP_DST
+		             , O.MARK_INDEX
+		             , B.FILE_NAM
+		          FROM ORT_SUPPLYITEM_APP_NIIM O
+		             , STO_ORTLOC_DTS B
+		             , ORT_PRODUCT_DTS R
+		         WHERE O.ZONE_CODE = B.ZONE_CODE
+		           AND O.MAP5000_NUM = B.MAP5000_NUM
+		           AND O.ZONE_CODE = R.ZONE_CODE
+		           AND O.MAP5000_NUM = R.MAP5000_NUM
+		           AND O.GTYP_DST = R.GTYP_DST
+		           AND EXISTS (
+		                       SELECT 1
+		                         FROM IMG_SUPPLY_DTS_NIIM
+		                        WHERE SUP_IDN   = #supIdn#
+		                          AND SUP_IDN   = O.SUP_IDN
+		                          AND IMAGE_CDE = O.IMAGE_CDE
+		                      )
+		</isEqual>
+		<isEmpty property="selDbAppGbn">
+		        UNION ALL
+		</isEmpty>
+		<isEqual property="lidGbn" compareValue="lid">
+		        SELECT L.SUP_IDN
+		             , L.IMAGE_CDE
+		             , L.ITEM_ID
+		             , SUBSTR(L.ZONE_CODE, 1, 4) PRJ_YY
+		             , L.ZONE_CODE
+		             , '' PH_COURSE
+		             , '' PH_NUM
+		             <!-- , MAP_COUNT PH_COUNT -->
+		             <!-- , MAP_COST PH_COST -->
+		             , L.PROD_CDE
+		             , '' POS_DESC
+		             , '' SECURITY
+		             , '' MAP5000_NUM
+		             , '' MAP5000_NAM
+		             , NULL MARK_INDEX
+		             , B.FILE_NAM
+		          FROM LID_SUPPLYITEM_APP_NIIM L
+		             , STO_LIDLOC_DTS B
+		         WHERE L.ZONE_CODE = B.ZONE_CODE
+		           AND L.LIDAR_IDN = B.LIDAR_IDN
+		           AND EXISTS (
+		                       SELECT 1
+		                         FROM IMG_SUPPLY_DTS_NIIM
+		                        WHERE SUP_IDN   = #supIdn#
+		                          AND SUP_IDN   = L.SUP_IDN
+		                          AND IMAGE_CDE = L.IMAGE_CDE
+		                      )
+		</isEqual>
+		<isEmpty property="selDbAppGbn">
+		        UNION ALL
+		</isEmpty>
+		<isEqual property="nirGbn" compareValue="nir">
+		        SELECT N.SUP_IDN
+		             , N.IMAGE_CDE
+		             , N.ITEM_ID
+		             , SUBSTR(N.ZONE_CODE, 1, 4) PRJ_YY
+		             , N.ZONE_CODE
+		             , N.PH_COURSE
+		             , N.PH_NUM
+		             <!-- , MAP_COUNT PH_COUNT -->
+		             <!-- , MAP_COST PH_COST -->
+		             , N.PROD_CDE
+		             , '' POS_DESC
+		             , '' SECURITY
+		             , '' MAP5000_NUM
+		             , '' MAP5000_NAM
+		             , N.MARK_INDEX
+		             , B.FILE_NAM
+		          FROM NIR_SUPPLYITEM_APP N
+		             , STO_AIRLOC_DTS B
+		         WHERE N.ZONE_CODE = B.ZONE_CODE
+		           AND N.PH_COURSE = B.PH_COURSE
+		           AND N.PH_NUM = B.PH_NUM
+		           AND EXISTS (
+		                       SELECT 1
+		                         FROM IMG_SUPPLY_DTS_NIIM
+		                        WHERE SUP_IDN   = #supIdn#
+		                          AND SUP_IDN   = N.SUP_IDN
+		                          AND IMAGE_CDE = N.IMAGE_CDE
+		                      )
+		</isEqual>
+		<isEmpty property="selDbAppGbn">
+		        UNION ALL
+		</isEmpty>
+		<isEqual property="tdsGbn" compareValue="tds">
+		        SELECT T.SUP_IDN
+		             , T.IMAGE_CDE
+		             , T.ITEM_ID
+		             , SUBSTR(T.ZONE_CODE, 1, 4) PRJ_YY
+		             , T.ZONE_CODE
+		             , '' PH_COURSE
+		             , '' PH_NUM
+		             <!-- , MAP_COUNT PH_COUNT -->
+		             <!-- , MAP_COST PH_COST -->
+		             , T.PROD_CDE
+		             , '' POS_DESC
+		             , '' SECURITY
+		             , '' MAP5000_NUM
+		             , '' MAP5000_NAM
+		             , T.MARK_INDEX
+		             , B.FILE_NAM
+		          FROM TDS_SUPPLYITEM_APP_NIIM T
+		             , STO_TDSLOC_DTS B
+		         WHERE T.ZONE_CODE = B.ZONE_CODE
+		           AND T.TDS_IDN = B.TDS_IDN
+		           AND EXISTS (
+		                       SELECT 1
+		                         FROM IMG_SUPPLY_DTS_NIIM
+		                        WHERE SUP_IDN   = #supIdn#
+		                          AND SUP_IDN   = T.SUP_IDN
+		                          AND IMAGE_CDE = T.IMAGE_CDE
+		                      )
+		</isEqual>
+		       ) T
+		     , AIR_ZONE_DTS Z 
+		 WHERE T.ZONE_CODE  = Z.ZONE_CODE
+		 ORDER BY IMAGE_CDE, ITEM_ID DESC
+	
+	</select>
+	
+	
+	<select id="applyDAO.getDbAppRstReview" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT A.SUP_IDN
+			 , TO_CHAR(TO_DATE(A.REQ_DATE), 'YYYY-MM-DD') REQ_DATE
+			 , TO_CHAR(TO_DATE(A.SUP_DATE), 'YYYY-MM-DD') SUP_DATE
+			 , A.AP_NAME
+		     , A.AP_POST
+		     , A.AP_DEPARTMENT
+		     , A.AP_POSITION
+		     , decrypt(A.AP_TEL) AP_TEL
+		     , A.MGR_NAME
+		     , A.MGR_POSITION
+		     , decrypt(A.MGR_TEL) MGR_TEL
+		     , A.PURPOSE
+		     , A.SEC_DATA_MNG_PLAN
+		     , A.SUBCONT_NAME
+		     , A.SUBCONT_SR_NAME
+		     , decrypt(A.SUBCONT_SR_TEL) SUBCONT_SR_TEL
+		     , A.SUBCONT_MGR_NAME
+		     , decrypt(A.SUBCONT_MGR_TEL) SUBCONT_MGR_TEL
+		     , A.AGREE_YN
+		     , A.CON_NAME
+		     , A.CON_POSITION
+			 , (
+			    SELECT COUNT(SUP_IDN)
+                  FROM AIR_SUPPLYITEM_APP_NIIM
+                 WHERE SUP_IDN = A.SUP_IDN 
+               ) AIR_CNT
+             , (
+			    SELECT COUNT(SUP_IDN)
+                  FROM DEM_SUPPLYITEM_APP_NIIM
+                 WHERE SUP_IDN = A.SUP_IDN 
+               ) DEM_CNT
+             , (
+			    SELECT COUNT(SUP_IDN)
+                  FROM ORT_SUPPLYITEM_APP_NIIM
+                 WHERE SUP_IDN = A.SUP_IDN 
+               ) ORT_CNT
+             , (
+			    SELECT COUNT(SUP_IDN)
+                  FROM LID_SUPPLYITEM_APP_NIIM
+                 WHERE SUP_IDN = A.SUP_IDN 
+               ) LID_CNT
+             , (
+			    SELECT COUNT(SUP_IDN)
+                  FROM NIR_SUPPLYITEM_APP
+                 WHERE SUP_IDN = A.SUP_IDN 
+               ) NIR_CNT
+             , (
+			    SELECT COUNT(SUP_IDN)
+                  FROM TDS_SUPPLYITEM_APP_NIIM
+                 WHERE SUP_IDN = A.SUP_IDN 
+               ) TDS_CNT
+		  FROM IMG_SUPPLY_APP_NIIM A
+		 WHERE SUP_IDN = #supIdn#
+	
+	</select>
+	
+	
+	<insert id="applyDAO.regDbApp" parameterClass="Map">
+		<selectKey type="pre" keyProperty="sup_idn" resultClass="java.lang.String">
+			SELECT TO_CHAR(SYSDATE, 'YYYY') || 
+			       LPAD(TO_CHAR(TO_NUMBER(NVL(MAX(SUBSTR(SUP_IDN, 5, 5)), 0),'XXXXX') + 1, 'FMXXXXX'), '5', '0') AS SUP_IDN
+			  FROM IMG_SUPPLY_APP_NIIM
+			 WHERE SUBSTR(SUP_IDN, 1, 4) = TO_CHAR(SYSDATE, 'YYYY')
+		</selectKey>
+		
+		INSERT 
+		  INTO IMG_SUPPLY_APP_NIIM
+		  (
+		       SUP_IDN
+		     , REQ_DATE
+<!-- 		     , SUP_DATE -->
+		     , AP_NAME
+		     , AP_POST
+		     , AP_DEPARTMENT
+		     , AP_POSITION
+		     , AP_TEL
+		     , MGR_NAME
+		     , MGR_POSITION
+		     , MGR_TEL
+		     , PURPOSE
+		     , DETAIL_PURPOSE 
+		     , SEC_DATA_MNG_PLAN
+		     , SUBCONT_NAME
+		     , SUBCONT_SR_NAME
+		     , SUBCONT_SR_TEL
+		     , SUBCONT_MGR_NAME
+		     , SUBCONT_MGR_TEL
+		     , AGREE_YN
+		     , ETC
+		     , CON_NAME
+		     , CON_POSITION
+		     , DEL_YN
+		     , CREATE_USR
+		     , CREATE_DT
+		     , LAST_CHANGE_USR
+		     , LAST_CHANGE_DT
+		  ) 
+		VALUES 
+		  (
+		       #sup_idn#
+		     , #reqDate#
+<!-- 		     , #supDate# -->
+		     , #apName#
+		     , #apPost#
+		     , #apDepartment#
+		     , #apPosition#
+		     , encrypt(#apTel#)
+		     , #mgrName#
+		     , #mgrPosition#
+		     , encrypt(#mgrTel#)
+		     , #purpose#
+		     , #detailPurpose#
+		     , #secDataMngPlan#
+		     , #subcontName#
+		     , #subcontSrName#
+		     , encrypt(#subcontSrTel#)
+		     , #subcontMgrName#
+		     , encrypt(#subcontMgrTel#)
+		     , #agreeYn#
+		     , #etc#
+		     , #conName#
+		     , #conPosition#
+		     , 'N'
+		     , #createUsr#
+		     , SYSDATE
+		     , #createUsr#
+		     , SYSDATE
+		  )
+		  
+	</insert>
+	
+	
+	<update id="applyDAO.uptDbApp" parameterClass="Map" >
+	
+		UPDATE IMG_SUPPLY_APP_NIIM 
+		   SET LAST_CHANGE_DT    = SYSDATE
+		<isNotEmpty property="reqDate">
+		     , REQ_DATE          = #reqDate#
+		</isNotEmpty>
+		<isNotEmpty property="supDate">
+		     , SUP_DATE          = #supDate#
+		</isNotEmpty>
+		<isNotEmpty property="apName">
+		     , AP_NAME           = #apName#
+		</isNotEmpty>
+		<isNotEmpty property="apPost">
+		     , AP_POST           = #apPost#
+		</isNotEmpty>
+		<isNotEmpty property="apDepartment">
+		     , AP_DEPARTMENT     = #apDepartment#
+		</isNotEmpty>
+		<isNotEmpty property="apPosition">
+		     , AP_POSITION       = #apPosition#
+		</isNotEmpty>
+		<isNotEmpty property="apTel">
+		     , AP_TEL            = encrypt(#apTel#)
+		</isNotEmpty>
+		<isNotEmpty property="mgrName">
+		     , MGR_NAME          = #mgrName#
+		</isNotEmpty>
+		<isNotEmpty property="mgrPosition">
+		     , MGR_POSITION      = #mgrPosition#
+		</isNotEmpty>
+		<isNotEmpty property="mgrTel">
+		     , MGR_TEL           = encrypt(#mgrTel#)
+		</isNotEmpty>
+		<isNotEmpty property="purpose">
+		     , PURPOSE           = #purpose#
+		</isNotEmpty>
+		<isNotEmpty property="secDataMngPlan">
+		     , SEC_DATA_MNG_PLAN = #secDataMngPlan#
+		</isNotEmpty>
+		
+		<isNotNull property="subcontName">
+		     , SUBCONT_NAME      = #subcontName#
+		</isNotNull>
+		<isNotNull property="subcontSrName">
+		     , SUBCONT_SR_NAME   = #subcontSrName#
+		</isNotNull>
+		<isNotNull property="subcontSrTel">
+		     , SUBCONT_SR_TEL    = encrypt(#subcontSrTel#)
+		</isNotNull>
+		<isNotNull property="subcontMgrName">
+		     , SUBCONT_MGR_NAME  = #subcontMgrName#
+		</isNotNull>
+		<isNotNull property="subcontMgrTel">
+		     , SUBCONT_MGR_TEL   = encrypt(#subcontMgrTel#)
+		</isNotNull>
+		
+		<isNotEmpty property="agreeYn">
+		     , AGREE_YN          = #agreeYn#
+		</isNotEmpty>
+		<isNotEmpty property="conName">
+		     , CON_NAME          = #conName#
+		</isNotEmpty>
+		<isNotEmpty property="conPosition">
+		     , CON_POSITION      = #conPosition#
+		</isNotEmpty>
+		<isNotEmpty property="lastChangeUsr">
+		     , LAST_CHANGE_USR   = #lastChangeUsr#
+		</isNotEmpty>
+  		 WHERE SUP_IDN = #supIdn#
+  		
+	</update>
+	
+	<!-- 
+	<delete id="applyDAO.delDbApp" parameterClass="Map">
+	
+		DELETE 
+		  FROM IMG_SUPPLY_APP_NIIM
+		 WHERE SUP_IDN = #supIdn#
+	
+	</delete>
+	 -->
+	<update id="applyDAO.delDbApp" parameterClass="Map">
+	
+		UPDATE IMG_SUPPLY_APP_NIIM
+		   SET DEL_YN = 'Y'
+		 WHERE SUP_IDN = #supIdn#
+	
+	</update>
+	<delete id="applyDAO.delDbAppDts" parameterClass="Map">
+	
+		DELETE 
+		  FROM IMG_SUPPLY_DTS_NIIM
+		 WHERE SUP_IDN = #supIdn#
+	
+	</delete>
+	<delete id="applyDAO.delDbAppAirSupply" parameterClass="Map">
+	
+		DELETE 
+		  FROM AIR_SUPPLYITEM_APP_NIIM
+		 WHERE SUP_IDN = #supIdn#
+	
+	</delete>
+	<delete id="applyDAO.delDbAppDemSupply" parameterClass="Map">
+	
+		DELETE 
+		  FROM DEM_SUPPLYITEM_APP_NIIM
+		 WHERE SUP_IDN = #supIdn#
+	
+	</delete>
+	<delete id="applyDAO.delDbAppOrtSupply" parameterClass="Map">
+	
+		DELETE 
+		  FROM ORT_SUPPLYITEM_APP_NIIM
+		 WHERE SUP_IDN = #supIdn#
+	
+	</delete>
+	
+	
+	<select id="applyDAO.getDbAppAuthList" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT ROW_NUMBER() OVER(ORDER BY T.IMAGE_CDE, T.ZONE_CODE DESC) NUM
+		     , T.IMAGE_CDE
+		     , (
+		        SELECT CDE_NAM
+                  FROM CMT_DETAIL_CODE_NIIM
+                 WHERE FLE_IDN = 'IMAGE_CDE'
+                   AND CDE_CDE = T.IMAGE_CDE
+		       ) IMAGE_NAM
+		     , SUBSTR(T.ZONE_CODE, 0, 4) SCENEYEAR
+		     , T.ZONE_CODE
+		     , Z.ZONE_NAM
+		     , T.SECURITY_CDE
+		     , (
+		        SELECT CDE_NAM
+		          FROM CMT_DETAIL_CODE_NIIM
+		         WHERE FLE_IDN = 'SECURITY_CDE'
+		           AND CDE_CDE = T.SECURITY_CDE
+		       ) SECURITY_NAM
+		     , T.CNT
+		  FROM (
+		        SELECT 'PDT001' IMAGE_CDE
+		             , A.ZONE_CODE
+		             , T.SECURITY_CDE
+		             , COUNT(A.ITEM_ID) CNT
+		          FROM USR_AIR_SUPPLYITEM_APP_NIIM A
+		             , AIR_PRODUCT_DTS T
+		         WHERE A.SUP_IDN   = #supIdn#
+		           AND A.ZONE_CODE = T.ZONE_CODE
+		           AND A.PH_COURSE = T.PH_COURSE
+		           AND A.PH_NUM    = T.PH_NUM
+		         GROUP BY A.SUP_IDN
+		                , A.ZONE_CODE
+		                , T.SECURITY_CDE
+		         UNION
+		        SELECT 'PDT002' IMAGE_CDE
+		             , D.ZONE_CODE
+		             , T.SECURITY_CDE
+		             , COUNT(D.ITEM_ID) CNT
+		          FROM USR_DEM_SUPPLYITEM_APP_NIIM D
+		             , DEM_PRODUCT_DTS T
+		             , DEM_PRODUCT_DTS R
+		         WHERE D.SUP_IDN     = #supIdn#
+		           AND D.ZONE_CODE   = T.ZONE_CODE
+		           AND D.MAP5000_NUM = T.MAP5000_NUM
+		           AND D.ZONE_CODE   = R.ZONE_CODE
+		           AND D.MAP5000_NUM = R.MAP5000_NUM
+		           AND D.GRID_INT    = R.GRID_INT
+		         GROUP BY D.SUP_IDN
+		                , D.ZONE_CODE
+		                , T.SECURITY_CDE
+		         UNION
+		        SELECT 'PDT004' IMAGE_CDE
+		             , O.ZONE_CODE
+		             , T.SECURITY_CDE
+		             , COUNT(O.ITEM_ID) CNT
+		          FROM USR_ORT_SUPPLYITEM_APP_NIIM O
+		             , META_ORT_CONTR T
+		             , ORT_PRODUCT_DTS R
+		         WHERE O.SUP_IDN     = #supIdn#
+		           AND O.ZONE_CODE   = T.ZONE_CODE
+		           AND O.MAP5000_NUM = T.MAP5000_NUM
+		           AND O.ZONE_CODE   = R.ZONE_CODE
+		           AND O.MAP5000_NUM = R.MAP5000_NUM
+		           AND O.GTYP_DST    = R.GTYP_DST
+		         GROUP BY O.SUP_IDN
+		                , O.ZONE_CODE
+		                , T.SECURITY_CDE
+		       ) T
+		     , AIR_ZONE_DTS Z
+		 WHERE T.ZONE_CODE = Z.ZONE_CODE
+	
+	</select>
+	
+	
+	<update id="applyDAO.uptDbAppAuth" parameterClass="Map">
+	
+		UPDATE USR_IMG_SUPPLY_APP_NIIM
+		   SET APPROVAL_CDE 	= #approvalCde#
+<!-- 		<isNotEmpty property="rejectCause"> -->
+		     , REJECT_CAUSE 	= #rejectCause#
+		<!-- </isNotEmpty> -->
+		<isNotEmpty property="limitDay">
+		     , EXPIRED_DATE     = TO_CHAR(SYSDATE + (#limitDay# - 1), 'YYYYMMDD')
+		</isNotEmpty>
+		<isNotEmpty property="metaYn">
+		     , META_YN          = #metaYn#
+		</isNotEmpty>
+		     , LAST_CHANGE_USR 	= #lastChangeUsr#
+		     , LAST_CHANGE_DT 	= SYSDATE
+		 WHERE SUP_IDN = #supIdn# 
+	
+	</update>
+	
+	<!-- 신청서작성 - 신청서 활용목적 리스트 -->
+	<select id="applyDAO.getPurposeList" parameterClass="String" resultClass="egovMap">
+		   SELECT 			SUBSTR(CN_DC,10) 			AS CN_DC
+		   				,	DETAIL_CODE_NM
+		   				,	SORT_ORDR_NO
+		   				,	CODE_ID
+		   				,	DETAIL_CODE_ID
+			 FROM 		TC_CMMN_DETAIL_CODE@LK_NLIP
+			WHERE 		USE_AT 		= 'Y'
+              AND 		CODE_ID 	LIKE 'CAAA%'
+              <isNotEmpty>
+              AND       CODE_ID     = #codeId#
+              </isNotEmpty>
+	</select>
+	
+	
+<!-- ############################################################# 공급시스템 ############################################################# -->	
+	<insert id="applyDAO.regUserDbApp" parameterClass="Map">
+	
+		INSERT 
+		  INTO USR_IMG_SUPPLY_APP_NIIM
+		  (
+			   USR_MGNO
+			 , SUP_IDN
+			 , APPROVAL_CDE
+			<isNotEmpty property="metaYn">
+			 , META_YN
+			</isNotEmpty>
+			 , LAST_CHANGE_USR
+			 , LAST_CHANGE_DT
+		  ) 
+		VALUES 
+		  (
+		       #usrMgno#
+			 , #supIdn#
+			 , '0'
+			<isNotEmpty property="metaYn">
+			 , #metaYn#
+			</isNotEmpty>
+			 , #usrMgno#
+			 , SYSDATE
+		  )
+	
+	</insert>
+	
+	<insert id="applyDAO.regUserDbAppHist" parameterClass="Map">
+	
+		INSERT 
+		  INTO USR_IMG_SUPPLY_APP_HIST_NIIM
+		  (
+			   USR_MGNO
+			 , SUP_IDN
+			 , APPROVAL_CDE
+			 , CREATE_USR
+			 , CREATE_DT
+		  ) 
+		SELECT USR_MGNO
+		     , SUP_IDN
+		     , APPROVAL_CDE
+		     , LAST_CHANGE_USR
+		     , LAST_CHANGE_DT
+		  FROM USR_IMG_SUPPLY_APP_NIIM
+		 WHERE SUP_IDN = #supIdn#
+		<isNotEmpty property="usrMgno">
+		   AND USR_MGNO = #usrMgno#
+		</isNotEmpty>
+	
+	</insert>
+	
+	<update id="applyDAO.uptUserDbAppMap" parameterClass="Map">
+		UPDATE USR_IMG_SUPPLY_APP_NIIM SET MAP_APPROVAL_CDE='0'
+		WHERE SUP_IDN=#supIdn#
+	</update>
+	
+	<update id="applyDAO.uptUserDbAppIim" parameterClass="Map">
+		UPDATE USR_IMG_SUPPLY_APP_NIIM SET IIM_APPROVAL_CDE='0'
+		WHERE SUP_IDN=#supIdn#
+	</update>
+	
+	
+	<insert id="applyDAO.regUserDbAppAir" parameterClass="Map">
+	
+		INSERT 
+		  INTO USR_AIR_SUPPLYITEM_APP_NIIM
+		  (
+			   USR_MGNO
+			 , SUP_IDN
+			 , ITEM_ID
+			 , ZONE_CODE
+			 , PH_COURSE
+			 , PH_NUM
+		  ) 
+		VALUES 
+		  (
+		       #usrMgno#
+			 , #supIdn#
+			 , (
+			    SELECT NVL(MAX(ITEM_ID), 0) + 1
+			      FROM USR_AIR_SUPPLYITEM_APP_NIIM
+			     WHERE USR_MGNO = #usrMgno#
+			       AND SUP_IDN  = #supIdn#
+			   )
+			 , #zoneCode#
+			 , #phCourse#
+			 , #phNum#
+		  )
+	
+	</insert>
+	
+	<insert id="applyDAO.regUserDbAppDem" parameterClass="Map">
+	
+		INSERT 
+		  INTO USR_DEM_SUPPLYITEM_APP_NIIM
+		  (
+			   USR_MGNO
+			 , SUP_IDN
+			 , ITEM_ID
+			 , ZONE_CODE
+			 , MAP5000_NUM
+			 , GRID_INT
+		  ) 
+		VALUES 
+		  (
+		       #usrMgno#
+			 , #supIdn#
+			 , (
+			    SELECT NVL(MAX(ITEM_ID), 0) + 1
+			      FROM USR_DEM_SUPPLYITEM_APP_NIIM
+			     WHERE USR_MGNO = #usrMgno#
+			       AND SUP_IDN  = #supIdn#
+			   )
+			 , #zoneCode#
+			 , #map5000Num#
+			 , #gridInt#
+		  )
+	
+	</insert>
+	
+	<insert id="applyDAO.regUserDbAppOrt" parameterClass="Map">
+	
+		INSERT 
+		  INTO USR_ORT_SUPPLYITEM_APP_NIIM
+		  (
+			   USR_MGNO
+			 , SUP_IDN
+			 , ITEM_ID
+			 , ZONE_CODE
+			 , MAP5000_NUM
+			 , GTYP_DST
+		  ) 
+		VALUES 
+		  (
+		       #usrMgno#
+			 , #supIdn#
+			 , (
+			    SELECT NVL(MAX(ITEM_ID), 0) + 1
+			      FROM USR_ORT_SUPPLYITEM_APP_NIIM
+			     WHERE USR_MGNO = #usrMgno#
+			       AND SUP_IDN  = #supIdn#
+			   )
+			 , #zoneCode#
+			 , #map5000Num#
+			 , #gtypDst#
+		  )
+	
+	</insert>
+	
+	<insert id="applyDAO.regUserDbAppAt" parameterClass="Map">
+	
+		INSERT 
+		  INTO USR_AT_SUPPLYITEM_APP_NIIM
+		  (
+			   USR_MGNO
+			 , SUP_IDN
+			 , ITEM_ID
+			 , ZONE_CODE
+		  ) 
+		VALUES 
+		  (
+		       #usrMgno#
+			 , #supIdn#
+			 , (
+			    SELECT NVL(MAX(ITEM_ID), 0) + 1
+			      FROM USR_AT_SUPPLYITEM_APP_NIIM
+			     WHERE USR_MGNO = #usrMgno#
+			       AND SUP_IDN  = #supIdn#
+			   )
+			 , #zoneCode#
+		  )
+	
+	</insert>
+	
+	<insert id="applyDAO.regUserDbAppMap" parameterClass="Map">
+	
+		INSERT 
+		  INTO USR_MAP_SUPPLYITEM_APP_NIIM
+		  (
+			   USR_MGNO
+			 , SUP_IDN
+			 , ITEM_ID
+			 , MAP_SER_NO
+			 , MAP_HISTORY_NO
+			 , MAP_SHT_NO
+		  ) 
+		VALUES 
+		  (
+		       #usrMgno#
+			 , #supIdn#
+			 , (
+			    SELECT NVL(MAX(ITEM_ID), 0) + 1
+			      FROM USR_MAP_SUPPLYITEM_APP_NIIM
+			     WHERE USR_MGNO = #usrMgno#
+			       AND SUP_IDN  = #supIdn#
+			   )
+			 , #mapSerNo#
+			 , #mapHistoryNo#
+			 , #mapShtNo#
+		  )
+	
+	</insert>
+	
+	
+	<select id="applyDAO.getUserApplyListCnt" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+	
+		SELECT COUNT(*)
+		  FROM IMG_SUPPLY_APP_NIIM A
+		     , USR_IMG_SUPPLY_APP_NIIM B
+		 WHERE A.SUP_IDN = B.SUP_IDN
+		   AND A.DEL_YN  = 'N'
+		   AND B.USR_MGNO = #usrMgno#
+		<isEqual property="type" compareValue="wait">
+		   AND B.APPROVAL_CDE IN ('0', '1', '8', '10', '11', '12',
+		   						 '13', '14', '15', '16', '17', '30', '40')
+		</isEqual>
+		<isEqual property="type" compareValue="app">
+		   <!-- AND B.APPROVAL_CDE IN ('2', '3') -->
+		   AND B.APPROVAL_CDE IN ('2', '3', '4' ,'7', '50')
+		</isEqual>
+		<isEqual property="type" compareValue="rej">
+		   AND B.APPROVAL_CDE IN ('5', '6')
+		</isEqual>
+		<isEqual property="type" compareValue="comp">
+		<![CDATA[
+		   AND B.APPROVAL_CDE IN ('4' ,'7')
+		]]>
+		</isEqual>
+	
+	</select>
+	
+	<select id="applyDAO.getUserApplyList" parameterClass="java.util.Map" resultClass="egovMap">
+		
+		<include refid="Paging_head"/>
+		SELECT (  CASE WHEN AIR_CNT > 0 THEN '항공사진 ' || AIR_CNT || '건' END
+		       || CASE WHEN AIR_CNT > 0 AND DEM_CNT > 0 THEN ', ' END
+		       || CASE WHEN DEM_CNT > 0 THEN '수치표고 ' || DEM_CNT || '건' END
+		       || CASE WHEN AIR_CNT + DEM_CNT > 0 AND ORT_CNT > 0 THEN ', ' END
+		       || CASE WHEN ORT_CNT > 0 THEN '정사영상 ' || ORT_CNT || '건' END 
+		       || CASE WHEN AIR_CNT + DEM_CNT + ORT_CNT > 0 AND AT_CNT > 0 THEN ', ' END
+		       || CASE WHEN AT_CNT  > 0 THEN 'AT성과 '  || AT_CNT  || '건' END 
+		       || CASE WHEN AIR_CNT + DEM_CNT + ORT_CNT + AT_CNT > 0 AND MAP_CNT > 0 THEN ', ' END
+		       || CASE WHEN MAP_CNT > 0 THEN '수치지형도 '|| MAP_CNT  || '건' 	END ) REQ_NAME
+		<isEqual property="type" compareValue="wait">
+		     , ROW_NUMBER() OVER(ORDER BY REQ_DATE DESC, SUP_IDN DESC) NUM
+		</isEqual>
+		<isEqual property="type" compareValue="app">
+		     , ROW_NUMBER() OVER(ORDER BY DECODE(APPROVAL_CDE, '3', '2', '7', '2', '50', '2', APPROVAL_CDE), REQ_DATE DESC, SUP_IDN DESC) NUM
+		</isEqual>
+		<isEqual property="type" compareValue="rej">
+		     , ROW_NUMBER() OVER(ORDER BY APPROVAL_CDE, REQ_DATE DESC, SUP_IDN DESC) NUM
+		</isEqual>
+		<isEqual property="type" compareValue="comp">
+		     , ROW_NUMBER() OVER(ORDER BY REQ_DATE DESC, SUP_IDN DESC) NUM
+		</isEqual>
+		     , T.*
+		  FROM (
+		        SELECT A.SUP_IDN
+		             , TO_CHAR(TO_DATE(A.REQ_DATE, 'YYYYMMDD'), 'YYYY-MM-DD') REQ_DATE
+		             , TO_CHAR(TO_DATE(A.SUP_DATE, 'YYYYMMDD'), 'YYYY-MM-DD') SUP_DATE
+		             , A.AP_NAME
+		             , A.AP_POST
+		             , A.AP_DEPARTMENT
+		             , A.AP_POSITION
+		             , decrypt(A.AP_TEL) AP_TEL
+		             , A.MGR_NAME
+		             , A.MGR_POSITION
+		             , decrypt(A.MGR_TEL) MGR_TEL
+<!-- 		             , A.PURPOSE -->
+				     , (SELECT 		SUBSTR(CN_DC,10) AS CN_DC
+		                  FROM 		TC_CMMN_DETAIL_CODE@LK_NLIP
+		                  WHERE 	CODE_ID = A.PURPOSE
+		                    AND 	DETAIL_CODE_ID = A.DETAIL_PURPOSE 		) 	AS PURPOSE
+		             , A.SEC_DATA_MNG_PLAN
+		             , A.SUBCONT_NAME
+		             , A.SUBCONT_SR_NAME
+		             , decrypt(A.SUBCONT_SR_TEL) SUBCONT_SR_TEL
+		             , A.SUBCONT_MGR_NAME
+		             , decrypt(A.SUBCONT_MGR_TEL) SUBCONT_MGR_TEL
+		             , A.AGREE_YN
+		             , A.CON_NAME
+		             , A.CON_POSITION
+		             , B.APPROVAL_CDE
+		             , (
+		                SELECT DECODE(CDE_CDE, '2', '다운로드', CDE_NAM)
+                          FROM CMT_DETAIL_CODE_NIIM
+                         WHERE FLE_IDN = 'APPROVAL_CDE'
+                           AND CDE_CDE = B.APPROVAL_CDE 
+                       ) APPROVAL_NAM
+                     , B.META_YN
+                     , DECODE(B.META_YN, 'Y', '포함', 'N', '미포함', '') META_NAM
+                     , (CASE WHEN B.APPROVAL_CDE IN ('5', '6', '2', '50') THEN TO_CHAR(B.LAST_CHANGE_DT, 'YYYY.MM.DD') ELSE TO_CHAR(TO_DATE(A.SUP_DATE, 'YYYYMMDD'), 'YYYY.MM.DD') END) COMP_DATE
+                     , (CASE WHEN B.APPROVAL_CDE IN ('5', '6', '2') 
+                             THEN (SELECT USR_NM FROM ITR_USR_INFO_NIIM WHERE USR_MGNO = B.LAST_CHANGE_USR)
+                             ELSE A.CON_NAME 
+                         END) COMP_NAME
+                     , (CASE WHEN B.APPROVAL_CDE IN  ('1', '8', '10', '11', '12',
+		   						 					'13', '14', '15', '16', '17', '30', '40')
+		       	             THEN '처리중'
+		       	             WHEN B.APPROVAL_CDE = '0'
+		       	             THEN '승인요청'
+		       	             WHEN B.APPROVAL_CDE = '2'
+		       	             THEN '미확인'
+		       	             WHEN B.APPROVAL_CDE IN ('3', '4', '7', '50')
+		       	             THEN '확인'
+		       	             WHEN B.APPROVAL_CDE = '5'
+		       	             THEN '미확인'
+		       	             WHEN B.APPROVAL_CDE = '6'
+		       	             THEN '확인'
+		       	         END) STATUS
+		       	     , (CASE WHEN A.SUP_DATE IS NOT NULL AND B.APPROVAL_CDE IN ('2', '3', '50') AND TO_DATE(B.EXPIRED_DATE, 'YYYYMMDD') &gt; TO_DATE(TO_CHAR(SYSDATE - 1, 'YYYYMMDD'), 'YYYYMMDD')
+		       	             THEN TO_DATE(B.EXPIRED_DATE, 'YYYYMMDD') - TO_DATE(TO_CHAR(SYSDATE - 1, 'YYYYMMDD'), 'YYYYMMDD') || '일'
+		       	             ELSE '-'
+		       	         END) REMAINED_DAY
+		       	     , (CASE WHEN A.SUP_DATE IS NOT NULL AND B.APPROVAL_CDE IN ('2', '3', '50') 
+		       	              AND TO_DATE(B.EXPIRED_DATE, 'YYYYMMDD') > (TO_DATE(A.SUP_DATE, 'YYYYMMDD') + (#limitDay#*3 - 2)) 
+		       	             THEN 'N'
+		       	             ELSE 'Y'
+		       	         END) EXTENSION_YN
+                     , (
+                        SELECT COUNT(ITEM_ID)
+                          FROM USR_AIR_SUPPLYITEM_APP_NIIM
+                         WHERE USR_MGNO = B.USR_MGNO
+                           AND SUP_IDN = B.SUP_IDN
+                       ) AIR_CNT
+                     , (
+                        SELECT COUNT(ITEM_ID)
+                          FROM USR_DEM_SUPPLYITEM_APP_NIIM
+                         WHERE USR_MGNO = B.USR_MGNO
+                           AND SUP_IDN = B.SUP_IDN
+                       ) DEM_CNT
+                     , (
+                        SELECT COUNT(ITEM_ID)
+                          FROM USR_ORT_SUPPLYITEM_APP_NIIM
+                         WHERE USR_MGNO = B.USR_MGNO
+                           AND SUP_IDN = B.SUP_IDN
+                       ) ORT_CNT
+                     , (
+                        SELECT COUNT(ITEM_ID)
+                          FROM USR_AT_SUPPLYITEM_APP_NIIM
+                         WHERE USR_MGNO = B.USR_MGNO
+                           AND SUP_IDN = B.SUP_IDN
+                       ) AT_CNT
+                     , (
+                        SELECT COUNT(ITEM_ID)
+                          FROM USR_MAP_SUPPLYITEM_APP_NIIM
+                         WHERE USR_MGNO = B.USR_MGNO
+                           AND SUP_IDN = B.SUP_IDN
+                       ) MAP_CNT
+		          FROM IMG_SUPPLY_APP_NIIM A
+		             , USR_IMG_SUPPLY_APP_NIIM B
+		         WHERE A.SUP_IDN = B.SUP_IDN
+		           AND A.DEL_YN  = 'N'
+		           AND B.USR_MGNO = #usrMgno#
+		        <isEqual property="type" compareValue="wait">
+		           AND B.APPROVAL_CDE IN ('0', '1', '8', '10', '11', '12',
+		   						 		'13', '14', '15', '16', '17', '30', '40')
+		        </isEqual>
+		        <isEqual property="type" compareValue="app">
+		           <!-- AND B.APPROVAL_CDE IN ('2', '3') -->
+		           <!-- APPROVAL_CDE = '50' :: 신청서 승인 페이지에서 다운로드 버튼 클릭시 생성됨, 상태값 확인으로 변경, 남은일시 확인가능 -->
+		           AND B.APPROVAL_CDE IN ('2', '3', '4' ,'7', '50')
+		        </isEqual>
+		        <isEqual property="type" compareValue="rej">
+		           AND B.APPROVAL_CDE IN ('5', '6')
+		        </isEqual>
+		        <isEqual property="type" compareValue="comp">
+		        <![CDATA[
+		           AND B.APPROVAL_CDE IN ('4' ,'7')
+		        ]]>
+		        </isEqual>
+		       ) T
+		<include refid="Paging_tail"/>
+	</select>
+	
+	
+	<update id="applyDAO.applyExtension" parameterClass="java.util.Map">
+			<!-- UPDATE (
+		        SELECT B.EXPIRED_DATE
+		          FROM IMG_SUPPLY_APP_NIIM A
+		             , USR_IMG_SUPPLY_APP_NIIM B
+		         WHERE A.SUP_IDN = B.SUP_IDN
+		           AND TO_DATE(B.EXPIRED_DATE) < (TO_DATE(A.SUP_DATE) + (#limitDay#*3 - 1))
+		           AND A.SUP_IDN = #supIdn#
+		       ) 
+		   SET EXPIRED_DATE = TO_CHAR(TO_DATE(EXPIRED_DATE) + #limitDay#, 'YYYYMMDD') -->
+		   
+	<![CDATA[
+		   UPDATE USR_IMG_SUPPLY_APP_NIIM 
+		   SET EXPIRED_DATE = TO_CHAR(TO_DATE(EXPIRED_DATE) + #limitDay#, 'YYYYMMDD')
+		   WHERE EXPIRED_DATE = (SELECT B.EXPIRED_DATE
+		          FROM IMG_SUPPLY_APP_NIIM A
+		             , USR_IMG_SUPPLY_APP_NIIM B
+		         WHERE A.SUP_IDN = B.SUP_IDN
+		           AND TO_DATE(B.EXPIRED_DATE) < (TO_DATE(A.SUP_DATE) + (#limitDay#*3 - 1))
+		           AND A.SUP_IDN = #supIdn#)
+		  AND SUP_IDN = #supIdn#
+	]]>
+	</update>
+	
+	<select id="applyDAO.getSupIdnList" parameterClass="java.util.Map" resultClass="egovMap">
+	<![CDATA[
+	
+		SELECT /* applyDAO.getSupIdnList */
+			B.USR_MGNO
+		     , B.SUP_IDN
+		     , B.APPROVAL_CDE
+		     , B.META_YN
+		     , B.LAST_CHANGE_USR
+		  FROM IMG_SUPPLY_APP_NIIM A
+		     , USR_IMG_SUPPLY_APP_NIIM B 
+		 WHERE A.SUP_IDN = B.SUP_IDN
+		   AND B.APPROVAL_CDE = '8'
+		
+	]]>
+	</select>
+	
+	
+	<update id="applyDAO.uptDbApproval" parameterClass="java.util.Map">
+		UPDATE USR_IMG_SUPPLY_APP_NIIM
+		SET APPROVAL_CDE = #approvalCde#
+		WHERE SUP_IDN = #supIdn#
+	</update>
+	
+	
+	<update id="applyDAO.updateExpiredDt" parameterClass="Map">
+		UPDATE USR_IMG_SUPPLY_APP_NIIM
+		SET EXPIRED_DATE = TO_CHAR(SYSDATE + (#limitDay# - 1), 'YYYYMMDD')
+		WHERE SUP_IDN = #supIdn# 
+	</update>
+	
+	<select id="applyDAO.selectMetaCheck" parameterClass="Map" resultClass="String">
+		SELECT DISTINCT(META_YN)
+		FROM USR_IMG_SUPPLY_APP_NIIM
+		WHERE SUP_IDN = #supIdn#
+	</select>
+	
+</sqlMap>

@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_meta">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	
+	<!--
+		항공사진 테이블
+		AIR_BASEMETA_DTS
+		AIR_ORIENTMAP_DTS
+		AIR_PRODUCT_DTS
+		AIR_PRODUCTEO_DTS
+		META_AIRMAP_ACQUT
+		META_AIRMAP_CONT
+		AIR_PRODUCT_DTS
+		META_AIRMAP_DISTR
+		META_AIRMAP_IDENT
+		META_AIRMAP_MAIT
+		META_AIRMAP_REFRC
+		META_AIRMAP_SPATIAL
+		
+		수치표고 테이블
+		DEM_BASEMETA_DTS
+		DEM_GPSCOORD_DTS
+		DEM_PRODUCT_DTS
+		
+		정사영상 테이블
+		META_ORT_CONT
+		META_ORT_CONTR
+		META_ORT_DISTR
+		META_ORT_IDENT
+		META_ORT_MAIT
+		META_ORT_REFRC
+		META_ORT_SPATIAL
+		ORT_BASEMETA_DTS
+		ORT_PRODUCT_DTS
+		
+		라이다 테이블
+		LID_PRODUCT_DTS
+		
+		3차원객체 테이블
+		TDS_PRODUCT_DTS
+	-->
+
+	<select id="metaDAO.air_basemeta_dts" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM AIR_BASEMETA_DTS T
+		  , USR_AIR_SUPPLYITEM_APP_NIIM S
+		<!-- <isEqual property="imageCde" compareValue="PDT001">
+		     , AIR_SUPPLYITEM_APP_NIIM S		
+		</isEqual>
+		<isNotEqual property="imageCde" compareValue="PDT001">
+			<isEqual property="imageCde" compareValue="PDT011">
+			     , AIR_SUPPLYITEM_APP_NIIM S		
+			</isEqual>
+			<isNotEqual property="imageCde" compareValue="PDT011">
+		     	, NIR_SUPPLYITEM_APP S
+		     </isNotEqual>
+		</isNotEqual> -->
+		 WHERE T.ZONE_CODE = S.ZONE_CODE
+		   AND T.PH_COURSE = S.PH_COURSE
+		   AND T.PH_NUM    = S.PH_NUM
+		   AND S.SUP_IDN   = #supIdn#
+		 ORDER BY S.ZONE_CODE
+		        , S.PH_COURSE
+		        , S.PH_NUM
+		
+	</select>
+	
+	<select id="metaDAO.air_orientmap_dts" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM AIR_ORIENTMAP_DTS T
+		  , USR_AIR_SUPPLYITEM_APP_NIIM S
+		<!-- <isEqual property="imageCde" compareValue="PDT001">
+		     , AIR_SUPPLYITEM_APP_NIIM S		
+		</isEqual>
+		<isNotEqual property="imageCde" compareValue="PDT001">
+			<isEqual property="imageCde" compareValue="PDT011">
+			     , AIR_SUPPLYITEM_APP_NIIM S		
+			</isEqual>
+			<isNotEqual property="imageCde" compareValue="PDT011">
+		     	, NIR_SUPPLYITEM_APP S
+		     </isNotEqual>
+		</isNotEqual> -->
+		 WHERE T.ZONE_CODE = S.ZONE_CODE
+		   AND T.PH_COURSE = S.PH_COURSE
+		   AND T.PH_NUM    = S.PH_NUM
+		   AND S.SUP_IDN   = #supIdn#
+		 ORDER BY S.ZONE_CODE
+		        , S.PH_COURSE
+		        , S.PH_NUM
+		
+	</select>
+	
+	<select id="metaDAO.air_product_dts" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM AIR_PRODUCT_DTS T
+		  , USR_AIR_SUPPLYITEM_APP_NIIM S
+		<!-- <isEqual property="imageCde" compareValue="PDT001">
+		     , AIR_SUPPLYITEM_APP_NIIM S		
+		</isEqual>
+		<isNotEqual property="imageCde" compareValue="PDT001">
+		     <isEqual property="imageCde" compareValue="PDT011">
+			     , AIR_SUPPLYITEM_APP_NIIM S		
+			</isEqual>
+			<isNotEqual property="imageCde" compareValue="PDT011">
+		     	, NIR_SUPPLYITEM_APP S
+		     </isNotEqual>
+		</isNotEqual> -->
+		 WHERE T.ZONE_CODE = S.ZONE_CODE
+		   AND T.PH_COURSE = S.PH_COURSE
+		   AND T.PH_NUM    = S.PH_NUM
+		   AND S.SUP_IDN   = #supIdn#
+		 ORDER BY S.ZONE_CODE
+		        , S.PH_COURSE
+		        , S.PH_NUM
+		
+	</select>
+	
+	<select id="metaDAO.air_producteo_dts" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM AIR_PRODUCTEO_DTS T
+		  , USR_AIR_SUPPLYITEM_APP_NIIM S
+		<!-- <isEqual property="imageCde" compareValue="PDT001">
+		     , AIR_SUPPLYITEM_APP_NIIM S		
+		</isEqual>
+		<isNotEqual property="imageCde" compareValue="PDT001">
+		     <isEqual property="imageCde" compareValue="PDT011">
+			     , AIR_SUPPLYITEM_APP_NIIM S		
+			</isEqual>
+			<isNotEqual property="imageCde" compareValue="PDT011">
+		     	, NIR_SUPPLYITEM_APP S
+		     </isNotEqual>
+		</isNotEqual> -->
+		 WHERE T.ZONE_CODE = S.ZONE_CODE
+		   AND T.PH_COURSE = S.PH_COURSE
+		   AND T.PH_NUM    = S.PH_NUM
+		   AND S.SUP_IDN   = #supIdn#
+		 ORDER BY S.ZONE_CODE
+		        , S.PH_COURSE
+		        , S.PH_NUM
+		
+	</select>
+	
+	<select id="metaDAO.meta_airmap_acqut" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM META_AIRMAP_ACQUT T
+		 WHERE EXISTS (
+		               SELECT 1
+		               FROM USR_AIR_SUPPLYITEM_APP_NIIM S
+		<!-- <isEqual property="imageCde" compareValue="PDT001">
+		                 FROM AIR_SUPPLYITEM_APP_NIIM S
+		</isEqual>
+		<isNotEqual property="imageCde" compareValue="PDT001">
+			<isEqual property="imageCde" compareValue="PDT011">
+						 FROM AIR_SUPPLYITEM_APP_NIIM S
+			</isEqual>
+			<isNotEqual property="imageCde" compareValue="PDT011">
+		                 FROM NIR_SUPPLYITEM_APP S
+            </isNotEqual>
+		</isNotEqual> -->
+		                WHERE S.ZONE_CODE = T.ZONE_CODE 
+		                  AND S.SUP_IDN   = #supIdn#
+		              )
+		 ORDER BY T.ZONE_CODE
+		
+	</select>
+	
+	<select id="metaDAO.meta_airmap_cont" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM META_AIRMAP_CONT T
+		  , USR_AIR_SUPPLYITEM_APP_NIIM S
+		<!-- <isEqual property="imageCde" compareValue="PDT001">
+		     , AIR_SUPPLYITEM_APP_NIIM S		
+		</isEqual>
+		<isNotEqual property="imageCde" compareValue="PDT001">
+		     <isEqual property="imageCde" compareValue="PDT011">
+			     , AIR_SUPPLYITEM_APP_NIIM S		
+			</isEqual>
+			<isNotEqual property="imageCde" compareValue="PDT011">
+		     	, NIR_SUPPLYITEM_APP S
+		     </isNotEqual>
+		</isNotEqual> -->
+		 WHERE T.ZONE_CODE = S.ZONE_CODE
+		   AND T.PH_COURSE = S.PH_COURSE
+		   AND T.PH_NUM    = S.PH_NUM
+		   AND S.SUP_IDN   = #supIdn#
+		 ORDER BY S.ZONE_CODE
+		        , S.PH_COURSE
+		        , S.PH_NUM
+		
+	</select>
+	
+	<select id="metaDAO.AIR_PRODUCT_DTS" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM AIR_PRODUCT_DTS T
+		  , USR_AIR_SUPPLYITEM_APP_NIIM S
+		<!-- <isEqual property="imageCde" compareValue="PDT001">
+		     , AIR_SUPPLYITEM_APP_NIIM S		
+		</isEqual>
+		<isNotEqual property="imageCde" compareValue="PDT001">
+		     <isEqual property="imageCde" compareValue="PDT011">
+			     , AIR_SUPPLYITEM_APP_NIIM S		
+			</isEqual>
+			<isNotEqual property="imageCde" compareValue="PDT011">
+		     	, NIR_SUPPLYITEM_APP S
+		     </isNotEqual>
+		</isNotEqual> -->
+		 WHERE T.ZONE_CODE = S.ZONE_CODE
+		   AND T.PH_COURSE = S.PH_COURSE
+		   AND T.PH_NUM    = S.PH_NUM
+		   AND S.SUP_IDN   = #supIdn#
+		 ORDER BY S.ZONE_CODE
+		        , S.PH_COURSE
+		        , S.PH_NUM
+		
+	</select>
+	
+	<select id="metaDAO.meta_airmap_distr" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM META_AIRMAP_DISTR T
+		  , USR_AIR_SUPPLYITEM_APP_NIIM S
+		<!-- <isEqual property="imageCde" compareValue="PDT001">
+		     , AIR_SUPPLYITEM_APP_NIIM S		
+		</isEqual>
+		<isNotEqual property="imageCde" compareValue="PDT001">
+		     <isEqual property="imageCde" compareValue="PDT011">
+			     , AIR_SUPPLYITEM_APP_NIIM S		
+			</isEqual>
+			<isNotEqual property="imageCde" compareValue="PDT011">
+		     	, NIR_SUPPLYITEM_APP S
+		     </isNotEqual>
+		</isNotEqual> -->
+		 WHERE T.ZONE_CODE = S.ZONE_CODE
+		   AND T.PH_COURSE = S.PH_COURSE
+		   AND T.PH_NUM    = S.PH_NUM
+		   AND S.SUP_IDN   = #supIdn#
+		 ORDER BY S.ZONE_CODE
+		        , S.PH_COURSE
+		        , S.PH_NUM
+		
+	</select>
+	
+	<select id="metaDAO.meta_airmap_ident" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.FILE_IDENTIFIER
+		     , T.TARGET_NAME
+		     , T.FILE_IDENTIFIER_DSCRT
+		     , T.ROLE_CD
+		     , T.AIRMAP_DSCRT
+		     , T.RESOLUTION
+		     , T.TOPIC_CATE_CD
+		     , T.LANGUAGE
+		     , T.COUNTRY
+		     , T.CHARACTERENCODING
+		     , T.ZONE_CODE
+		     , T.PH_COURSE
+		     , T.PH_NUM
+		     , T.RES_POSTNAME
+		     , T.RES_PHONE
+		     , T.RES_FAX
+		     , T.RES_ADDRESS
+		     , T.RES_POSTAL_CODE
+		     , DECRYPT(T.XMIN) XMIN
+		     , DECRYPT(T.XMAX) XMAX
+		     , DECRYPT(T.YMIN) YMIN
+		     , DECRYPT(T.YMAX) YMAX
+		  FROM META_AIRMAP_IDENT T
+		  , USR_AIR_SUPPLYITEM_APP_NIIM S
+		<!-- <isEqual property="imageCde" compareValue="PDT001">
+		     , AIR_SUPPLYITEM_APP_NIIM S		
+		</isEqual>
+		<isNotEqual property="imageCde" compareValue="PDT001">
+		     <isEqual property="imageCde" compareValue="PDT011">
+			     , AIR_SUPPLYITEM_APP_NIIM S		
+			</isEqual>
+			<isNotEqual property="imageCde" compareValue="PDT011">
+		     	, NIR_SUPPLYITEM_APP S
+		     </isNotEqual>
+		</isNotEqual> -->
+		 WHERE T.ZONE_CODE = S.ZONE_CODE
+		   AND T.PH_COURSE = S.PH_COURSE
+		   AND T.PH_NUM    = S.PH_NUM
+		   AND S.SUP_IDN   = #supIdn#
+		 ORDER BY S.ZONE_CODE
+		        , S.PH_COURSE
+		        , S.PH_NUM
+		
+	</select>
+	
+	<select id="metaDAO.meta_airmap_mait" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM META_AIRMAP_MAIT T
+		  , USR_AIR_SUPPLYITEM_APP_NIIM S
+		<!-- <isEqual property="imageCde" compareValue="PDT001">
+		     , AIR_SUPPLYITEM_APP_NIIM S		
+		</isEqual>
+		<isNotEqual property="imageCde" compareValue="PDT001">
+		     <isEqual property="imageCde" compareValue="PDT011">
+			     , AIR_SUPPLYITEM_APP_NIIM S		
+			</isEqual>
+			<isNotEqual property="imageCde" compareValue="PDT011">
+		     	, NIR_SUPPLYITEM_APP S
+		     </isNotEqual>
+		</isNotEqual> -->
+		 WHERE T.ZONE_CODE = S.ZONE_CODE
+		   AND T.PH_COURSE = S.PH_COURSE
+		   AND T.PH_NUM    = S.PH_NUM
+		   AND S.SUP_IDN   = #supIdn#
+		 ORDER BY S.ZONE_CODE
+		        , S.PH_COURSE
+		        , S.PH_NUM
+		
+	</select>
+	
+	<select id="metaDAO.meta_airmap_refrc" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM META_AIRMAP_REFRC T
+		  , USR_AIR_SUPPLYITEM_APP_NIIM S
+		<!-- <isEqual property="imageCde" compareValue="PDT001">
+		     , AIR_SUPPLYITEM_APP_NIIM S		
+		</isEqual>
+		<isNotEqual property="imageCde" compareValue="PDT001">
+		     <isEqual property="imageCde" compareValue="PDT011">
+			     , AIR_SUPPLYITEM_APP_NIIM S		
+			</isEqual>
+			<isNotEqual property="imageCde" compareValue="PDT011">
+		     	, NIR_SUPPLYITEM_APP S
+		     </isNotEqual>
+		</isNotEqual> -->
+		 WHERE T.ZONE_CODE = S.ZONE_CODE
+		   AND T.PH_COURSE = S.PH_COURSE
+		   AND T.PH_NUM    = S.PH_NUM
+		   AND S.SUP_IDN   = #supIdn#
+		 ORDER BY S.ZONE_CODE
+		        , S.PH_COURSE
+		        , S.PH_NUM
+		
+	</select>
+	
+	<select id="metaDAO.meta_airmap_spatial" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM META_AIRMAP_SPATIAL T
+		  , USR_AIR_SUPPLYITEM_APP_NIIM S
+		<!-- <isEqual property="imageCde" compareValue="PDT001">
+		     , AIR_SUPPLYITEM_APP_NIIM S		
+		</isEqual>
+		<isNotEqual property="imageCde" compareValue="PDT001">
+		     <isEqual property="imageCde" compareValue="PDT011">
+			     , AIR_SUPPLYITEM_APP_NIIM S		
+			</isEqual>
+			<isNotEqual property="imageCde" compareValue="PDT011">
+		     	, NIR_SUPPLYITEM_APP S
+		     </isNotEqual>
+		</isNotEqual> -->
+		 WHERE T.ZONE_CODE = S.ZONE_CODE
+		   AND T.PH_COURSE = S.PH_COURSE
+		   AND T.PH_NUM    = S.PH_NUM
+		   AND S.SUP_IDN   = #supIdn#
+		 ORDER BY S.ZONE_CODE
+		        , S.PH_COURSE
+		        , S.PH_NUM
+		
+	</select>
+	
+	<select id="metaDAO.dem_basemeta_dts" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.ZONE_CODE
+		     , T.MAP5000_NUM
+		     , T.FILE_IDENTIFIER
+		     , T.LANGUAGE
+		     , T.RES_OFFICENAME
+		     , T.RES_POSTNAME
+		     , T.RES_PHONE
+		     , T.RES_FAX
+		     , T.RES_ADDRESS
+		     , T.RES_POSTAL_CODE
+		     , T.META_DATE
+		     , T.META_VERSION
+		     , T.DIST_FORMAT_NAME
+		     , T.DIST_FORMAT_VERSION
+		     , T.DIST_OFFICENAME
+		     , T.DIST_POSTNAME
+		     , T.DIST_PHONE
+		     , T.QUALITY_TARGET
+		     , T.DOCUMENT
+		     , T.TARGET_NAME
+		     , T.SPATIAL_DATA
+		     , T.SIGUNGU_NAM
+		     , T.SIGUNGU_CDE
+		    <!--  , DECRYPT(T.XMIN) XMIN
+		     , DECRYPT(T.XMAX) XMAX
+		     , DECRYPT(T.YMIN) YMIN
+		     , DECRYPT(T.YMAX) YMAX -->
+		  FROM DEM_BASEMETA_DTS T
+		     , USR_DEM_SUPPLYITEM_APP_NIIM S
+			 , DEM_PRODUCT_DTS R
+		 WHERE T.ZONE_CODE   = R.ZONE_CODE
+		   AND T.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.ZONE_CODE   = R.ZONE_CODE
+		   AND S.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.GRID_INT    = R.GRID_INT
+		   AND S.SUP_IDN     = #supIdn#
+		 ORDER BY SUBSTR(S.ZONE_CODE, 0, 4)
+		        , LENGTH(S.MAP5000_NUM)
+		        , SUBSTR(S.MAP5000_NUM, 0, 5)
+		        , S.MAP5000_NUM
+		
+	</select>
+	
+	<select id="metaDAO.dem_gpscoord_dts" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM DEM_GPSCOORD_DTS T
+		     , USR_DEM_SUPPLYITEM_APP_NIIM S
+			 , DEM_PRODUCT_DTS R
+		 WHERE T.ZONE_CODE   = R.ZONE_CODE
+		   AND T.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.ZONE_CODE   = R.ZONE_CODE
+		   AND S.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.GRID_INT    = R.GRID_INT
+		   AND S.SUP_IDN     = #supIdn#
+		 ORDER BY SUBSTR(S.ZONE_CODE, 0, 4)
+		        , LENGTH(S.MAP5000_NUM)
+		        , SUBSTR(S.MAP5000_NUM, 0, 5)
+		        , S.MAP5000_NUM
+		
+	</select>
+	
+	<select id="metaDAO.dem_product_dts" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM DEM_PRODUCT_DTS T
+		     , USR_DEM_SUPPLYITEM_APP_NIIM S
+			 , DEM_PRODUCT_DTS R
+		 WHERE T.ZONE_CODE   = R.ZONE_CODE
+		   AND T.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.ZONE_CODE   = R.ZONE_CODE
+		   AND S.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.GRID_INT    = R.GRID_INT
+		   AND S.SUP_IDN     = #supIdn#
+		 ORDER BY SUBSTR(S.ZONE_CODE, 0, 4)
+		        , LENGTH(S.MAP5000_NUM)
+		        , SUBSTR(S.MAP5000_NUM, 0, 5)
+		        , S.MAP5000_NUM
+		
+	</select>
+	
+	<select id="metaDAO.meta_ort_cont" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM META_ORT_CONT T
+		     , USR_ORT_SUPPLYITEM_APP_NIIM S
+			 , ORT_PRODUCT_DTS R
+		 WHERE T.ZONE_CODE   = R.ZONE_CODE
+		   AND T.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.ZONE_CODE   = R.ZONE_CODE
+		   AND S.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.SUP_IDN     = #supIdn#
+		 ORDER BY SUBSTR(S.ZONE_CODE, 0, 4)
+		        , SUBSTR(S.MAP5000_NUM, 0, 5)
+		        , S.MAP5000_NUM
+		
+	</select>
+	
+	<select id="metaDAO.meta_ort_contr" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM META_ORT_CONTR T
+		     , USR_ORT_SUPPLYITEM_APP_NIIM S
+			 , ORT_PRODUCT_DTS R
+		 WHERE T.ZONE_CODE   = R.ZONE_CODE
+		   AND T.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.ZONE_CODE   = R.ZONE_CODE
+		   AND S.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.SUP_IDN     = #supIdn#
+		 ORDER BY SUBSTR(S.ZONE_CODE, 0, 4)
+		        , SUBSTR(S.MAP5000_NUM, 0, 5)
+		        , S.MAP5000_NUM
+		
+	</select>
+	
+	<select id="metaDAO.meta_ort_distr" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM META_ORT_DISTR T
+		     , USR_ORT_SUPPLYITEM_APP_NIIM S
+			 , ORT_PRODUCT_DTS R
+		 WHERE T.ZONE_CODE   = R.ZONE_CODE
+		   AND T.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.ZONE_CODE   = R.ZONE_CODE
+		   AND S.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.SUP_IDN     = #supIdn#
+		 ORDER BY SUBSTR(S.ZONE_CODE, 0, 4)
+		        , SUBSTR(S.MAP5000_NUM, 0, 5)
+		        , S.MAP5000_NUM
+		
+	</select>
+	
+	<select id="metaDAO.meta_ort_ident" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.FILE_IDENTIFIER
+		     , T.ROLE_CD
+		     , T.AIRMAP_DSCRT
+		     , T.INPUT_CO
+		     , T.SPATIAL_DATA_CD
+		     , T.LANGUAGE
+		     , T.COUNTRY
+		     , T.CHARACTERENCODING
+		     , T.SCALE
+		     , T.TOPIC_CATE_CD
+		     , T.TARGET_NAME
+		     , T.FILE_IDENTIFIER_DSCRT
+		     , T.ZONE_CODE
+		     , T.MAP5000_NUM
+		     , T.RES_POSTNAME
+		     , T.RES_PHONE
+		     , T.RES_FAX
+		     , T.RES_ADDRESS
+		     , T.RES_POSTAL_CODE
+		     , T.GTYP_DST
+		     , DECRYPT(T.XMIN) XMIN
+		     , DECRYPT(T.XMAX) XMAX
+		     , DECRYPT(T.YMIN) YMIN
+		     , DECRYPT(T.YMAX) YMAX
+		  FROM META_ORT_IDENT T
+		     , USR_ORT_SUPPLYITEM_APP_NIIM S
+			 , ORT_PRODUCT_DTS R
+		 WHERE T.ZONE_CODE   = R.ZONE_CODE
+		   AND T.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.ZONE_CODE   = R.ZONE_CODE
+		   AND S.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.SUP_IDN     = #supIdn#
+		 ORDER BY SUBSTR(S.ZONE_CODE, 0, 4)
+		        , SUBSTR(S.MAP5000_NUM, 0, 5)
+		        , S.MAP5000_NUM
+		
+	</select>
+	
+	<select id="metaDAO.meta_ort_mait" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM META_ORT_MAIT T
+		     , USR_ORT_SUPPLYITEM_APP_NIIM S
+			 , ORT_PRODUCT_DTS R
+		 WHERE T.ZONE_CODE   = R.ZONE_CODE
+		   AND T.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.ZONE_CODE   = R.ZONE_CODE
+		   AND S.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.SUP_IDN     = #supIdn#
+		 ORDER BY SUBSTR(S.ZONE_CODE, 0, 4)
+		        , SUBSTR(S.MAP5000_NUM, 0, 5)
+		        , S.MAP5000_NUM
+		
+	</select>
+	
+	<select id="metaDAO.meta_ort_refrc" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM META_ORT_REFRC T
+		     , USR_ORT_SUPPLYITEM_APP_NIIM S
+			 , ORT_PRODUCT_DTS R
+		 WHERE T.ZONE_CODE   = R.ZONE_CODE
+		   AND T.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.ZONE_CODE   = R.ZONE_CODE
+		   AND S.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.SUP_IDN     = #supIdn#
+		 ORDER BY SUBSTR(S.ZONE_CODE, 0, 4)
+		        , SUBSTR(S.MAP5000_NUM, 0, 5)
+		        , S.MAP5000_NUM
+		
+	</select>
+	
+	<select id="metaDAO.meta_ort_spatial" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM META_ORT_SPATIAL T
+		     , USR_ORT_SUPPLYITEM_APP_NIIM S
+			 , ORT_PRODUCT_DTS R
+		 WHERE T.ZONE_CODE   = R.ZONE_CODE
+		   AND T.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.ZONE_CODE   = R.ZONE_CODE
+		   AND S.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.SUP_IDN     = #supIdn#
+		 ORDER BY SUBSTR(S.ZONE_CODE, 0, 4)
+		        , SUBSTR(S.MAP5000_NUM, 0, 5)
+		        , S.MAP5000_NUM
+		
+	</select>
+	
+	<select id="metaDAO.ort_basemeta_dts" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM ORT_BASEMETA_DTS T
+		     , USR_ORT_SUPPLYITEM_APP_NIIM S
+			 , ORT_PRODUCT_DTS R
+		 WHERE T.ZONE_CODE   = R.ZONE_CODE
+		   AND T.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.ZONE_CODE   = R.ZONE_CODE
+		   AND S.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.SUP_IDN     = #supIdn#
+		 ORDER BY SUBSTR(S.ZONE_CODE, 0, 4)
+		        , SUBSTR(S.MAP5000_NUM, 0, 5)
+		        , S.MAP5000_NUM
+		
+	</select>
+	
+	<select id="metaDAO.ort_product_dts" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.* 
+		  FROM ORT_PRODUCT_DTS T
+		     , USR_ORT_SUPPLYITEM_APP_NIIM S
+			 , ORT_PRODUCT_DTS R
+		 WHERE T.ZONE_CODE   = R.ZONE_CODE
+		   AND T.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.ZONE_CODE   = R.ZONE_CODE
+		   AND S.MAP5000_NUM = R.MAP5000_NUM
+		   AND S.SUP_IDN     = #supIdn#
+		 ORDER BY SUBSTR(S.ZONE_CODE, 0, 4)
+		        , SUBSTR(S.MAP5000_NUM, 0, 5)
+		        , S.MAP5000_NUM
+		
+	</select>
+	
+	<select id="metaDAO.lid_product_dts" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.ZONE_CODE
+		     , T.LIDAR_IDN
+		     , T.EQUIP_NAME
+		     , T.EQUIP_INFO
+		     , T.LIDARORIGIN_FORM
+		     , T.LIDARORIGIN_YMD
+		     , T.COURSE_NUM
+		     , T.REFLECT_CNT
+		     , T.COORDINATE
+		     , T.CONST_CO
+		     , T.INPUT_CO
+		     , T.SECURITY_CDE
+		     , T.REFERENCE
+		     , T.PRP
+		     , T.CRS_IDN
+		     , T.MAP5000_NUM
+		     , T.SIGUNGU_CDE
+		     , T.NAME
+		     , DECRYPT(T.XMIN) XMIN
+		     , DECRYPT(T.XMAX) XMAX
+		     , DECRYPT(T.YMIN) YMIN
+		     , DECRYPT(T.YMAX) YMAX
+		  FROM LID_PRODUCT_DTS T
+		     , LID_SUPPLYITEM_APP_NIIM S
+		 WHERE T.ZONE_CODE = S.ZONE_CODE
+		   AND T.LIDAR_IDN = S.LIDAR_IDN
+		   AND S.SUP_IDN   = #supIdn#
+		 ORDER BY SUBSTR(S.ZONE_CODE, 0, 4)
+		        , LENGTH(T.MAP5000_NUM)
+		        , SUBSTR(T.MAP5000_NUM, 0, 5)
+		        , T.MAP5000_NUM
+		
+	</select>
+	
+	<select id="metaDAO.tds_product_dts" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+		
+		SELECT T.ZONE_CODE
+		     , T.UTL3D_BRG
+		     , T.UTL3D_BN
+		     , T.UTL3D_TYPE
+		     , T.UTL3D_BGL
+		     , T.UTL3D_OW
+		     , T.UTL3D_BAR
+		     , T.UTL3D_BAD
+		     , T.UTL3D_LRN
+		     , T.UTL3D_BGH
+		     , T.UTL3D_MPN
+		     , T.UTL3D_WEB
+		     , T.UTL3D_TNA
+		     , T.UTL3D_TNB
+		     , T.UTL3D_TNC
+		     , T.UTL3D_TND
+		     , T.UTL3D_FTE
+		     , T.UTL3D_RTE
+		     , T.UTL3D_BTE
+		     , T.UTL3D_LTE
+		     , T.UTL3D_TTE
+		     , T.SHAPE
+		     , T.TDS_IDN
+		     , T.SIGUNGU_CDE
+		     , T.ZONE_NM
+		     , T.ZONE_SE
+		     , DECRYPT(T.XMIN) XMIN
+		     , DECRYPT(T.XMAX) XMAX
+		     , DECRYPT(T.YMIN) YMIN
+		     , DECRYPT(T.YMAX) YMAX
+		  FROM TDS_PRODUCT_DTS T
+		     , TDS_SUPPLYITEM_APP_NIIM S
+		 WHERE T.ZONE_CODE = S.ZONE_CODE
+		   AND T.TDS_IDN   = S.TDS_IDN
+		   AND S.SUP_IDN   = #supIdn#
+		 ORDER BY S.ZONE_CODE
+		        , S.TDS_IDN
+		
+	</select>
+	
+</sqlMap>

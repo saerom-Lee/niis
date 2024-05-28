@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_smartMap">
+
+	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	
+		<insert id="loginDAO.test" parameterClass="java.util.Map">
+		
+			SELECT 1 FROM DUAL
+			
+		</insert>
+		
+		<select id="niisSmartMapDAO.getZoneList" resultClass="java.lang.String">
+			select a.zone_code 
+			from air_zone_dts a
+			WHERE 1=1
+			<isNotEmpty prepend="AND">
+                  <![CDATA[ A.ZONE_YY >= #sYear# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND">
+                  <![CDATA[ A.ZONE_YY <= #eYear#]]>
+			</isNotEmpty>
+		</select>
+	
+		<insert id="smartMapDAO.air_zone_dts" parameterClass="java.util.Map" >
+		INSERT INTO AIR_ZONE_DTS (
+			ZONE_CODE
+			, ZONE_NAM
+			, PRJ_NAM
+			, ZONE_YY
+			, SCALE
+			, GSD_VAL
+			, PROJECTTYPE_CDE
+			, CAMERA_CDE
+			, IMAGE_CDE
+			, DEM_GRID
+			, REMARK
+			, PRJ_INFO_MGNO
+		) 
+		VALUES (
+			  #zoneCode#
+			, #zoneNam#
+			, #prjNam#
+			, #zoneYy#
+			, #scale#
+			, #gsdVal#
+			, #projecttypeCde#
+			, #cameraCde#
+			, #imageCde#
+			, #demGgrid#
+			, #remark#
+			, #prjInfoMgno#
+		)
+	</insert>
+	
+	<insert id="smartMapDAO.air_basemeta_dts" parameterClass="java.util.Map" >
+		INSERT INTO AIR_BASEMETA_DTS (
+			ZONE_CODE
+			, PH_COURSE
+			, PH_NUM
+			, FILE_IDENTIFIER
+			, TARGET_NAME
+			, LANGUAGE
+			, RES_OFFICENAME
+			, RES_POSTNAME
+			, RES_PHONE
+			, RES_FAX
+			, RES_ADDRESS
+			, RES_POSTAL_CODE
+			, META_DATE
+			, META_VERSION
+			, CONST_CO
+			, INPUT_CO
+			, SPATIAL_DATA
+			, DIST_FORMAT_NAME
+			, DIST_FORMAT_VERSION
+			, DIST_OFFICENAME
+			, DIST_POSTNAME
+			, DIST_PHONE
+			, RESOLUTION
+			, QUALITY_TARGET
+			, SCAN
+			, FILM
+			, DOCUMENT
+			, SIGUNGU_NAM
+			, SIGUNGU_CDE
+		) 
+		VALUES (
+			#zoneCode#
+			, #phCourse#
+			, #phNum#
+			, #fileIdentifier#
+			, #targetName#
+			, #language#
+			, #resOfficename#
+			, #resPostname#
+			, #resPhone#
+			, #resFax#
+			, #resAddress#
+			, #resPostalCode#
+			, #metaDate#
+			, #metaVersion#
+			, #constCo#
+			, #inputCo#
+			, #spatialData#
+			, #distFormatName#
+			, #distFormatVersion#
+			, #distOfficename#
+			, #distPostname#
+			, #distPhone#
+			, #resolution#
+			, #qualityTarget#
+			, #scan#
+			, #film#
+			, #document#
+			, #sigunguNam#
+			, #sigunguCde#
+		)
+	</insert>
+	
+	<insert id="smartMapDAO.air_orientmap_as" parameterClass="java.util.Map" >
+		INSERT INTO AIR_ORIENTMAP_AS (
+			OBJECTID
+			, ZONE_CODE
+			, ZONE_NAM
+			, PH_COURSE
+			, PH_NUM
+			, STO_IDN
+			, LOC_CDE
+			, FILE_NAM
+			, FILE_FORMA
+			, X_COOR
+			, Y_COOR
+			, ORIGIN
+			, HJD_CDE
+			, ZONE_YY
+			, XMIN
+			, XMAX
+			, YMIN
+			, YMAX
+			, SECURITY_C
+			, MASK_OX
+			, SERV_OX
+			, SHAPE
+		) 
+		VALUES (
+			#objectid#
+			, #zoneCode#
+			, #zoneNam#
+			, #phCourse#
+			, #phNum#
+			, #stoIdn#
+			, #locCde#
+			, #fileNam#
+			, #fileForma#
+			, #xCoor#
+			, #yCoor#
+			, #origin#
+			, #hjdCde#
+			, #zoneYy#
+			, #xmin#
+			, #xmax#
+			, #ymin#
+			, #ymax#
+			, #securityC#
+			, #maskOx#
+			, #servOx#
+			, #shape#
+		)
+	</insert>
+	
+	<insert id="smartMapDAO.air_orientmap_dts" parameterClass="java.util.Map" >
+		INSERT INTO AIR_ORIENTMAP_DTS (
+			ZONE_CODE
+			, PH_COURSE
+			, PH_NUM
+			, PYOJUNG_ID
+			, MAP_NUM
+			, MAP_NAM
+			, COOR_X
+			, COOR_Y
+			, ORIGIN
+			, COOR_CX
+			, COOR_CY
+			, CRS_IDN
+			, P_COOR_X
+			, P_COOR_Y
+			, P_CRS_IDN
+		) 
+		VALUES (
+			#zoneCode#
+			, #phCourse#
+			, #phNum#
+			, #pyojungId#
+			, #mapNum#
+			, #mapNam#
+			, #coorX#
+			, #coorY#
+			, #origin#
+			, #coorCx#
+			, #coorCy#
+			, #crsIdn#
+			, #pCoorX#
+			, #pCoorY#
+			, #pCrsIdn#
+		)
+	</insert>
+	
+	<insert id="smartMapDAO.air_product_dts" parameterClass="java.util.Map" >
+		INSERT INTO AIR_PRODUCT_DTS (
+			ZONE_CODE
+			, PH_COURSE
+			, PH_NUM
+			, APH_NUM
+			, APH_NOW
+			, FILM_NUM
+			, FILM_NOW
+			, RPH_NUM
+			, RPH_NOW
+			, MD1_NUM
+			, MD2_NUM
+			, NIX_OX
+			, SCUR_OX
+			, SECURITY_CDE
+			, MASK_OX
+			, SERV_OX
+			, REMARK
+			, NIX_A_OX
+			, NIX_B_OX
+		) 
+		VALUES (
+			#zoneCode#
+			, #phCourse#
+			, #phNum#
+			, #aphNum#
+			, #aphNow#
+			, #filmNum#
+			, #filmNow#
+			, #rphNum#
+			, #rphNow#
+			, #md1Num#
+			, #md2Num#
+			, #nixOx#
+			, #scurOx#
+			, #securityCde#
+			, #maskOx#
+			, #servOx#
+			, #remark#
+			, #nixAOx#
+			, #nixBOx#
+		)
+	</insert>
+	
+	<insert id="smartMapDAO.air_producteo_dts" parameterClass="java.util.Map" >
+		INSERT INTO AIR_PRODUCTEO_DTS (
+			ZONE_CODE
+			, PH_COURSE
+			, PH_NUM
+			, EO_X
+			, EO_Y
+			, EO_Z
+			, EO_OMEGA
+			, EO_PHI
+			, EO_KAPPA
+			, CRS_IDN
+		) 
+		VALUES (
+			#zoneCode#
+			, #phCourse#
+			, #phNum#
+			, #eoX#
+			, #eoY#
+			, #eoZ#
+			, #eoOmega#
+			, #eoPhi#
+			, #eoKappa#
+			, #crsIdn#
+		)
+	</insert>
+	
+	<insert id="smartMapDAO.dem_basemeta_dts" parameterClass="java.util.Map" >
+		INSERT INTO DEM_BASEMETA_DTS (
+			ZONE_CODE
+			, MAP5000_NUM
+			, FILE_IDENTIFIER
+			, LANGUAGE
+			, RES_OFFICENAME
+			, RES_POSTNAME
+			, RES_PHONE
+			, RES_FAX
+			, RES_ADDRESS
+			, RES_POSTAL_CODE
+			, META_DATE
+			, META_VERSION
+			, DIST_FORMAT_NAME
+			, DIST_FORMAT_VERSION
+			, DIST_OFFICENAME
+			, DIST_POSTNAME
+			, DIST_PHONE
+			, QUALITY_TARGET
+			, DOCUMENT
+			, TARGET_NAME
+			, SPATIAL_DATA
+			, SIGUNGU_NAM
+			, SIGUNGU_CDE
+		) 
+		VALUES (
+			#zoneCode#
+			, #map5000Num#
+			, #fileIdentifier#
+			, #language#
+			, #resOfficename#
+			, #resPostname#
+			, #resPhone#
+			, #resFax#
+			, #resAddress#
+			, #resPostalCode#
+			, #metaDate#
+			, #metaVersion#
+			, #distFormatName#
+			, #distFormatVersion#
+			, #distOfficename#
+			, #distPostname#
+			, #distPhone#
+			, #qualityTarget#
+			, #document#
+			, #targetName#
+			, #spatialData#
+			, #sigunguNam#
+			, #sigunguCde#
+		)
+	</insert>
+	
+	<insert id="smartMapDAO.dem_orientmap_as" parameterClass="java.util.Map" >
+		INSERT INTO DEM_ORIENTMAP_AS (
+			OBJECTID
+			, ZONE_CODE
+			, ZONE_NAM
+			, MAP_NUM
+			, MAP_NAM
+			, MAP5000_NUM
+			, MAP5000_NAM
+			, STO_IDN
+			, LOC_CDE
+			, FILE_NAM
+			, FILE_FORMA
+			, X_COOR
+			, Y_COOR
+			, ORIGIN
+			, HJD_CDE
+			, ZONE_YY
+			, XMIN
+			, XMAX
+			, YMIN
+			, YMAX
+			, SECURITY_C
+			, SERV_OX
+			, SHAPE
+		) 
+		VALUES (
+			#objectid#
+			, #zoneCode#
+			, #zoneNam#
+			, #mapNum#
+			, #mapNam#
+			, #map5000Num#
+			, #map5000Nam#
+			, #stoIdn#
+			, #locCde#
+			, #fileNam#
+			, #fileForma#
+			, #xCoor#
+			, #yCoor#
+			, #origin#
+			, #hjdCde#
+			, #zoneYy#
+			, #xmin#
+			, #xmax#
+			, #ymin#
+			, #ymax#
+			, #securityC#
+			, #servOx#
+			, #shape#
+		)
+	</insert>
+	
+	<insert id="smartMapDAO.dem_product_dts" parameterClass="java.util.Map" >
+		INSERT INTO DEM_PRODUCT_DTS (
+			ZONE_CODE
+			, MAP5000_NUM
+			, NAME
+			, MAP5000_NAM
+			, ORIGIN_DATA
+			, ACQ_ORIGIN
+			, ORIGIN_FORM
+			, ORIGIN_YEAR
+			, GRID_INT
+			, UNIT
+			, INTERPOL_METHOD
+			, LB_X
+			, LB_Y
+			, RT_X
+			, RT_Y
+			, CRS_IDN
+			, COORDINATE
+			, ORIGIN
+			, ELEV_NORM
+			, HEIVAR_KIND
+			, MAX_ELEV
+			, MIN_ELEV
+			, DATA_FORM
+			, ACCURACY
+			, PRODUCER
+			, PUBLISHER
+			, REFERENCE
+			, PRP
+			, SECURITY_CDE
+			, DTD_OX
+			, SHADED_IMG_OX
+			, OBS_RGS_OX
+			, FLIGHT_PLAN_OX
+			, GPSINS_OX
+			, GPS_BP_OX
+			, P_LB_X
+			, P_LB_Y
+			, P_RT_X
+			, P_RT_Y
+			, P_CRS_IDN
+			, IMAGE_CDE
+		) 
+		VALUES (
+			#zoneCode#
+			, #map5000Num#
+			, #name#
+			, #map5000Nam#
+			, #originData#
+			, #acqOrigin#
+			, #originForm#
+			, #originYear#
+			, #gridInt#
+			, #unit#
+			, #interpolMethod#
+			, #lbX#
+			, #lbY#
+			, #rtX#
+			, #rtY#
+			, #crsIdn#
+			, #coordinate#
+			, #origin#
+			, #elevNorm#
+			, #heivarKind#
+			, #maxElev#
+			, #minElev#
+			, #dataForm#
+			, #accuracy#
+			, #producer#
+			, #publisher#
+			, #reference#
+			, #prp#
+			, #securityCde#
+			, #dtdOx#
+			, #shadedImgOx#
+			, #obsRgsOx#
+			, #flightPlanOx#
+			, #gpsinsOx#
+			, #gpsBpOx#
+			, #pLbX#
+			, #pLbY#
+			, #pRtX#
+			, #pRtY#
+			, #pCrsIdn#
+			, #imageCde#
+		)
+	</insert>
+	
+	<insert id="smartMapDAO.ort_basemeta_dts" parameterClass="java.util.Map" >
+		INSERT INTO ORT_BASEMETA_DTS (
+			ZONE_CODE
+			, MAP5000_NUM
+			, FILE_IDENTIFIER
+			, LANGUAGE
+			, RES_OFFICENAME
+			, RES_POSTNAME
+			, RES_PHONE
+			, RES_FAX
+			, RES_ADDRESS
+			, RES_POSTAL_CODE
+			, META_DATE
+			, META_VERSION
+			, DIST_FORMAT_NAME
+			, DIST_FORMAT_VERSION
+			, DIST_OFFICENAME
+			, DIST_POSTNAME
+			, DIST_PHONE
+			, QUALITY_TARGET
+			, DOCUMENT
+			, TARGET_NAME
+			, SPATIAL_DATA
+			, SIGUNGU_NAM
+			, SIGUNGU_CDE
+		) 
+		VALUES (
+			#zoneCode#
+			, #map5000Num#
+			, #fileIdentifier#
+			, #language#
+			, #resOfficename#
+			, #resPostname#
+			, #resPhone#
+			, #resFax#
+			, #resAddress#
+			, #resPostalCode#
+			, #metaDate#
+			, #metaVersion#
+			, #distFormatName#
+			, #distFormatVersion#
+			, #distOfficename#
+			, #distPostname#
+			, #distPhone#
+			, #qualityTarget#
+			, #document#
+			, #targetName#
+			, #spatialData#
+			, #sigunguNam#
+			, #sigunguCde#
+		)
+	</insert>
+	
+	<insert id="smartMapDAO.ort_orientmap_as" parameterClass="java.util.Map" >
+		INSERT INTO ORT_ORIENTMAP_AS (
+			OBJECTID
+			, ZONE_CODE
+			, ZONE_NAM
+			, MAP_NUM
+			, MAP_NAM
+			, MAP5000_NUM
+			, MAP5000_NAM
+			, STO_IDN
+			, LOC_CDE
+			, FILE_NAM
+			, FILE_FORMA
+			, X_COOR
+			, Y_COOR
+			, ORIGIN
+			, HJD_CDE
+			, ZONE_YY
+			, XMIN
+			, XMAX
+			, YMIN
+			, YMAX
+			, SECURITY_C
+			, MASK_OX
+			, SERV_OX
+			, SCLAE_RELA
+			, SHAPE
+		) 
+		VALUES (
+			0
+			, #zoneCode#
+			, #zoneNam#
+			, #mapNum#
+			, #mapNam#
+			, #map5000Num#
+			, #map5000Nam#
+			, #stoIdn#
+			, #locCde#
+			, #fileNam#
+			, #fileForma#
+			, #xCoor#
+			, #yCoor#
+			, #origin#
+			, #hjdCde#
+			, #zoneYy#
+			, #xmin#
+			, #xmax#
+			, #ymin#
+			, #ymax#
+			, #securityC#
+			, #maskOx#
+			, #servOx#
+			, #sclaeRela#
+			, #shape#
+		)
+	</insert>
+	
+	<insert id="smartMapDAO.ort_product_dts" parameterClass="java.util.Map" >
+		INSERT INTO ORT_PRODUCT_DTS (
+			ZONE_CODE
+			, MAP5000_NUM
+			, MAP5000_NAM
+			, SCALE
+			, GTYP_DST
+			, CONST_CO
+			, INPUT_CO
+			, ORIGIN
+			, WORK_YMD
+			, MASK_OX
+			, ORIGIN_IMG
+			, SECURITY_CDE
+			, REFERENCE
+			, PRP
+			, COLOR_GBN
+			, USED_DEM
+			, CMR_TYPE
+			, SAT_NAM
+			, CRS_IDN
+			, P_CRS_IDN
+			, IMAGE_CDE
+			, SCALE_RELAC
+		) 
+		VALUES (
+			#zoneCode#
+			, #map5000Num#
+			, #map5000Nam#
+			, #scale#
+			, #gtypDst#
+			, #constCo#
+			, #inputCo#
+			, #origin#
+			, #workYmd#
+			, #maskOx#
+			, #originImg#
+			, #securityCde#
+			, #reference#
+			, #prp#
+			, #colorGbn#
+			, #usedDem#
+			, #cmrType#
+			, #satNam#
+			, #crsIdn#
+			, #pCrsIdn#
+			, #imageCde#
+			, #scaleRelac#
+		)
+	</insert>
+	
+	<select id="smartMapDAO.stoInfo" resultClass="egovMap">
+		SELECT STO_IDN, STO_DRV, STO_NAM FROM STO_INFO_DTS
+	</select>
+	
+	<select id="smartMapDAO.cmtSto" resultClass="egovMap">
+		SELECT CODE_CDE, CATALOG_CDE, CODE_CNT, FOLDER_NAM 
+		FROM CMT_STORAGE_CDE
+	</select>
+	
+	<select id="smartMapDAO.stoDrv" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT trim(STO_DRV) as STO_DRV FROM STO_INFO_DTS WHERE STO_IDN=#stoIdn#
+	</select>
+	
+	<select id="smartMapDAO.folderNam" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT FOLDER_NAM FROM CMT_STORAGE_CDE WHERE CODE_CDE = #storageCde#
+	</select>
+	
+	<insert id="smartMapDAO.insertOrtLoc" parameterClass="java.util.Map" >
+		/* smartMapDAO.insertOrtLoc */ 
+		INSERT INTO STO_ORTLOC_DTS
+			(ZONE_CODE, MAP5000_NUM, STORAGE_CDE, FILE_NAM, FILE_FORMAT, FILE_SIZE, STO_IDN, MAP_NUM, FILE_EXT)
+		VALUES 
+			(#zoneCode#, #map5000Num#, #storageCde#, #fileNam# ,#fileFormat#, #fileSize#, #stoIdn#, #mapNum#, #fileExt#)
+	</insert>
+	
+	<insert id="smartMapDAO.insertAirLoc" parameterClass="java.util.Map" >
+		/* smartMapDAO.insertAirLoc */ 
+		INSERT INTO STO_AIRLOC_DTS
+			(ZONE_CODE, PH_COURSE, PH_NUM, STORAGE_CDE, FILE_NAM, FILE_FORMAT, FILE_SIZE, STO_IDN, FILE_EXT)
+		VALUES 
+			(#zoneCode#, #phCourse#, #phNum#, #storageCde#, #fileNam# ,#fileFormat#, #fileSize#, #stoIdn#, #fileExt#)
+	</insert>
+	
+	<select id="smartMapDAO.uploadPath" parameterClass="java.util.Map" resultClass="egovMap">
+		
+	</select>
+	
+</sqlMap>

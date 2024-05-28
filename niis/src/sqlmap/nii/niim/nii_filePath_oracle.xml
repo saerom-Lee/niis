@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_filePath">
+	
+	<sql id="Air_file_path">
+
+    <!--  , (TRIM(D.STO_DRV) 
+        || ':/' || C.FOLDER_NAM 
+        || '/'  || 'TIFF'
+        || '/'  || (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SEC_FOLDER_CDE' AND CDE_CDE = G.SECURITY_CDE)
+        || '/'  || SUBSTR(A.ZONE_CODE, 1, 4) 
+        || '/'  || SUBSTR(A.ZONE_CODE, 8, 11) 
+        || '/'  || A.PH_COURSE 
+        || '/'  || B.FILE_NAM) AS FILE_PATH
+     , (TRIM(D.STO_DRV) 
+        || ':/' || C.FOLDER_NAM 
+        || '/'  || 'NIX/LSS'
+        || '/'  || (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SEC_FOLDER_CDE' AND CDE_CDE = G.SECURITY_CDE)
+        || '/'  || SUBSTR(A.ZONE_CODE, 1, 4) 
+        || '/'  || SUBSTR(A.ZONE_CODE, 8, 11) 
+        || '/'  || A.PH_COURSE 
+        || '/'  || B.FILE_NAM) AS NIX_PATH
+     , (TRIM(D.STO_DRV) 
+        || ':/' || C.FOLDER_NAM 
+        || '/'  || 'NIX/NLS'
+        || '/'  || (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SEC_FOLDER_CDE' AND CDE_CDE = G.SECURITY_CDE)
+        || '/'  || SUBSTR(A.ZONE_CODE, 1, 4) 
+        || '/'  || SUBSTR(A.ZONE_CODE, 8, 11) 
+        || '/'  || A.PH_COURSE 
+        || '/'  || B.FILE_NAM) AS NIX_NLS_PATH -->
+        <!-- ,#stoImgPath# , -->
+        , #stoImgPath# ||C.FOLDER_NAM||
+        '/'||substr(G.zone_code, 1, 4)||
+        '/'||substr(G.zone_code, 8, 4)||
+        '/'||G.ph_course||
+        '/'||B.file_nam||'.' || B.FILE_FORMAT FILE_PATH
+          ,C.FOLDER_NAM||
+        '/'||substr(G.zone_code, 1, 4)||
+        '/'||substr(G.zone_code, 8, 4)||
+        '/'||G.ph_course||
+        '/'||B.file_nam||'.' || 'jpg'  NIX_PATH
+
+	</sql>
+	
+	<sql id="AirLib_file_path">
+
+     , #stoImgPath# ||C.FOLDER_NAM||
+        '/'||substr(G.zone_code, 1, 4)||
+        '/'||substr(G.zone_code, 8, 4)||
+        '/'||G.ph_course||
+        '/'||B.file_nam||'.' || B.FILE_FORMAT FILE_PATH
+          ,C.FOLDER_NAM||
+        '/'||substr(G.zone_code, 1, 4)||
+        '/'||substr(G.zone_code, 8, 4)||
+        '/'||G.ph_course||
+        '/'||B.file_nam||'.' || 'jpg'  NIX_PATH
+
+	</sql>
+	
+	
+	<sql id="Dem_file_path">
+
+     <!-- , (TRIM(D.STO_DRV) 
+        || ':/' || C.FOLDER_NAM 
+        || '/'  || 'TXT'
+        || '/'  || (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SEC_FOLDER_CDE' AND CDE_CDE = F.SECURITY_CDE)
+        || '/'  || SUBSTR(A.ZONE_CODE, 1, 4) 
+        || '/'  || DECODE(LENGTH(TRIM(A.MAP5000_NUM)), 5, '50K', 6, '25K', 7, '10K', 8, '5K')
+        || '/'  || F.GRID_INT
+        || '/'  || SUBSTR(TRIM(A.MAP5000_NUM), 1, 5)
+        || '/'  || B.FILE_NAM) AS FILE_PATH
+     , (TRIM(D.STO_DRV) 
+        || ':/' || REPLACE(C.FOLDER_NAM, 'ASCII', 'IMAGE') 
+        || '/'  || 'NIX/LSS'
+        
+        || '/'  || 'NIX/ORGL'
+        
+        || '/'  || (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SEC_FOLDER_CDE' AND CDE_CDE = F.SECURITY_CDE)
+        || '/'  || SUBSTR(A.ZONE_CODE, 1, 4) 
+        || '/'  || DECODE(LENGTH(TRIM(A.MAP5000_NUM)), 5, '50K', 6, '25K', 7, '10K', 8, '5K')
+        || '/'  || F.GRID_INT
+        || '/'  || SUBSTR(TRIM(A.MAP5000_NUM), 1, 5)
+        || '/'  || B.FILE_NAM) AS NIX_PATH -->
+       ,#stoImgPath#
+    	|| C.FOLDER_NAM 
+    	|| '/' || SUBSTR(F.ZONE_CODE, 1, 4) 
+    	|| '/' || SUBSTR(F.ZONE_CODE, 8, 4) 
+		|| '/' || DECODE(substr(G.ORIGIN, 1, 1), '중', 'cent', '서', 'west', '동', 'east', 'esea')
+    	|| '/' || SUBSTR(F.MAP5000_NUM, 1, 5) 
+	    || '/' || B.FILE_NAM 
+    	|| '.' || B.FILE_FORMAT FILE_PATH
+		 ,C.FOLDER_NAM||
+        '/'||SUBSTR(F.ZONE_CODE, 1, 4) ||
+        '/'||SUBSTR(F.ZONE_CODE, 8, 4) ||
+		'/'||DECODE(substr(G.ORIGIN, 1, 1), '중', 'cent', '서', 'west', '동', 'east', 'esea') ||
+        '/'||SUBSTR(F.MAP5000_NUM, 1,5) ||
+        '/'||B.FILE_NAM||'.' || 'jpg'  NIX_PATH
+	</sql>
+	
+	
+	<sql id="Ort_file_path">
+
+    <!--  , (TRIM(D.STO_DRV) 
+        || ':/' || C.FOLDER_NAM 
+        || '/'  || DECODE(H.ORIGIN, '동부', 'EST', '중부', 'MID', '서부', 'WST', '동해', 'ESS', '제주', 'JEJ', 'ETC')
+        || '/'  || 'TIFF'
+        
+        || '/'  || (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SEC_ORT_FOLDER_CDE' AND CDE_CDE = G.SECURITY_CDE)
+        
+        || '/'  || 'AFTINT'
+        || '/'  || SUBSTR(A.ZONE_CODE, 1, 4) 
+        
+        || '/'  || F.SCALE
+        
+        || '/'  || '5K'
+        || '/'  || H.GTYP_DST
+        || '/'  || SUBSTR(TRIM(A.MAP5000_NUM), 1, 5)
+        || '/'  || B.FILE_NAM) AS FILE_PATH
+     , (TRIM(D.STO_DRV) 
+        || ':/' || C.FOLDER_NAM 
+        || '/'  || 'MID'
+        || '/'  || 'NIX/LSS'
+        || '/'  || 'AFTINT'
+        || '/'  || SUBSTR(A.ZONE_CODE, 1, 4) 
+        
+        || '/'  || F.SCALE
+        
+        || '/'  || '5K'
+        
+        || '/'  || I.GTYP_DST
+        
+        || '/'  || SUBSTR(TRIM(A.MAP5000_NUM), 1, 5)
+        || '/'  || B.FILE_NAM) AS NIX_PATH -->
+        
+        ,#stoImgPath# 
+    	|| C.FOLDER_NAM 
+    	|| '/' || SUBSTR(H.ZONE_CODE, 1, 4) 
+    	|| '/' || SUBSTR(H.ZONE_CODE, 8, 4) 
+		|| '/' || DECODE(substr(F.ORIGIN, 1, 1), '중', 'cent', '서', 'west', '동', 'east', 'esea')
+    	|| '/' || SUBSTR(H.MAP5000_NUM, 1, 5) 
+    	|| '/' || B.FILE_NAM 
+    	|| '.' || B.FILE_FORMAT FILE_PATH,
+    	C.FOLDER_NAM 
+    	|| '/' || SUBSTR(H.ZONE_CODE, 1, 4) 
+    	|| '/' || SUBSTR(H.ZONE_CODE, 8, 4) 
+		|| '/' || DECODE(substr(F.ORIGIN, 1, 1), '중', 'cent', '서', 'west', '동', 'east', 'esea')
+    	|| '/' || SUBSTR(H.MAP5000_NUM, 1, 5) 
+    	|| '/' || B.FILE_NAM 
+        || '.' || 'jpg'  NIX_PATH
+
+	</sql>
+	
+	
+	<sql id="Lid_file_path">
+
+     , (TRIM(D.STO_DRV) 
+        || ':/' || C.FOLDER_NAM 
+        || '/'  || 'ORTHO'
+        || '/'  || SUBSTR(A.ZONE_CODE, 1, 4) 
+        || '/'  || SUBSTR(TRIM(A.MAP5000_NUM), 1, 5)
+        || '/'  || B.FILE_NAM) AS FILE_PATH
+     , (TRIM(D.STO_DRV) 
+        || ':/' || C.FOLDER_NAM 
+        || '/'  || 'ORTHO'
+        || '/'  || SUBSTR(A.ZONE_CODE, 1, 4)
+        || '/'  || SUBSTR(TRIM(A.MAP5000_NUM), 1, 5)
+        || '/'  || B.FILE_NAM || '.' || B.FILE_FORMAT) AS NIX_PATH
+
+	</sql>
+	
+	
+	<sql id="Nir_file_path">
+
+     , (TRIM(D.STO_DRV) 
+        || ':/' || C.FOLDER_NAM 
+        || '/'  || 'TIFF'
+        || '/'  || (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SEC_FOLDER_CDE' AND CDE_CDE = G.SECURITY_CDE)
+        || '/'  || SUBSTR(A.ZONE_CODE, 1, 4) 
+        || '/'  || SUBSTR(A.ZONE_CODE, 8, 11) 
+        || '/'  || A.PH_COURSE 
+        || '/'  || B.FILE_NAM) AS FILE_PATH
+     , (TRIM(D.STO_DRV) 
+        || ':/' || C.FOLDER_NAM 
+        || '/'  || 'NIX/LSS'
+        || '/'  || (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SEC_FOLDER_CDE' AND CDE_CDE = G.SECURITY_CDE)
+        || '/'  || SUBSTR(A.ZONE_CODE, 1, 4) 
+        || '/'  || SUBSTR(A.ZONE_CODE, 8, 11) 
+        || '/'  || A.PH_COURSE 
+        || '/'  || B.FILE_NAM) AS NIX_PATH
+
+	</sql>
+	
+	
+	<sql id="Tds_file_path">
+
+     , (TRIM(D.STO_DRV) 
+        || ':/' || C.FOLDER_NAM 
+        <!-- 
+        || '/'  || TRIM(A.ZONE_SE)
+         -->
+        || '/'  || (SELECT CDE_CDE FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'UTL3D_TYPE' AND CDE_NAM = A.UTL3D_TYPE)
+        || '/'  || 'AFTINT'
+        || '/'  || SUBSTR(A.ZONE_CODE, 1, 4) 
+        || '/'  || SUBSTR(A.ZONE_CODE, 8, 11) 
+        || '/'  || B.FILE_NAM) AS FILE_PATH
+     , (TRIM(D.STO_DRV) 
+        || ':/' || C.FOLDER_NAM
+        <!--  
+        || '/'  || TRIM(A.ZONE_SE)
+         -->
+        || '/'  || (SELECT CDE_CDE FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'UTL3D_TYPE' AND CDE_NAM = A.UTL3D_TYPE)
+        || '/'  || 'AFTINT'
+        || '/'  || SUBSTR(A.ZONE_CODE, 1, 4) 
+        || '/'  || SUBSTR(A.ZONE_CODE, 8, 11) 
+        || '/'  || B.FILE_NAM || '.' || B.FILE_FORMAT) AS NIX_PATH
+
+	</sql>
+	
+	
+	<sql id="Air_supply_file_path">
+
+           <!--  ,  ('/' 
+                || C.FOLDER_NAM
+                || '/' 
+                || 'TIFF'
+                || '/' 
+                || (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SEC_FOLDER_CDE' AND CDE_CDE = G.SECURITY_CDE)
+                || '/' 
+                || SUBSTR(A.ZONE_CODE, 1, 4) 
+                || '/' 
+                || SUBSTR(A.ZONE_CODE, 8, 11) 
+                || '/' 
+                || A.PH_COURSE 
+                || '/' ) AS FILE_PATH -->
+               ,C.FOLDER_NAM||
+		        '/'||substr(G.zone_code, 1, 4)||
+		        '/'||substr(G.zone_code, 8, 4)||
+		        '/'||G.ph_course || '/' FILE_PATH
+             , (B.FILE_NAM 
+                || '.' || B.FILE_FORMAT) AS FILE_NAME
+
+	</sql>
+	
+	<sql id="AirLib_supply_file_path">
+
+             , ('/' 
+                || C.FOLDER_NAM
+                || '/' 
+                || 'TIFF'
+                || '/' 
+                || (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SEC_FOLDER_CDE' AND CDE_CDE = G.SECURITY_CDE)
+                || '/' 
+                || SUBSTR(A.ZONE_CODE, 1, 4) 
+                || '/' 
+                || SUBSTR(A.ZONE_CODE, 8, 11) 
+                || '/' 
+                || A.PH_COURSE 
+                || '/' ) AS FILE_PATH
+             , (B.FILE_NAM 
+                || '.' || B.FILE_FORMAT) AS FILE_NAME
+
+	</sql>
+	
+	
+	<sql id="Dem_supply_file_path">
+
+             <!-- , ('/' 
+                || C.FOLDER_NAM 
+                || '/' 
+                || 'TXT'
+                || '/' 
+                || (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SEC_FOLDER_CDE' AND CDE_CDE = F.SECURITY_CDE)
+                || '/' 
+                || SUBSTR(A.ZONE_CODE, 1, 4) 
+                || '/' 
+                || DECODE(LENGTH(TRIM(A.MAP5000_NUM)), 5, '50K', 6, '25K', 7, '10K', 8, '5K')
+                || '/' 
+                || F.GRID_INT
+                || '/' 
+                || SUBSTR(TRIM(A.MAP5000_NUM), 1, 5)
+                || '/' ) AS FILE_PATH -->
+             , C.FOLDER_NAM 
+		    	|| '/' || SUBSTR(F.ZONE_CODE, 1, 4) 
+		    	|| '/' || SUBSTR(F.ZONE_CODE, 8, 4) 
+				|| '/' || DECODE(SUBSTR(F.ORIGIN,1,1), '중', 'cent', '서', 'west', '동', 'east', 'esea')  
+		    	|| '/' || SUBSTR(F.MAP5000_NUM, 1, 5) || '/' FILE_PATH
+             , (B.FILE_NAM 
+                || '.' || B.FILE_FORMAT) AS FILE_NAME
+
+	</sql>
+	
+	
+	<sql id="Ort_supply_file_path">
+
+            <!--  , ('/' 
+                || C.FOLDER_NAM
+                || '/' 
+                || DECODE(H.ORIGIN, '동부', 'EST', '중부', 'MID', '서부', 'WST', '동해', 'ESS', '제주', 'JEJ', 'ETC')
+                || '/'
+                || 'TIFF'
+                || '/' 
+                
+                || (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SEC_ORT_FOLDER_CDE' AND CDE_CDE = G.SECURITY_CDE)
+                
+                || 'AFTINT'
+                || '/' 
+                || SUBSTR(A.ZONE_CODE, 1, 4) 
+                || '/' 
+                
+                || F.SCALE
+                
+                || '5K'
+                || '/' 
+                || I.GTYP_DST
+                || '/' 
+                || SUBSTR(TRIM(A.MAP5000_NUM), 1, 5)
+                || '/') AS FILE_PATH -->
+                , C.FOLDER_NAM 
+		    	|| '/' || SUBSTR(H.ZONE_CODE, 1, 4) 
+		    	|| '/' || SUBSTR(H.ZONE_CODE, 8, 4) 
+				|| '/' || DECODE(SUBSTR(H.ORIGIN,1,1), '중', 'cent', '서', 'west', '동', 'east', 'esea')  
+		    	|| '/' || SUBSTR(TRIM(H.MAP5000_NUM), 1, 5) || '/' FILE_PATH
+             , (B.FILE_NAM 
+                || '.' || B.FILE_FORMAT) AS FILE_NAME
+
+	</sql>
+	
+</sqlMap>

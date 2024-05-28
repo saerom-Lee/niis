@@ -1,0 +1,50 @@
+@charset "utf-8";
+
+
+/*** 레이어팝업 ***/
+body {/* overflow:hidden; */}
+#mask {position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:9998; display:none;}
+.layer {position:absolute; top:-9999px; left:50%; box-shadow:0px 3px 18px rgba(0,0,0,0.6); border-radius:7px; overflow:hidden; z-index:9999; display:none; width:460px;}
+.layer > .tit {height:55px; line-height:55px; padding:0 60px; background:#2f5c6b; background: linear-gradient(to bottom, #366674 0%,#295463 99%); font-size:18px; font-weight:600; text-align:center; color:#fff;}
+.layer > .tit .btnLayerClose {position:absolute; top:0px; right:0px; height:55px; width:54px; text-align:center;}
+.layer > .tit .btnLayerClose img {display:inline-block; padding-top:20px;}
+.layer > .con {background:#f8fafb; padding:20px;}
+.layer > .con .txt {font-size:16px; text-align:center; padding-top:20px; color:#555;}
+.layer > .con .txt .block {line-height:2;}
+
+.layerOpenFix {top:0; left:0;}
+
+
+/* .layerAlert > .con p.txt {font-size:18px;} */
+
+/* 회원가입 */
+#membership {}
+
+/* 가입대기 */
+#membershipWait .con {padding-top:165px; background:#f8fafb url(../images/login/bg_membership_wait.gif) center 25px no-repeat;}
+
+
+/* 가입보류 */
+#membershipPending .con {padding-top:180px; background:#f8fafb url(../images/login/bg_membership_pending.gif) center 25px no-repeat;}
+#membershipPending .titTxt {padding-bottom:16px; font-size:16px; color:#333; text-align:center;}
+#membershipPending .reason {text-align:center; background:#fff; border-radius:7px; height:40px; line-height:39px; font-weight:600; color:#e45e29;}
+
+/* 정보수정 */
+#myInfoModify {}
+
+/* 시스템 종료 */
+#sistemClose .con {text-align:center; padding-top:160px; background:#f8fafb url(../images/popup/bg_count.gif) center 25px no-repeat;}
+#sistemClose .count {text-align:center; background:#fff; border-radius:7px; height:40px; line-height:39px; font-weight:600; color:#e45e29; margin-top:12px;}
+
+/* 전체신청 */
+#totalApplication {width:700px;}
+#totalApplication .totalApplicationTit {height:38px; border-bottom:1px solid #bbc5ca; margin-bottom:5px; position:relative;}
+#totalApplication .totalApplicationTit h4 {font-size:24px; font-weight:600; color:#2a8095;}
+#totalApplication .totalApplicationTit h4 span {font-size:16px; color:#555; padding-left:5px;}
+#totalApplication .totalApplicationTit p {position:absolute; top:12px; right:0; color:#555;}
+#totalApplication .labelTxt {position:relative; top:3px;}
+
+/* 반려 */
+#returnReason .con {padding-top:180px; background:#f8fafb url(../images/popup/bg_return_reason.gif) center 25px no-repeat;}
+#returnReason .titTxt {padding-bottom:16px; font-size:16px; color:#333; text-align:center;}
+#returnReason .reason {text-align:center; background:#fff; border-radius:7px; height:40px; line-height:39px; font-weight:600; color:#e45e29;}

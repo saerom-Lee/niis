@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>INNORIX InnoEX(Enterprise eXchange) - Up/Down Combination 1</title>
+    </head>
+<body>
+
+    <form id="writeForm" name="writeForm" action="./result.jsp" method="post">
+        test field : <input id="test_field_value" name="test_field_value" type="text" style="width:478px" />
+    </form><br />
+
+    <div id="fileControl"></div><br />
+
+    <input type="button" value="바로열기" onclick="innorix.api.downloadAndOpen('fileControl');" />
+    <input type="button" value="선택 다운로드" onclick="innorix.api.downloadSelectedFiles('fileControl');" />
+    <input type="button" value="전체 다운로드" onclick="innorix.api.download('fileControl');" />
+    &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+    <input type="button" value="파일추가" onclick="innorix.api.openFileDialog('fileControl');" />
+    <input type="button" value="업로드 시작" onclick="innorix.api.upload('fileControl');" />
+
+    <script type="text/javascript" src="../../common/innorix.config.js"></script>
+    <script type="text/javascript">
+
+        // 컨트롤 설치확인
+        if (innorix.api.isPluginInstalled() == false) {
+            innorix.api.goToInstallPage("../../common/install/install.html"); // 컨트롤 설치안내 웹 페이지로 전환
+        }
+
+        // 컨트롤 이벤트 리스너
+        innorix.event = {
+            loadComplete        : function(controlId, param) { // 컨트롤 로딩 완료
+                var urlBase = location.href.substring(0, location.href.lastIndexOf("/") + 1);
+                var obj = {};
+                /*
+                // 다이렉트 다운로드 목록 생성, ex) http://your.server.com/data/download-sample.pdf
+                obj[controlId] = [
+                    {
+                        downloadUrl: urlBase + "2015 INNORIX Solution Brochure(r2).pdf",
+                        fileSize: 3524930,
+                        printFileName: "2015 이노릭스 솔루션 통합 소개자료(r2).pdf",
+                        fileID: "fid111"
+                    },
+                    {
+                        downloadUrl: urlBase + "2015 INNORIX Solution Brochure(r2).pdf",
+                        fileSize: 3524930,
+                        printFileName: "2015 INNORIX Solution Brochure(r2).pdf",
+                        fileID: "fid222"
+                    },
+                    {
+                        downloadUrl: urlBase + "2015 INNORIX Solution Brochure(r2).pdf",
+                        fileSize: 3524930,
+                        printFileName: "2015 INNORIX ソリューションパンフレット(r2).pdf",
+                        fileID: "fid333"
+                    }
+                ];
+                */
+
+                // 스트림 다운로드 목록 생성, ex) http://your.server.com/download.jsp?fileID=1234
+                obj[controlId] = [
+                    {
+                        downloadUrl: urlBase + "download.jsp?fileID=111",
+                        fileSize: 3524930,
+                        printFileName: "2015 이노릭스 솔루션 통합 소개자료(r2).pdf",
+                        fileID: "fid111"
+                    },
+                    {
+                        downloadUrl: urlBase + "download.jsp?fileID=222",
+                        fileSize: 3524930,
+                        printFileName: "2015 INNORIX Solution Brochure(r2).pdf",
+                        fileID: "fid222"
+                    },
+                    {
+                        downloadUrl: urlBase + "download.jsp?fileID=333",
+                        fileSize: 3524930,
+                        printFileName: "2015 INNORIX ソリューションパンフレット(r2).pdf",
+                        fileID: "fid333"
+                    }
+                ];
+
+                innorix.api.presetDownloadFiles(obj); // 컨트롤에 다운로드 목록 갱신
+            },
+            downloadCancel      : function(controlId, param) { // 다운로드 취소
+
+            },
+            downloadError       : function(controlId, param) { // 다운로드 에러
+            
+            },
+            downloadComplete    : function(controlId, param) { // 다운로드 완료
+
+            },
+            uploadCancel        : function(controlId, param) { // 업로드 취소
+
+            },
+            uploadError         : function(controlId, param) { // 업로드 에러
+
+            },
+            uploadComplete      : function(controlId, param) { // 업로드 완료
+                innorix.util.addFormData("writeForm", param);       // writeForm 객체에 업로드 완료된 파일 정보를 추가
+                innorix.util.formSubmit("writeForm", "result.jsp"); // writeForm 객체를 result.jsp URL로 Form Submit
+            }
+        };
+
+        // 컨트롤 생성
+        innorix.api.create({
+            fileControl: {                                      // 컨트롤 id
+                product         : "innoexu, innoexd",           // innoex 업로드, 다운로드 통합
+                uploadUrl       : "./upload.jsp?param=value",   // 업로드 url
+                downloadType    : "stream",                     // 다운로드 타입 선택, direct | stream
+                limitExtension  : ["exe", "msi", "cab"],        // 첨부파일 확장자 제한
+                maxFileSize     : 1024 * 1024 * 1024 * 5,       // 첨부가능 파일 전체 크기(bytes)
+                maxTotalSize    : 1024 * 1024 * 1024 * 5,       // 첨부가능 1개 파일 크기(bytes)
+                maxFileCount    : 100,                          // 첨부가능 파일 전체 개수
+                contextMenu     : true                          // 마우스 오른쪽 버튼 클릭 컨텍스트 메뉴 활성
+            /* --- 추가 속성 ---
+                charset         : "utf-8",                      // 캐릭터셋 설정, utf-8 | euc-kr
+                controlType     : "basic",                      // 컨트롤 타입, basic | bigFile1 | bigFile2
+                width           : 550,                          // 컨트롤 너비(pixel)
+                height          : 200,                          // 컨트롤 높이(pixel)
+                dropZone        : true                          // 파일 드랍존 활성
+            */
+            }
+        });
+    </script>
+
+</body>
+</html>

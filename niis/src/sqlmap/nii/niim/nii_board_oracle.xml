@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_board">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	
+	<select id="boardDAO.getBoardMaster" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT BOARD_CATE
+		     , BOARD_NAME
+		     , BOARD_CAPTION
+		     , WRITE_YN
+		     , REPLY_YN
+		     , FILE_YN
+		     , CREATE_USR
+		     , CREATE_DT
+		     , LAST_CHANGE_USR
+		     , LAST_CHANGE_DT
+		  FROM CMT_BOARD_MASTER_NIIM
+		 WHERE BOARD_CATE = #boardCate#
+			
+	</select>
+	
+	
+	<select id="boardDAO.getBoardTopList" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT ROW_NUMBER() OVER(ORDER BY BOARD_SEQ DESC) NUM
+		     , BOARD_CATE 
+		     , BOARD_SEQ 
+		     , PARENT_SEQ 
+		     , TITLE
+		     , CONTENTS 
+		     , HIT 
+		     , DEL_YN 
+		     , CREATE_USR 
+		     , (
+		        SELECT DECODE(USE_AT, '00', '관리자', USR_NM) 
+		          FROM ITR_USR_INFO_NIIM 
+		         WHERE USR_MGNO = A.CREATE_USR
+		       ) CREATE_USR_NM
+		     , TO_CHAR(CREATE_DT, 'YYYY-MM-DD HH24:MI') CREATE_DT
+		     , LAST_CHANGE_USR 
+		     , (
+		        SELECT DECODE(USE_AT, '00', '관리자', USR_NM)
+		          FROM ITR_USR_INFO_NIIM 
+		         WHERE USR_MGNO = A.LAST_CHANGE_USR
+		       ) LAST_CHANGE_USR_NM
+		     , TO_CHAR(DECODE(LAST_CHANGE_DT, NULL, CREATE_DT, LAST_CHANGE_DT), 'YYYY-MM-DD HH24:MI') LAST_CHANGE_DT
+		     , (
+		        SELECT COUNT(*)
+		          FROM CMT_BOARD_FILE_NIIM
+		         WHERE BOARD_CATE = A.BOARD_CATE
+		           AND BOARD_SEQ = A.BOARD_SEQ
+		       ) FILE_CNT
+		  FROM CMT_BOARD_NIIM A
+		 WHERE DEL_YN = 'N'
+		   AND BOARD_CATE = #boardCate#
+		   AND TOP_YN = 'Y'
+	
+	</select>
+	
+	<!-- 공지사항 리스트 -->	
+	<select id="boardDAO.getBoardListCnt" parameterClass="java.util.Map" resultClass="int">
+	
+		SELECT COUNT(*)
+		  FROM CMT_BOARD_NIIM A
+		 WHERE DEL_YN = 'N'
+		   AND BOARD_CATE = #boardCate#
+		<isEqual property="srchType" compareValue="0">
+			<isNotEmpty property="srchCondition">
+		   AND TITLE LIKE '%' || #srchCondition# || '%'
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="srchType" compareValue="1">
+			<isNotEmpty property="srchCondition">
+		   AND CONTENTS LIKE '%' || #srchCondition# || '%'
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="srchType" compareValue="2">
+			<isNotEmpty property="srchCondition">
+		   AND (TITLE LIKE '%' || #srchCondition# || '%' OR CONTENTS LIKE '%' || #srchCondition# || '%')
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="srchType" compareValue="3">
+			<isNotEmpty property="srchCondition">
+		   AND CREATE_USR IN (
+		                      SELECT USR_MGNO 
+		                        FROM ITR_USR_INFO_NIIM 
+		                       WHERE USR_NAME LIKE '%' || #srchCondition# || '%'
+		                     )
+			</isNotEmpty>
+		</isEqual>
+	
+	</select>
+	<!-- 공지사항 리스트 -->	
+	<select id="boardDAO.getBoardList" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		<include refid="Paging_head" />
+		SELECT <!-- ROW_NUMBER() OVER(ORDER BY BOARD_SEQ DESC) NUM -->
+		       DECODE(LEVEL, 1, ROWNUM, '') NUM 
+		     , BOARD_CATE 
+		     , BOARD_SEQ 
+		     , PARENT_SEQ 
+		     , LPAD(' ',(LEVEL-1)*4,' ') || TITLE AS TITLE
+		     , CONTENTS 
+		     , HIT 
+		     , TOP_YN 
+		     , DEL_YN 
+		     , CREATE_USR 
+		     , (
+		        SELECT DECODE(USE_AT, '00', '관리자', USR_NM)
+		          FROM ITR_USR_INFO_NIIM 
+		         WHERE USR_MGNO = A.CREATE_USR
+		       ) CREATE_USR_NM
+		     , TO_CHAR(CREATE_DT, 'YYYY-MM-DD HH24:MI') CREATE_DT
+		     , LAST_CHANGE_USR 
+		     , (
+		        SELECT DECODE(USE_AT, '00', '관리자', USR_NM)
+		          FROM ITR_USR_INFO_NIIM 
+		         WHERE USR_MGNO = A.LAST_CHANGE_USR
+		       ) LAST_CHANGE_USR_NM
+		     , TO_CHAR(DECODE(LAST_CHANGE_DT, NULL, CREATE_DT, LAST_CHANGE_DT), 'YYYY-MM-DD HH24:MI') LAST_CHANGE_DT
+		     , (
+		        SELECT COUNT(*)
+		          FROM CMT_BOARD_FILE_NIIM
+		         WHERE BOARD_CATE = A.BOARD_CATE
+		           AND BOARD_SEQ = A.BOARD_SEQ
+		       ) FILE_CNT
+		  FROM CMT_BOARD_NIIM A
+		 WHERE DEL_YN = 'N'
+		   AND BOARD_CATE = #boardCate#
+		<isEqual property="srchType" compareValue="0">
+			<isNotEmpty property="srchCondition">
+		   AND TITLE LIKE '%' || #srchCondition# || '%'
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="srchType" compareValue="1">
+			<isNotEmpty property="srchCondition">
+		   AND CONTENTS LIKE '%' || #srchCondition# || '%'
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="srchType" compareValue="2">
+			<isNotEmpty property="srchCondition">
+		   AND (TITLE LIKE '%' || #srchCondition# || '%' OR CONTENTS LIKE '%' || #srchCondition# || '%')
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="srchType" compareValue="3">
+			<isNotEmpty property="srchCondition">
+		   AND CREATE_USR IN (
+		                      SELECT USR_MGNO 
+		                        FROM ITR_USR_INFO_NIIM 
+		                       WHERE USR_NAME LIKE '%' || #srchCondition# || '%'
+		                     )
+			</isNotEmpty>
+		</isEqual>
+		 START WITH NVL(PARENT_SEQ, -1) = -1 
+		        AND BOARD_CATE = #boardCate#
+		 CONNECT BY PRIOR BOARD_SEQ = PARENT_SEQ
+		 ORDER SIBLINGS BY BOARD_SEQ DESC 
+		<include refid="Paging_tail" />
+	
+	</select>
+	
+	
+	<update id="boardDAO.updateHit" parameterClass="Map">
+	
+		UPDATE CMT_BOARD_NIIM
+		   SET HIT = NVL(HIT, 0) + 1
+		 WHERE BOARD_CATE = #boardCate#
+		   AND BOARD_SEQ = #boardSeq#
+	
+	</update>
+	
+	
+	<select id="boardDAO.getBoardDetail" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT A.BOARD_CATE
+		     , A.BOARD_SEQ
+		     , A.PARENT_SEQ
+		     , A.TITLE
+		     , A.CONTENTS
+		     , A.HIT
+		     , A.DEL_YN
+		     , A.TOP_YN
+		     , A.CREATE_USR
+		     , (
+		        SELECT DECODE(USE_AT, '00', '관리자', USR_NM)
+		          FROM ITR_USR_INFO_NIIM 
+		         WHERE USR_MGNO = A.CREATE_USR
+		       ) CREATE_USR_NM
+		     , TO_CHAR(A.CREATE_DT, 'YYYY-MM-DD HH24:MI') CREATE_DT
+		     , A.LAST_CHANGE_USR
+		     , (
+		        SELECT DECODE(USE_AT, '00', '관리자', USR_NM)
+		          FROM ITR_USR_INFO_NIIM 
+		         WHERE USR_MGNO = A.LAST_CHANGE_USR
+		       ) LAST_CHANGE_USR_NM
+		     , TO_CHAR(A.LAST_CHANGE_DT, 'YYYY-MM-DD HH24:MI') LAST_CHANGE_DT
+		     , (
+		        SELECT COUNT(*)
+		          FROM CMT_BOARD_FILE_NIIM
+		         WHERE BOARD_CATE = A.BOARD_CATE
+		           AND BOARD_SEQ = A.BOARD_SEQ
+		       ) FILE_CNT
+	         , P.POP_GBN_CDE
+	         , P.IMG_URL
+	         , P.POP_BEGIN_DT
+	         , P.POP_END_DT
+	         , NVL(P.POP_POS_X, 0) POP_POS_X
+	         , NVL(P.POP_POS_Y, 0) POP_POS_Y
+		  FROM CMT_BOARD_NIIM A
+		     , CMT_POPUP_NIIM P
+		 WHERE A.BOARD_CATE = #boardCate#
+		   AND A.BOARD_SEQ  = #boardSeq#
+		   AND A.BOARD_CATE = P.BOARD_CATE(+)
+		   AND A.BOARD_SEQ  = P.BOARD_SEQ(+)
+	
+	</select>
+	
+	
+	<select id="boardDAO.getBoardFileList" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT BOARD_CATE
+		     , BOARD_SEQ
+		     , FILE_SEQ 
+		     , FILE_NAME
+		     , FILE_URL
+		     , FILE_SIZE
+		     , CREATE_USR
+		     , (
+		        SELECT USR_NM 
+		          FROM ITR_USR_INFO_NIIM 
+		         WHERE USR_MGNO = A.CREATE_USR
+		       ) LAST_CHANGE_USR_NM
+		     , TO_CHAR(CREATE_DT, 'YYYY-MM-DD HH24:MI') CREATE_DT
+		  FROM CMT_BOARD_FILE_NIIM A
+		 WHERE BOARD_CATE = #boardCate#
+		   AND BOARD_SEQ = #boardSeq#
+	
+	</select>
+	
+	
+	<insert id="boardDAO.insertBoard" parameterClass="Map">
+		<selectKey type="pre" keyProperty="boardSeq" resultClass="java.lang.String">
+			SELECT NVL(MAX(BOARD_SEQ), 0) + 1
+			  FROM CMT_BOARD_NIIM
+			 WHERE BOARD_CATE = #boardCate#
+		</selectKey>
+		
+		INSERT 
+		  INTO CMT_BOARD_NIIM
+		  (
+			   BOARD_CATE
+		     , BOARD_SEQ
+		     , PARENT_SEQ
+		     , TITLE
+		     , CONTENTS
+		     , HIT
+		     , DEL_YN
+		<isEqual property="topYn" compareValue="Y">
+		     , TOP_YN
+		</isEqual>
+		     , CREATE_USR
+		     , CREATE_DT
+		     , LAST_CHANGE_USR
+		     , LAST_CHANGE_DT
+		  ) 
+		VALUES 
+		  (
+		       #boardCate#
+			 , #boardSeq#
+			 , NVL(#parentSeq#, -1)
+			 , #title#
+			 , #contents#
+			 , 0
+			 , 'N'
+		<isEqual property="topYn" compareValue="Y">
+		     , #topYn#
+		</isEqual>
+			 , #createUsr#
+			 , SYSDATE
+			 , #createUsr#
+			 , SYSDATE
+		  )
+		  
+	</insert>
+	
+	
+	<update id="boardDAO.updateBoard" parameterClass="Map">
+	
+		UPDATE CMT_BOARD_NIIM
+		   SET TITLE           = #title# 
+		     , CONTENTS        = #contents#
+		<isEqual property="topYn" compareValue="Y">
+		     , TOP_YN          = #topYn#
+		</isEqual>
+		     , LAST_CHANGE_USR = #lastChangeUsr#
+		     , LAST_CHANGE_DT  = SYSDATE
+		 WHERE BOARD_CATE = #boardCate#
+		   AND BOARD_SEQ = #boardSeq#
+	
+	</update>
+	
+	
+	<update id="boardDAO.deleteBoard" parameterClass="Map">
+	
+		UPDATE CMT_BOARD_NIIM
+		   SET DEL_YN          = 'Y'
+		     , LAST_CHANGE_USR = #lastChangeUsr#
+		     , LAST_CHANGE_DT  = SYSDATE
+		 WHERE BOARD_CATE = #boardCate#
+		   AND BOARD_SEQ = #boardSeq#
+	
+	</update>
+	
+	
+	<insert id="boardDAO.insertBoardFile" parameterClass="Map">
+	
+		INSERT 
+		  INTO CMT_BOARD_FILE_NIIM
+		  (
+			   BOARD_CATE
+		     , BOARD_SEQ
+		     , FILE_SEQ
+		     , FILE_NAME
+		     , FILE_URL
+		     , FILE_SIZE
+		     , CREATE_USR
+		     , CREATE_DT
+		  ) 
+		VALUES 
+		  (
+		       #boardCate#
+			 , #boardSeq#
+			 , (
+			    SELECT NVL(MAX(FILE_SEQ), 0) + 1
+			      FROM CMT_BOARD_FILE_NIIM
+			     WHERE BOARD_CATE = #boardCate#
+			       AND BOARD_SEQ = #boardSeq#
+			   )
+		     , #fileName#
+		     , #fileUrl#
+		     , #fileSize#
+			 , #createUsr#
+			 , SYSDATE
+		  )
+	
+	</insert>
+	
+	
+	<delete id="boardDAO.deleteBoardFile" parameterClass="Map">
+	
+		DELETE
+		  FROM CMT_BOARD_FILE_NIIM
+		 WHERE BOARD_CATE = #boardCate#
+		   AND BOARD_SEQ = #boardSeq#
+		   AND FILE_SEQ = #fileSeq#
+	
+	</delete>
+	
+	
+	<delete id="boardDAO.deleteBoardFileAll" parameterClass="Map">
+	
+		DELETE
+		  FROM CMT_BOARD_FILE_NIIM
+		 WHERE BOARD_CATE = #boardCate#
+		   AND BOARD_SEQ = #boardSeq#
+	
+	</delete>
+	
+	
+	<select id="boardDAO.getAttachFile" parameterClass="java.util.Map" resultClass="egovMap">
+	
+		SELECT BOARD_CATE
+		     , BOARD_SEQ
+		     , FILE_SEQ
+		     , FILE_NAME
+		     , FILE_URL
+		     , FILE_SIZE
+		     , CREATE_USR
+		     , CREATE_DT
+		  FROM CMT_BOARD_FILE_NIIM
+		 WHERE BOARD_CATE = #boardCate#
+		   AND BOARD_SEQ = #boardSeq#
+		   AND FILE_SEQ = #fileSeq#
+	
+	</select>
+	
+	<insert id="boardDAO.insertPop" parameterClass="Map">
+		<selectKey type="pre" keyProperty="boardSeq" resultClass="java.lang.String">
+			SELECT NVL(MAX(BOARD_SEQ), 0)
+			  FROM CMT_BOARD_NIIM
+			 WHERE BOARD_CATE = #boardCate#
+		</selectKey>
+		
+		INSERT 
+		  INTO CMT_POPUP_NIIM
+		  (
+			   BOARD_CATE
+		     , BOARD_SEQ
+		     , TITLE
+		     , POP_BEGIN_DT
+		     , POP_END_DT
+		     , POP_POS_CDE
+		     , POP_POS_X
+		     , POP_POS_Y
+		     , IMG_URL
+		     , LAST_CHANGE_USR
+		     , LAST_CHANGE_DT
+		     , POP_GBN_CDE
+		  ) 
+		VALUES 
+		  (
+		       #boardCate#
+			 , #boardSeq#
+			 , #title#
+			 , #popBeginDt#
+			 , #popEndDt#
+			 , '0'
+			 , #popPosX#
+			 , #popPosY#
+			 , #fileUrl#
+			 , #createUsr#
+			 , SYSDATE
+			 , #popGbnCde#
+		  )
+		  
+	</insert>
+	
+	<update id="boardDAO.updateBoardPop" parameterClass="Map">
+		UPDATE CMT_POPUP_NIIM
+		   SET
+		       TITLE			= #title#
+		     , POP_BEGIN_DT		= #popBeginDt#
+		     , POP_END_DT		= #popEndDt#
+		     , POP_POS_CDE		= '0'
+		     , POP_POS_X		= #popPosX#
+		     , POP_POS_Y		= #popPosY#
+		<isNotEmpty property="fileUrl">
+		     , IMG_URL			= #fileUrl#
+		</isNotEmpty>
+		     , LAST_CHANGE_USR	= #lastChangeUsr#
+		     , LAST_CHANGE_DT	= SYSDATE
+		     , POP_GBN_CDE		= #popGbnCde#
+		 WHERE BOARD_CATE = #boardCate#
+		   AND BOARD_SEQ = #boardSeq#
+	</update>
+	
+		<select id="boardDAO.checkUrl" parameterClass="String" resultClass="egovMap">
+					SELECT file_url
+					FROM CMT_BOARD_FILE_NIIM 
+					WHERE board_seq = 
+					(SELECT 
+					max(board_seq) 
+					FROM CMT_BOARD_FILE_NIIM)
+		</select>
+	
+</sqlMap>

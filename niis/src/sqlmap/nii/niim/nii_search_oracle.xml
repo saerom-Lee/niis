@@ -1,0 +1,2308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nii_search">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="paramVO" type="org.nii.niis.niim.service.ParamVO"/>
+	<typeAlias  alias="ZoneVO" type="org.nii.niis.niim.service.ZoneVO"/>
+
+	<resultMap id="poiVO" class="org.nii.niis.niim.service.PoiVO">
+<!-- 		<result property="poitype_cd"       column="poitype_cd"/> -->
+		<result property="poi_nam"   		column="FMYNM"/>
+		<result property="coor_x"   		column="XCOORD"/>
+		<result property="coor_y"   		column="YCOORD"/>
+<!-- 		<result property="wkb_geometry"		column="wkb_geometry" jdbcType="BLOB"/> -->
+	</resultMap>
+	
+	<resultMap id="zipCodeVO" class="org.nii.niis.niim.service.ZipCodeVO">
+<!-- 		<result property="BDTYP_CD"     column="BDTYP_CD"/> -->
+<!-- 		<result property="BD_MGT_SN"    column="BD_MGT_SN"/> -->
+<!-- 		<result property="BSI_INT_SN"   column="BSI_INT_SN"/> -->
+<!-- 		<result property="BSI_ZON_NO"   column="BSI_ZON_NO"/> -->
+<!-- 		<result property="BULD_MEMO"    column="BULD_MEMO"/> -->
+		<result property="BULD_MNNM"    column="BULD_MNNM"/>
+<!-- 		<result property="BULD_NM"      column="BULD_NM"/> -->
+<!-- 		<result property="BULD_NM_DC"   column="BULD_NM_DC"/> -->
+<!-- 		<result property="BULD_SE_CD"   column="BULD_SE_CD"/> -->
+		<result property="BULD_SLNO"    column="BULD_SLNO"/>
+<!-- 		<result property="BULD_STTUS"   column="BULD_STTUS"/> -->
+<!-- 		<result property="BUL_DPN_SE"   column="BUL_DPN_SE"/> -->
+<!-- 		<result property="BUL_ENG_NM"   column="BUL_ENG_NM"/> -->
+<!-- 		<result property="BUL_MAN_NO"   column="BUL_MAN_NO"/> -->
+<!-- 		<result property="COMPET_DE"    column="COMPET_DE"/> -->
+<!-- 		<result property="EMD_CD"       column="EMD_CD"/> -->
+<!-- 		<result property="EQB_MAN_SN"   column="EQB_MAN_SN"/> -->
+<!-- 		<result property="ETC_BUL_NM"   column="ETC_BUL_NM"/> -->
+<!-- 		<result property="GRO_FLO_CO"   column="GRO_FLO_CO"/> -->
+<!-- 		<result property="IMA_FIL_SN"   column="IMA_FIL_SN"/> -->
+<!-- 		<result property="INPUT_MTHD"   column="INPUT_MTHD"/> -->
+<!-- 		<result property="INPUT_STEP"   column="INPUT_STEP"/> -->
+<!-- 		<result property="ISSU_YN"      column="ISSU_YN"/> -->
+<!-- 		<result property="LI_CD"       	column="LI_CD"/> -->
+		<result property="LNBR_MNNM"    column="LNBR_MNNM"/>
+		<result property="LNBR_SLNO"    column="LNBR_SLNO"/>
+ 		<result property="MNTN_YN"      column="MNTN_YN"/>
+<!-- 		<result property="MVMN_DE"      column="MVMN_DE"/> -->
+<!-- 		<result property="MVMN_RESN"    column="MVMN_RESN"/> -->
+<!-- 		<result property="MVM_RES_CD"   column="MVM_RES_CD"/> -->
+<!-- 		<result property="NTFC_DE"      column="NTFC_DE"/> -->
+<!-- 		<result property="NTI_TRG_YN"   column="NTI_TRG_YN"/> -->
+<!-- 		<result property="OPERT_DE"     column="OPERT_DE"/> -->
+<!-- 		<result property="OPE_MAN_ID"   column="OPE_MAN_ID"/> -->
+<!-- 		<result property="POS_BUL_NM"   column="POS_BUL_NM"/> -->
+<!-- 		<result property="POS_BUL_YN"   column="POS_BUL_YN"/> -->
+<!-- 		<result property="RDS_MAN_NO"   column="RDS_MAN_NO"/> -->
+<!-- 		<result property="RDS_SIG_CD"   column="RDS_SIG_CD"/> -->
+<!-- 		<result property="REG_PUB_NM"   column="REG_PUB_NM"/> -->
+<!-- 		<result property="RN_CD"       	column="RN_CD"/> -->
+			<result property="SIG_CD"       column="SIG_CD"/>
+<!-- 		<result property="UND_FLO_CO"   column="UND_FLO_CO"/> -->
+		<result property="ZIP"       	column="ZIP"/>
+<!-- 		<result property="ZIP_BUL_NM"   column="ZIP_BUL_NM"/> -->
+<!-- 		<result property="ZIP_NO"       column="ZIP_NO"/> -->
+		<result property="POINT_X"      column="x"/>
+		<result property="POINT_Y"      column="y"/>
+<!-- 		<result property="wkb_geometry"	column="wkb_geometry" jdbcType="BLOB"/> -->
+		<result property="DONG_NM"		column="DONG_NM"/>
+		<result property="JIBUN" column="JIBUN"/>
+	</resultMap>
+	
+	<resultMap id="jusoVO" class="org.nii.niis.niim.service.JusoVO">
+		<!-- 
+		<result property="ALWNC_DE"	    column="ALWNC_DE"/>	  
+		<result property="ALWNC_M_CD"   column="ALWNC_M_CD"/> 
+		<result property="ALWNC_RESN"   column="ALWNC_RESN"/> 
+		<result property="ALWNC_R_CD"   column="ALWNC_R_CD"/> 
+		<result property="BSI_INT"		column="BSI_INT"/>		
+		<result property="CRSRD_CNT"	column="CRSRD_CNT"/>	
+		<result property="ENG_RN"		column="ENG_RN"/>		  
+		<result property="INPUT_MTHD"   column="INPUT_MTHD"/> 
+		<result property="ISSU_YN"		column="ISSU_YN"/>		
+		<result property="MVMN_DE"		column="MVMN_DE"/>		
+		<result property="MVMN_RESN"	column="MVMN_RESN"/>	
+		<result property="MVM_RES_CD"   column="MVM_RES_CD"/> 
+		<result property="NLR_LCL_NO"   column="NLR_LCL_NO"/> 
+		<result property="NTFC_DE"		column="NTFC_DE"/>		
+		<result property="OPERT_DE"	    column="OPERT_DE"/>	  
+		<result property="OPE_MAN_ID"   column="OPE_MAN_ID"/> 
+		<result property="PAR_RDS_NO"   column="PAR_RDS_NO"/> 
+		<result property="PAR_SIG_CD"   column="PAR_SIG_CD"/> 
+		<result property="RBP_CN"		column="RBP_CN"/>		  
+		<result property="RDS_DPN_SE"   column="RDS_DPN_SE"/> 
+		<result property="RDS_MAN_NO"   column="RDS_MAN_NO"/> 
+		<result property="REP_CN"		column="REP_CN"/>		  
+		<result property="RNCHA_R_CD"   column="RNCHA_R_CD"/>
+		 --> 
+		<result property="RN"			column="RN"/>				  
+		<result property="RN_CD"		column="RN_CD"/>
+		<!-- 			
+		<result property="RN_DLB_DE"	column="RN_DLB_DE"/>	
+		<result property="ROAD_BT"		column="ROAD_BT"/>		
+		<result property="ROAD_LT"		column="ROAD_LT"/>		
+		<result property="ROAD_PY_LT"   column="ROAD_PY_LT"/> 
+		<result property="ROA_CLS_SE"   column="ROA_CLS_SE"/> 
+		<result property="ROA_MAN_ES"   column="ROA_MAN_ES"/> 
+		<result property="SIG_CD"		column="SIG_CD"/>		  
+		<result property="WDR_RD_CD"	column="WDR_RD_CD"/>	
+		<result property="POINT_X"      column="x"/>
+		<result property="POINT_Y"      column="y"/>
+		<result property="wkb_geometry"	column="wkb_geometry" jdbcType="BLOB"/>
+		 -->
+	</resultMap>
+	
+	
+	<!-- 통합검색(사업지구 검색) -->
+	<select id="searchDAO.selectZoneList" parameterClass="paramVO" resultClass="egovMap">
+		SELECT ZONE_NAM, ZONE_CODE, ZONE_YY FROM AIR_ZONE_DTS
+		<![CDATA[ WHERE 1<>1 ]]>
+		<isEqual property="airImgType" compareValue="PDT001">
+			UNION
+				SELECT DISTINCT A.ZONE_NAM, A.ZONE_CODE, A.ZONE_YY FROM AIR_ZONE_DTS a, META_AIRMAP_IDENT b, AIR_BASEMETA_DTS c
+					WHERE NVL(a.IMAGE_CDE, 'PDT001') = #airImgType#
+					<isNotEmpty property="startYear" prepend="AND">
+						<![CDATA[ a.ZONE_YY >= #startYear# ]]>
+					</isNotEmpty>				
+					<isNotEmpty property="endYear" prepend="AND">
+						<![CDATA[ a.ZONE_YY <= #endYear# ]]>
+					</isNotEmpty>
+				AND a.ZONE_CODE = b.ZONE_CODE
+				AND b.ZONE_CODE = c.ZONE_CODE
+				AND b.PH_COURSE = c.PH_COURSE
+				AND b.PH_NUM = c.PH_NUM
+				 AND TRIM(c.RES_OFFICENAME) = '국토지리정보원'
+		</isEqual>
+		<isEqual property="atImgType" compareValue="atCde">
+			UNION
+				SELECT DISTINCT A.ZONE_NAM, A.ZONE_CODE, A.ZONE_YY FROM AIR_ZONE_DTS a, AIR_ATPDT_FILE_INFO b
+					WHERE 1 = 1
+					<isNotEmpty property="startYear" prepend="AND">
+						<![CDATA[ a.ZONE_YY >= #startYear# ]]>
+					</isNotEmpty>				
+					<isNotEmpty property="endYear" prepend="AND">
+						<![CDATA[ a.ZONE_YY <= #endYear# ]]>
+					</isNotEmpty>
+				AND a.ZONE_CODE = b.ZONE_CODE
+				AND b.ZONE_CODE IS NOT NULL
+		</isEqual>
+		<isNotEqual property="imgType" compareValue="">
+			UNION
+				SELECT ZONE_NAM, ZONE_CODE, ZONE_YY FROM AIR_ZONE_DTS 
+					WHERE IMAGE_CDE IN ($imgType$)
+					<isNotEmpty property="startYear" prepend="AND">
+						<![CDATA[ ZONE_YY >= #startYear# ]]>
+					</isNotEmpty>				
+					<isNotEmpty property="endYear" prepend="AND">
+						<![CDATA[ ZONE_YY <= #endYear# ]]>
+					</isNotEmpty>
+		</isNotEqual>
+	</select>
+	
+	
+	<!-- 통합검색(항공사진 검색) -->
+	<select id="searchDAO.selectAirImgList" parameterClass="paramVO" resultClass="egovMap">
+	
+		SELECT 'PDT001' AS IMAGE_CDE,
+    			SUBSTR (A.ZONE_CODE, 1, 4) SCENEYEAR,
+		       A.ZONE_CODE,
+		       A.PH_COURSE,
+		       A.PH_NUM,
+		       E.ZONE_NAM,
+		       trim(D.STO_DRV) as STO_DRV,
+		       C.FOLDER_NAM,
+		       B.FILE_NAM,
+		       B.FILE_FORMAT,
+		       B.FILE_SIZE,
+		       NVL(B.FILE_EXT, 0) FILE_EXT,
+		       F.XMIN,
+		       F.XMAX,
+		       F.YMIN,
+		       F.YMAX,
+           	   (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SECURITY_CDE' AND CDE_CDE = G.SECURITY_CDE) AS SECURITY_CDE
+		FROM   AIR_BASEMETA_DTS A
+		       INNER JOIN STO_AIRLOC_DTS B
+		          ON A.ZONE_CODE = B.ZONE_CODE
+		             AND A.PH_COURSE = B.PH_COURSE
+		             AND A.PH_NUM = B.PH_NUM
+		             AND B.STORAGE_CDE = 'AIR002'
+		             AND TRIM(A.RES_OFFICENAME) = '국토지리정보원'
+		       INNER JOIN CMT_STORAGE_CDE C
+		          ON B.STORAGE_CDE = C.CODE_CDE
+		       INNER JOIN STO_INFO_DTS D
+		          ON B.STO_IDN = D.STO_IDN
+		       INNER JOIN AIR_ZONE_DTS E
+		          ON A.ZONE_CODE = E.ZONE_CODE
+		          AND E.IMAGE_CDE = 'PDT001'
+				<isNotEmpty property="startYear" prepend="AND">
+					<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>	
+				</isNotEmpty>
+				<isNotEmpty property="endYear" prepend="AND">
+					<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>	
+				</isNotEmpty>
+		       INNER JOIN META_AIRMAP_IDENT F
+		          ON A.ZONE_CODE = F.ZONE_CODE
+		             AND A.PH_COURSE = F.PH_COURSE
+		             AND A.PH_NUM = F.PH_NUM
+		             AND F.TARGET_NAME IN ('항공사진 이미지', '항공사진이미지')
+		             AND F.XMIN IS NOT NULL
+				<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+					<![CDATA[ xmin >= #xmin#	 ]]>	
+				</isGreaterEqual>
+				<isGreaterEqual prepend="AND" property="ymin" compareValue="1">
+					<![CDATA[ ymin >= #ymin#	 ]]>			
+				</isGreaterEqual>
+				<isGreaterEqual prepend="AND" property="xmax" compareValue="1">
+					<![CDATA[ xmax <= #xmax#	 ]]>	
+				</isGreaterEqual>
+				<isGreaterEqual prepend="AND" property="ymax" compareValue="1">
+					<![CDATA[ ymax <= #ymax#	 ]]>			
+				</isGreaterEqual>
+		       INNER JOIN AIR_PRODUCT_DTS G
+		          ON A.ZONE_CODE = G.ZONE_CODE
+		             AND A.PH_COURSE = G.PH_COURSE
+		             AND A.PH_NUM = G.PH_NUM
+			<dynamic prepend="WHERE">
+				<isNotEmpty property="zoneCode" prepend="AND">
+					A.ZONE_CODE = #zoneCode#		
+				</isNotEmpty>
+				<isNotEmpty property="sigunguCode" prepend="AND">
+					A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#,0,2)||'%'
+				</isNotEmpty>
+			</dynamic>
+          ORDER BY A.ZONE_CODE DESC, A.PH_COURSE ASC, A.PH_NUM ASC
+         
+	</select>
+	
+	<select id="searchDAO.selectAirImgFolderList" parameterClass="paramVO" resultClass="egovMap">
+	
+		SELECT /* searchDAO.selectAirImgFolderList */
+			'PDT001' AS IMAGE_CDE
+		     , SUBSTR(A.ZONE_CODE, 1, 4) SCENEYEAR
+		     , A.ZONE_CODE
+		     , A.PH_COURSE
+		     , E.ZONE_NAM
+		     , G.SECURITY_CDE SECURITY_CD
+		     , (
+		        SELECT CDE_NAM 
+		          FROM CMT_DETAIL_CODE_NIIM 
+		         WHERE FLE_IDN = 'SECURITY_CDE' 
+		           AND CDE_CDE = G.SECURITY_CDE
+		       ) AS SECURITY_CDE
+		     , COUNT(A.PH_NUM) CHILD_CNT
+		     , SUM(CASE WHEN B.FILE_EXT = 'O' THEN 1 ELSE 0 END) DOWNLOAD_ABLE_CNT
+		  FROM AIR_BASEMETA_DTS A
+		     , STO_AIRLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		     , META_AIRMAP_IDENT F
+		     , AIR_PRODUCT_DTS G
+		 WHERE A.ZONE_CODE   = B.ZONE_CODE
+		   AND A.PH_COURSE   = B.PH_COURSE
+		   AND A.PH_NUM      = B.PH_NUM
+		   AND A.ZONE_CODE   = E.ZONE_CODE
+		   AND A.ZONE_CODE   = F.ZONE_CODE
+		   AND A.PH_COURSE   = F.PH_COURSE
+		   AND A.PH_NUM      = F.PH_NUM
+		   AND A.ZONE_CODE   = G.ZONE_CODE
+		   AND A.PH_COURSE   = G.PH_COURSE
+		   AND A.PH_NUM      = G.PH_NUM
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN     = D.STO_IDN
+		   AND NVL(E.IMAGE_CDE, 'PDT001') = 'PDT001'
+		   AND TRIM(A.RES_OFFICENAME) = '국토지리정보원'
+		   AND F.XMIN IS NOT NULL
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		<isNotEmpty property="sigunguCode" prepend="AND">
+			A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#, 0, 5) || '%'
+		</isNotEmpty>
+		<isNotEmpty property="startYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="endYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>
+		</isNotEmpty>
+		<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+			<![CDATA[ DECRYPT(F.XMIN) >= #xmin#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymin" compareValue="1">
+			<![CDATA[ DECRYPT(F.YMIN) >= #ymin#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="xmax" compareValue="1">
+			<![CDATA[ DECRYPT(F.XMAX) <= #xmax#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymax" compareValue="1">
+			<![CDATA[ DECRYPT(F.YMAX) <= #ymax#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterThan prepend="AND" property="radius" compareValue="0">
+			<![CDATA[ SQRT(POWER((DECRYPT(ymax) + DECRYPT(ymin))/2 - (#ymax# + #ymin#)/2, 2) + POWER((DECRYPT(xmax) + DECRYPT(xmin))/2 - (#xmax# + #xmin#)/2, 2)) <= #radius#	 ]]>
+		</isGreaterThan>
+		
+		<!-- <include refid="Img_air_policy"/> -->
+		
+		 GROUP BY SUBSTR(A.ZONE_CODE, 1, 4)
+		        , A.ZONE_CODE
+		        , A.PH_COURSE
+		        , E.ZONE_NAM
+		        , G.SECURITY_CDE
+		 ORDER BY SUBSTR(A.ZONE_CODE, 1, 4) DESC
+		        , G.SECURITY_CDE
+		        , A.ZONE_CODE DESC
+		        , A.PH_COURSE
+         
+	</select>
+	
+	<!-- 통합검색(항공사진 검색) -->
+	<select id="searchDAO.selectAirImgDataList" parameterClass="paramVO" resultClass="egovMap">
+	
+		SELECT /* searchDAO.selectAirImgDataList */
+			'PDT001' AS IMAGE_CDE
+		     , SUBSTR(A.ZONE_CODE, 1, 4) SCENEYEAR
+		     , A.ZONE_CODE
+		     , A.PH_COURSE
+		     , A.PH_NUM
+		     , E.ZONE_NAM
+		     , TRIM(D.STO_DRV) as STO_DRV
+		     , C.FOLDER_NAM
+		     , B.FILE_NAM
+		     , B.FILE_FORMAT
+		     , B.FILE_SIZE
+		     , NVL(UPPER(B.FILE_EXT), 'X') FILE_EXT
+		     , SDE.ST_MINX(H.SHAPE) XMIN
+		     , SDE.ST_MAXX(H.SHAPE) XMAX
+		     , SDE.ST_MINY(H.SHAPE) YMIN
+		     , SDE.ST_MAXY(H.SHAPE) YMAX
+		     <!-- , DECRYPT(F.XMIN) XMIN
+		     , DECRYPT(F.XMAX) XMAX
+		     , DECRYPT(F.YMIN) YMIN
+		     , DECRYPT(F.YMAX) YMAX -->
+		     , G.SECURITY_CDE SECURITY_CD
+		     , (
+		        SELECT CDE_NAM 
+		          FROM CMT_DETAIL_CODE_NIIM 
+		         WHERE FLE_IDN = 'SECURITY_CDE' 
+		           AND CDE_CDE = G.SECURITY_CDE
+		       ) AS SECURITY_CDE
+		     
+		<include refid="Air_file_path"/>
+		     
+		  FROM AIR_BASEMETA_DTS A
+		     , STO_AIRLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		     , META_AIRMAP_IDENT F
+		     , AIR_PRODUCT_DTS G
+		     , AIR_ORIENTMAP_AS H
+		 WHERE A.ZONE_CODE   = B.ZONE_CODE
+		   AND A.PH_COURSE   = B.PH_COURSE
+		   AND A.PH_NUM      = B.PH_NUM
+		   AND A.ZONE_CODE   = E.ZONE_CODE
+		   AND A.ZONE_CODE   = F.ZONE_CODE
+		   AND A.PH_COURSE   = F.PH_COURSE
+		   AND A.PH_NUM      = F.PH_NUM
+		   AND A.ZONE_CODE   = G.ZONE_CODE
+		   AND A.PH_COURSE   = G.PH_COURSE
+		   AND A.PH_NUM      = G.PH_NUM
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN     = D.STO_IDN
+		   AND A.ZONE_CODE   = H.ZONE_CODE
+		   AND A.PH_COURSE   = H.PH_COURSE
+		   AND A.PH_NUM      = H.PH_NUM
+		   AND B.STORAGE_CDE = 'AIR009'
+		   AND TRIM(A.RES_OFFICENAME) = '국토지리정보원'
+		   <!-- AND F.XMIN IS NOT NULL -->
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		<isNotEmpty property="phCourse" prepend="AND">
+			A.PH_COURSE = #phCourse#
+		</isNotEmpty>
+		<isNotEmpty property="startYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="endYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="admcd" prepend="AND">
+			<isEqual property="tableNm" compareValue="TL_SCCO_CTPRVN">
+				SDE.ST_INTERSECTS(H.SHAPE, (
+					SELECT SHAPE 
+					FROM NGII_MAP.TL_SCCO_CTPRVN 
+					WHERE CTPRVN_CD LIKE #admcd# || '%'
+				)) = 1
+			</isEqual>
+			<isEqual property="tableNm" compareValue="TL_SCCO_SIG">
+				SDE.ST_INTERSECTS(H.SHAPE, (
+					SELECT SHAPE 
+					FROM NGII_MAP.TL_SCCO_SIG 
+					WHERE SIG_CD LIKE #admcd# || '%'
+				)) = 1
+			</isEqual>
+			<isEqual property="tableNm" compareValue="TL_SCCO_EMD">
+				SDE.ST_INTERSECTS(H.SHAPE, (
+					SELECT SHAPE 
+					FROM NGII_MAP.TL_SCCO_EMD 
+					WHERE EMD_CD LIKE #admcd# || '%'
+				)) = 1
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty property="geometry" prepend="AND">
+    		AND SDE.ST_INTERSECTS(H.SHAPE, SDE.ST_GEOMETRY(#geometry#, (SELECT DISTINCT SRID FROM SDE.ST_GEOMETRY_COLUMNS WHERE OWNER='NGII_AIR3' AND TABLE_NAME = 'AIR_ORIENTMAP_AS' AND COLUMN_NAME = 'SHAPE'))) = 1
+    	</isNotEmpty>
+		<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+			SDE.ST_INTERSECTS(H.SHAPE, (SELECT SDE.ST_GEOMFROMTEXT('POLYGON  (($xmin$ $ymin$, $xmax$ $ymin$, $xmax$ $ymax$, $xmin$ $ymax$, $xmin$ $ymin$))', ( SELECT DISTINCT SRID FROM SDE.ST_GEOMETRY_COLUMNS WHERE OWNER='NGII_AIR3' AND TABLE_NAME = 'AIR_ORIENTMAP_AS' AND COLUMN_NAME = 'SHAPE')) FROM DUAL)) = 1
+		</isGreaterEqual>
+		<isGreaterThan prepend="AND" property="radius" compareValue="0">
+			SQRT(POWER((SDE.ST_MAXY(H.SHAPE) + SDE.ST_MINY(H.SHAPE))/2 - (#ymax# + #ymin#)/2, 2) + POWER((SDE.ST_MAXX(H.SHAPE) + SDE.ST_MINX(H.SHAPE))/2 - (#xmax# + #xmin#)/2, 2)) &lt;= #radius#
+		</isGreaterThan>
+		<isNotEmpty property="securityCde" prepend="AND">
+			G.SECURITY_CDE = #securityCde#		
+		</isNotEmpty>
+		
+		<isEqual prepend="AND" property="fileExt" compareValue="O">
+			NVL(UPPER(B.FILE_EXT), 'X') = #fileExt#
+		</isEqual>
+		
+		<!-- <include refid="Img_air_policy"/> -->
+		
+		 ORDER BY A.ZONE_CODE DESC
+		        , A.PH_COURSE ASC
+		        , TO_NUMBER(REGEXP_REPLACE(A.PH_NUM, '[^0-9]')) ASC
+		        , A.PH_NUM ASC
+         
+	</select>
+	
+<!-- 	통합검색(해방전후 항공사진) -->
+	<select id="searchDAO.selectAirLibImgFolderList" parameterClass="paramVO" resultClass="egovMap">
+	
+		SELECT /* searchDAO.selectAirLibImgFolderList */
+			 E.IMAGE_CDE AS IMAGE_CDE
+		     , SUBSTR(A.ZONE_CODE, 1, 4) SCENEYEAR
+		     , A.ZONE_CODE
+		     , A.PH_COURSE
+		     , E.ZONE_NAM
+		     , G.SECURITY_CDE SECURITY_CD
+		     , (
+		        SELECT CDE_NAM 
+		          FROM CMT_DETAIL_CODE_NIIM 
+		         WHERE FLE_IDN = 'SECURITY_CDE' 
+		           AND CDE_CDE = G.SECURITY_CDE
+		       ) AS SECURITY_CDE
+		     , COUNT(A.PH_NUM) CHILD_CNT
+		     , SUM(CASE WHEN B.FILE_EXT = 'O' THEN 1 ELSE 0 END) DOWNLOAD_ABLE_CNT
+		  FROM AIR_BASEMETA_DTS A
+		     , STO_AIRLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		     , META_AIRMAP_IDENT F
+		     , AIR_PRODUCT_DTS G
+		 WHERE A.ZONE_CODE   = B.ZONE_CODE
+		   AND A.PH_COURSE   = B.PH_COURSE
+		   AND A.PH_NUM      = B.PH_NUM
+		   AND A.ZONE_CODE   = E.ZONE_CODE
+		   AND A.ZONE_CODE   = F.ZONE_CODE
+		   AND A.PH_COURSE   = F.PH_COURSE
+		   AND A.PH_NUM      = F.PH_NUM
+		   AND A.ZONE_CODE   = G.ZONE_CODE
+		   AND A.PH_COURSE   = G.PH_COURSE
+		   AND A.PH_NUM      = G.PH_NUM
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN     = D.STO_IDN
+		   AND NVL(E.IMAGE_CDE, 'PDT011') = 'PDT011'
+		   AND F.XMIN IS NOT NULL
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		<isNotEmpty property="sigunguCode" prepend="AND">
+			A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#, 0, 5) || '%'
+		</isNotEmpty>
+		<isNotEmpty property="startYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="endYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>
+		</isNotEmpty>
+		<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+			<![CDATA[ DECRYPT(F.XMIN) >= #xmin#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymin" compareValue="1">
+			<![CDATA[ DECRYPT(F.YMIN) >= #ymin#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="xmax" compareValue="1">
+			<![CDATA[ DECRYPT(F.XMAX) <= #xmax#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymax" compareValue="1">
+			<![CDATA[ DECRYPT(F.YMAX) <= #ymax#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterThan prepend="AND" property="radius" compareValue="0">
+			<![CDATA[ SQRT(POWER((DECRYPT(ymax) + DECRYPT(ymin))/2 - (#ymax# + #ymin#)/2, 2) + POWER((DECRYPT(xmax) + DECRYPT(xmin))/2 - (#xmax# + #xmin#)/2, 2)) <= #radius#	 ]]>
+		</isGreaterThan>
+		
+		<!-- <include refid="Img_air_policy"/> -->
+		
+		 GROUP BY SUBSTR(A.ZONE_CODE, 1, 4)
+		        , A.ZONE_CODE
+		        , A.PH_COURSE
+		        , E.ZONE_NAM
+		        , G.SECURITY_CDE
+		        , E.IMAGE_CDE
+		 ORDER BY SUBSTR(A.ZONE_CODE, 1, 4) DESC
+		        , G.SECURITY_CDE
+		        , A.ZONE_CODE DESC
+		        , A.PH_COURSE
+         
+	</select>
+	
+	<!-- 	통합검색(해방전후 항공사진) -->
+	<select id="searchDAO.selectAirLibImgDataList" parameterClass="paramVO" resultClass="egovMap">
+	
+		SELECT /* searchDAO.selectAirLibImgDataList */
+			 E.IMAGE_CDE AS IMAGE_CDE
+		     , SUBSTR(A.ZONE_CODE, 1, 4) SCENEYEAR
+		     , A.ZONE_CODE
+		     , A.PH_COURSE
+		     , A.PH_NUM
+		     , E.ZONE_NAM
+		     , TRIM(D.STO_DRV) as STO_DRV
+		     , C.FOLDER_NAM
+		     , B.FILE_NAM
+		     , B.FILE_FORMAT
+		     , B.FILE_SIZE
+		     , NVL(UPPER(B.FILE_EXT), 'X') FILE_EXT
+		     , DECRYPT(F.XMIN) XMIN
+		     , DECRYPT(F.XMAX) XMAX
+		     , DECRYPT(F.YMIN) YMIN
+		     , DECRYPT(F.YMAX) YMAX
+		     , G.SECURITY_CDE SECURITY_CD
+		     , (
+		        SELECT CDE_NAM 
+		          FROM CMT_DETAIL_CODE_NIIM 
+		         WHERE FLE_IDN = 'SECURITY_CDE' 
+		           AND CDE_CDE = G.SECURITY_CDE
+		       ) AS SECURITY_CDE
+		     
+		<include refid="AirLib_file_path"/>
+		     
+		  FROM AIR_BASEMETA_DTS A
+		     , STO_AIRLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		     , META_AIRMAP_IDENT F
+		     , AIR_PRODUCT_DTS G
+		     , AIR_ORIENTMAP_AS H
+		 WHERE A.ZONE_CODE   = B.ZONE_CODE
+		   AND A.PH_COURSE   = B.PH_COURSE
+		   AND A.PH_NUM      = B.PH_NUM
+		   AND A.ZONE_CODE   = E.ZONE_CODE
+		   AND A.ZONE_CODE   = F.ZONE_CODE
+		   AND A.PH_COURSE   = F.PH_COURSE
+		   AND A.PH_NUM      = F.PH_NUM
+		   AND A.ZONE_CODE   = G.ZONE_CODE
+		   AND A.PH_COURSE   = G.PH_COURSE
+		   AND A.PH_NUM      = G.PH_NUM
+		   AND A.ZONE_CODE   = H.ZONE_CODE
+		   AND A.PH_COURSE   = H.PH_COURSE
+		   AND A.PH_NUM      = H.PH_NUM
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN     = D.STO_IDN
+		   AND NVL(E.IMAGE_CDE, 'PDT011') = 'PDT011'
+		   AND F.XMIN IS NOT NULL
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		<isNotEmpty property="phCourse" prepend="AND">
+			A.PH_COURSE = #phCourse#
+		</isNotEmpty>
+		<isNotEmpty property="admcd" prepend="AND">
+			<isEqual property="tableNm" compareValue="TL_SCCO_CTPRVN">
+				SDE.ST_INTERSECTS(H.SHAPE, (
+					SELECT SHAPE 
+					FROM NGII_MAP.TL_SCCO_CTPRVN 
+					WHERE CTPRVN_CD LIKE #admcd# || '%'
+				)) = 1
+			</isEqual>
+			<isEqual property="tableNm" compareValue="TL_SCCO_SIG">
+				SDE.ST_INTERSECTS(H.SHAPE, (
+					SELECT SHAPE 
+					FROM NGII_MAP.TL_SCCO_SIG 
+					WHERE SIG_CD LIKE #admcd# || '%'
+				)) = 1
+			</isEqual>
+			<isEqual property="tableNm" compareValue="TL_SCCO_EMD">
+				SDE.ST_INTERSECTS(H.SHAPE, (
+					SELECT SHAPE 
+					FROM NGII_MAP.TL_SCCO_EMD 
+					WHERE EMD_CD LIKE #admcd# || '%'
+				)) = 1
+			</isEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="startYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="endYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="geometry" prepend="AND">
+    		AND SDE.ST_INTERSECTS(H.SHAPE, SDE.ST_GEOMETRY(#geometry#, (SELECT DISTINCT SRID FROM SDE.ST_GEOMETRY_COLUMNS WHERE OWNER='NGII_AIR3' AND TABLE_NAME = 'AIR_ORIENTMAP_AS' AND COLUMN_NAME = 'SHAPE'))) = 1
+    	</isNotEmpty>
+		<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+			SDE.ST_INTERSECTS(H.SHAPE, (SELECT SDE.ST_GEOMFROMTEXT('POLYGON  (($xmin$ $ymin$, $xmax$ $ymin$, $xmax$ $ymax$, $xmin$ $ymax$, $xmin$ $ymin$))', ( SELECT DISTINCT SRID FROM SDE.ST_GEOMETRY_COLUMNS WHERE OWNER='NGII_AIR3' AND TABLE_NAME = 'AIR_ORIENTMAP_AS' AND COLUMN_NAME = 'SHAPE')) FROM DUAL)) = 1
+		</isGreaterEqual>
+		<isGreaterThan prepend="AND" property="radius" compareValue="0">
+			SQRT(POWER((SDE.ST_MAXY(H.SHAPE) + SDE.ST_MINY(H.SHAPE))/2 - (#ymax# + #ymin#)/2, 2) + POWER((SDE.ST_MAXX(H.SHAPE) + SDE.ST_MINX(H.SHAPE))/2 - (#xmax# + #xmin#)/2, 2)) &lt;= #radius#
+		</isGreaterThan>
+		<isNotEmpty property="securityCde" prepend="AND">
+			G.SECURITY_CDE = #securityCde#		
+		</isNotEmpty>
+		
+		<isEqual prepend="AND" property="fileExt" compareValue="O">
+			NVL(UPPER(B.FILE_EXT), 'X') = #fileExt#
+		</isEqual>
+		
+		<!-- <include refid="Img_air_policy"/> -->
+		
+		 ORDER BY A.ZONE_CODE DESC
+		        , A.PH_COURSE ASC
+		        , TO_NUMBER(REGEXP_REPLACE(A.PH_NUM, '[^0-9]')) ASC
+		        , A.PH_NUM ASC
+         
+	</select>
+	
+	
+	<!-- 통합검색(nir 검색) -->
+	<select id="searchDAO.selectNirImgList" parameterClass="paramVO" resultClass="egovMap">
+		SELECT 'PDT009' AS IMAGE_CDE,
+    			SUBSTR (A.ZONE_CODE, 1, 4) SCENEYEAR,
+		       A.ZONE_CODE,
+		       A.PH_COURSE,
+		       A.PH_NUM,
+		       E.ZONE_NAM,
+		       trim(D.STO_DRV) as STO_DRV,
+		       C.FOLDER_NAM,
+		       B.FILE_NAM,
+		       B.FILE_FORMAT,
+		       B.FILE_SIZE,
+		       NVL(B.FILE_EXT, 0) FILE_EXT,
+		       F.XMIN,
+		       F.XMAX,
+		       F.YMIN,
+		       F.YMAX,
+           	   (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SECURITY_CDE' AND CDE_CDE = G.SECURITY_CDE) AS SECURITY_CDE
+		FROM   AIR_BASEMETA_DTS A
+		       INNER JOIN STO_AIRLOC_DTS B
+		          ON A.ZONE_CODE = B.ZONE_CODE
+		             AND A.PH_COURSE = B.PH_COURSE
+		             AND A.PH_NUM = B.PH_NUM
+		             AND B.STORAGE_CDE = 'AIR002'
+		       INNER JOIN CMT_STORAGE_CDE C
+		          ON B.STORAGE_CDE = C.CODE_CDE
+		       INNER JOIN STO_INFO_DTS D
+		          ON B.STO_IDN = D.STO_IDN
+		       INNER JOIN AIR_ZONE_DTS E
+		          ON A.ZONE_CODE = E.ZONE_CODE
+		          AND E.IMAGE_CDE = 'PDT001'
+				<isNotEmpty property="startYear" prepend="AND">
+					<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>	
+				</isNotEmpty>
+				<isNotEmpty property="endYear" prepend="AND">
+					<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>	
+				</isNotEmpty>
+		       INNER JOIN META_AIRMAP_IDENT F
+		          ON A.ZONE_CODE = F.ZONE_CODE
+		             AND A.PH_COURSE = F.PH_COURSE
+		             AND A.PH_NUM = F.PH_NUM
+		             AND F.TARGET_NAME IN ('항공사진 이미지', '항공사진근적외이미지')
+		             AND F.XMIN IS NOT NULL
+				<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+					<![CDATA[ xmin >= #xmin#	 ]]>	
+				</isGreaterEqual>
+				<isGreaterEqual prepend="AND" property="ymin" compareValue="1">
+					<![CDATA[ ymin >= #ymin#	 ]]>			
+				</isGreaterEqual>
+				<isGreaterEqual prepend="AND" property="xmax" compareValue="1">
+					<![CDATA[ xmax <= #xmax#	 ]]>	
+				</isGreaterEqual>
+				<isGreaterEqual prepend="AND" property="ymax" compareValue="1">
+					<![CDATA[ ymax <= #ymax#	 ]]>			
+				</isGreaterEqual>
+		       INNER JOIN AIR_PRODUCT_DTS G
+		          ON A.ZONE_CODE = G.ZONE_CODE
+		             AND A.PH_COURSE = G.PH_COURSE
+		             AND A.PH_NUM = G.PH_NUM
+			<dynamic prepend="WHERE">
+				<isNotEmpty property="zoneCode" prepend="AND">
+					A.ZONE_CODE = #zoneCode#		
+				</isNotEmpty>
+				<isNotEmpty property="sigunguCode" prepend="AND">
+					A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#,0,2)||'%'
+				</isNotEmpty>
+			</dynamic>
+          ORDER BY A.ZONE_CODE DESC, A.PH_COURSE ASC, A.PH_NUM ASC
+	</select>
+	
+	<select id="searchDAO.selectNirImgFolderList" parameterClass="paramVO" resultClass="egovMap">
+	
+		SELECT 'PDT009' AS IMAGE_CDE
+		     , SUBSTR(A.ZONE_CODE, 1, 4) SCENEYEAR
+		     , A.ZONE_CODE
+		     , A.PH_COURSE
+		     , E.ZONE_NAM
+		     , G.SECURITY_CDE SECURITY_CD
+		     , (
+		        SELECT CDE_NAM 
+		          FROM CMT_DETAIL_CODE_NIIM 
+		         WHERE FLE_IDN = 'SECURITY_CDE' 
+		           AND CDE_CDE = G.SECURITY_CDE
+		       ) AS SECURITY_CDE
+		     , COUNT(A.PH_NUM) CHILD_CNT
+		     , SUM(CASE WHEN B.FILE_EXT = 'O' THEN 1 ELSE 0 END) DOWNLOAD_ABLE_CNT
+		  FROM AIR_BASEMETA_DTS A
+		     , STO_AIRLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		     , META_AIRMAP_IDENT F
+		     , AIR_PRODUCT_DTS G
+		 WHERE A.ZONE_CODE   = B.ZONE_CODE
+		   AND A.PH_COURSE   = B.PH_COURSE
+		   AND A.PH_NUM      = B.PH_NUM
+		   AND A.ZONE_CODE   = E.ZONE_CODE
+		   AND A.ZONE_CODE   = F.ZONE_CODE
+		   AND A.PH_COURSE   = F.PH_COURSE
+		   AND A.PH_NUM      = F.PH_NUM
+		   AND A.ZONE_CODE   = G.ZONE_CODE
+		   AND A.PH_COURSE   = G.PH_COURSE
+		   AND A.PH_NUM      = G.PH_NUM
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN     = D.STO_IDN
+		   AND NVL(E.IMAGE_CDE, 'PDT001') = 'PDT009'
+		   AND F.XMIN IS NOT NULL
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		<isNotEmpty property="sigunguCode" prepend="AND">
+			A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#, 0, 5) || '%'
+		</isNotEmpty>
+		<isNotEmpty property="startYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="endYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>
+		</isNotEmpty>
+		<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+			<![CDATA[ DECRYPT(F.XMIN) >= #xmin#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymin" compareValue="1">
+			<![CDATA[ DECRYPT(F.YMIN) >= #ymin#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="xmax" compareValue="1">
+			<![CDATA[ DECRYPT(F.XMAX) <= #xmax#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymax" compareValue="1">
+			<![CDATA[ DECRYPT(F.YMAX) <= #ymax#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterThan prepend="AND" property="radius" compareValue="0">
+			<![CDATA[ SQRT(POWER((DECRYPT(ymax) + DECRYPT(ymin))/2 - (#ymax# + #ymin#)/2, 2) + POWER((DECRYPT(xmax) + DECRYPT(xmin))/2 - (#xmax# + #xmin#)/2, 2)) <= #radius#	 ]]>
+		</isGreaterThan>
+		
+		<!-- <include refid="Img_nir_policy"/> -->
+		
+		 GROUP BY SUBSTR(A.ZONE_CODE, 1, 4)
+		        , A.ZONE_CODE
+		        , A.PH_COURSE
+		        , E.ZONE_NAM
+		        , G.SECURITY_CDE
+		 ORDER BY SUBSTR(A.ZONE_CODE, 1, 4) DESC
+		        , G.SECURITY_CDE
+		        , A.ZONE_CODE DESC
+		        , A.PH_COURSE
+         
+	</select>
+	
+	<select id="searchDAO.selectNirImgDataList" parameterClass="paramVO" resultClass="egovMap">
+	
+		SELECT 'PDT009' AS IMAGE_CDE
+		     , SUBSTR(A.ZONE_CODE, 1, 4) SCENEYEAR
+		     , A.ZONE_CODE
+		     , A.PH_COURSE
+		     , A.PH_NUM
+		     , E.ZONE_NAM
+		     , TRIM(D.STO_DRV) as STO_DRV
+		     , C.FOLDER_NAM
+		     , B.FILE_NAM
+		     , B.FILE_FORMAT
+		     , B.FILE_SIZE
+		     , NVL(UPPER(B.FILE_EXT), 'X') FILE_EXT
+		     , DECRYPT(F.XMIN) XMIN
+		     , DECRYPT(F.XMAX) XMAX
+		     , DECRYPT(F.YMIN) YMIN
+		     , DECRYPT(F.YMAX) YMAX
+		     , G.SECURITY_CDE SECURITY_CD
+		     , (
+		        SELECT CDE_NAM 
+		          FROM CMT_DETAIL_CODE_NIIM 
+		         WHERE FLE_IDN = 'SECURITY_CDE' 
+		           AND CDE_CDE = G.SECURITY_CDE
+		       ) AS SECURITY_CDE
+		     
+		<include refid="Nir_file_path"/>
+		     
+		  FROM AIR_BASEMETA_DTS A
+		     , STO_AIRLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		     , META_AIRMAP_IDENT F
+		     , AIR_PRODUCT_DTS G
+		 WHERE A.ZONE_CODE   = B.ZONE_CODE
+		   AND A.PH_COURSE   = B.PH_COURSE
+		   AND A.PH_NUM      = B.PH_NUM
+		   AND A.ZONE_CODE   = E.ZONE_CODE
+		   AND A.ZONE_CODE   = F.ZONE_CODE
+		   AND A.PH_COURSE   = F.PH_COURSE
+		   AND A.PH_NUM      = F.PH_NUM
+		   AND A.ZONE_CODE   = G.ZONE_CODE
+		   AND A.PH_COURSE   = G.PH_COURSE
+		   AND A.PH_NUM      = G.PH_NUM
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN     = D.STO_IDN
+		   AND NVL(E.IMAGE_CDE, 'PDT001') = 'PDT009'
+		   AND F.XMIN IS NOT NULL
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		<isNotEmpty property="phCourse" prepend="AND">
+			A.PH_COURSE = #phCourse#
+		</isNotEmpty>
+		<isNotEmpty property="sigunguCode" prepend="AND">
+			A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#, 0, 5) || '%'
+		</isNotEmpty>
+		<isNotEmpty property="startYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="endYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>
+		</isNotEmpty>
+		<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+			<![CDATA[ DECRYPT(F.XMIN) >= #xmin#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymin" compareValue="1">
+			<![CDATA[ DECRYPT(F.YMIN) >= #ymin#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="xmax" compareValue="1">
+			<![CDATA[ DECRYPT(F.XMAX) <= #xmax#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymax" compareValue="1">
+			<![CDATA[ DECRYPT(F.YMAX) <= #ymax#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterThan prepend="AND" property="radius" compareValue="0">
+			<![CDATA[ SQRT(POWER((DECRYPT(ymax) + DECRYPT(ymin))/2 - (#ymax# + #ymin#)/2, 2) + POWER((DECRYPT(xmax) + DECRYPT(xmin))/2 - (#xmax# + #xmin#)/2, 2)) <= #radius#	 ]]>
+		</isGreaterThan>
+		<isNotEmpty property="securityCde" prepend="AND">
+			G.SECURITY_CDE = #securityCde#		
+		</isNotEmpty>
+		
+		<isEqual prepend="AND" property="fileExt" compareValue="O">
+			NVL(UPPER(B.FILE_EXT), 'X') = #fileExt#
+		</isEqual>
+		
+		<!-- <include refid="Img_nir_policy"/> -->
+		
+		 ORDER BY A.ZONE_CODE DESC
+		        , A.PH_COURSE ASC
+		        , TO_NUMBER(REGEXP_REPLACE(A.PH_NUM, '[^0-9]')) ASC
+		        , A.PH_NUM ASC
+         
+	</select>
+	
+	
+	<!-- 통합검색(정사영상 검색) -->
+	<select id="searchDAO.selectOrtImgList" parameterClass="paramVO" resultClass="egovMap">
+		/**searchDAO.selectOrtImgList*/
+		SELECT 'PDT004' AS IMAGE_CDE,
+		       SUBSTR (A.ZONE_CODE, 1, 4) SCENEYEAR,
+		       A.MAP5000_NUM,
+		       H.MAP5000_NAM,
+		       A.ZONE_CODE,
+		       E.ZONE_NAM,
+		       trim(D.STO_DRV) as STO_DRV,
+		       C.FOLDER_NAM,
+		       B.FILE_NAM,
+		       B.FILE_FORMAT,
+		       B.FILE_SIZE,
+		       NVL(B.FILE_EXT, 0) FILE_EXT,
+		       F.XMIN,
+		       F.XMAX,
+		       F.YMIN,
+		       F.YMAX,
+		       H.GTYP_DST,
+           	   (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SECURITY_CDE' AND CDE_CDE = G.SECURITY_CDE) AS SECURITY_CDE		            
+		FROM   ORT_BASEMETA_DTS A
+		       INNER JOIN STO_ORTLOC_DTS B
+		          ON     A.ZONE_CODE = B.ZONE_CODE
+		             AND A.MAP5000_NUM = B.MAP5000_NUM
+<!-- 		             AND B.STORAGE_CDE = 'ORT003' -->
+		       INNER JOIN CMT_STORAGE_CDE C
+		          ON B.STORAGE_CDE = C.CODE_CDE
+		       INNER JOIN STO_INFO_DTS D
+		          ON B.STO_IDN = D.STO_IDN
+		       INNER JOIN AIR_ZONE_DTS E
+		          ON A.ZONE_CODE = E.ZONE_CODE
+		          AND E.IMAGE_CDE = 'PDT004'
+				<isNotEmpty property="startYear" prepend="AND">
+					<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>	
+				</isNotEmpty>
+				<isNotEmpty property="endYear" prepend="AND">
+					<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>	
+				</isNotEmpty>
+		       INNER JOIN ORT_ORINETMAP_AS F
+		          ON     A.ZONE_CODE = F.ZONE_CODE
+		             AND A.MAP5000_NUM = F.MAP5000_NUM
+		             AND F.XMIN IS NOT NULL
+				<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+					<![CDATA[ xmin >= #xmin#	 ]]>	
+				</isGreaterEqual>
+				<isGreaterEqual prepend="AND" property="ymin" compareValue="1">
+					<![CDATA[ ymin >= #ymin#	 ]]>			
+				</isGreaterEqual>
+				<isGreaterEqual prepend="AND" property="xmax" compareValue="1">
+					<![CDATA[ xmax <= #xmax#	 ]]>	
+				</isGreaterEqual>
+				<isGreaterEqual prepend="AND" property="ymax" compareValue="1">
+					<![CDATA[ ymax <= #ymax#	 ]]>			
+				</isGreaterEqual>
+		       INNER JOIN META_ORT_CONTR G
+		          ON     A.ZONE_CODE = G.ZONE_CODE
+		             AND A.MAP5000_NUM = G.MAP5000_NUM
+		             AND G.SECURITY_CDE IS NOT NULL 
+		       INNER JOIN ORT_PRODUCT_DTS H
+		          ON     A.ZONE_CODE = H.ZONE_CODE
+		             AND A.MAP5000_NUM = H.MAP5000_NUM
+			<dynamic prepend="WHERE">
+				<isNotEmpty property="zoneCode" prepend="AND">
+					A.ZONE_CODE = #zoneCode#		
+				</isNotEmpty>
+				<isNotEmpty property="sigunguCode" prepend="AND">
+					A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#,0,2)||'%'
+				</isNotEmpty>
+			</dynamic>
+          ORDER BY A.ZONE_CODE DESC, A.MAP5000_NUM ASC
+	</select>
+	
+	<select id="searchDAO.selectOrtImgFolderList" parameterClass="paramVO" resultClass="egovMap">
+		/**searchDAO.selectOrtImgFolderList*/
+		SELECT 'PDT004' AS IMAGE_CDE
+		     , SUBSTR(A.ZONE_CODE, 1, 4) SCENEYEAR
+		     , A.ZONE_CODE
+		     , E.ZONE_NAM
+		     , H.GTYP_DST
+		     , SUBSTR(A.MAP5000_NUM, 1, 5) MAP_NUM
+		     , SUBSTR(A.MAP5000_NUM, 1, 5)
+		       || DECODE(REGEXP_REPLACE(MAX(H.MAP5000_NAM), '[0-9()]', '')
+		               , NULL
+		               , ''
+		               , '(' || REGEXP_REPLACE(MAX(H.MAP5000_NAM), '[0-9()]', '') || ')' ) MAP_NAM
+		     , H.SECURITY_CDE SECURITY_CD
+		     , (
+		        SELECT CDE_NAM 
+		          FROM CMT_DETAIL_CODE_NIIM 
+		         WHERE FLE_IDN = 'SECURITY_CDE' 
+		           AND CDE_CDE = H.SECURITY_CDE
+		       ) AS SECURITY_CDE
+		     , COUNT(A.MAP5000_NUM) CHILD_CNT
+		     , SUM(CASE WHEN B.FILE_EXT = 'O' THEN 1 ELSE 0 END) DOWNLOAD_ABLE_CNT
+		  FROM ORT_BASEMETA_DTS A
+		     , STO_ORTLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		     , ORT_ORIENTMAP_AS F
+		     , ORT_PRODUCT_DTS H
+		 WHERE A.ZONE_CODE   = B.ZONE_CODE
+		   AND A.MAP5000_NUM = B.MAP5000_NUM
+		   AND A.ZONE_CODE   = E.ZONE_CODE
+		   AND A.ZONE_CODE   = F.ZONE_CODE
+		   AND A.MAP5000_NUM = F.MAP5000_NUM
+		   AND A.ZONE_CODE   = H.ZONE_CODE
+		   AND A.MAP5000_NUM = H.MAP5000_NUM
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN     = D.STO_IDN
+<!-- 		   AND E.IMAGE_CDE   = 'PDT004' -->
+		   AND F.XMIN IS NOT NULL
+		   AND H.SECURITY_CDE IS NOT NULL
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		<isNotEmpty property="sigunguCode" prepend="AND">
+			A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#, 0, 5) || '%'
+		</isNotEmpty>
+		<isNotEmpty property="startYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="endYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>
+		</isNotEmpty>
+		<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+			<![CDATA[ DECRYPT(F.XMIN) >= #xmin#	 ]]>
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymin" compareValue="1">
+			<![CDATA[ DECRYPT(F.YMIN) >= #ymin#	 ]]>
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="xmax" compareValue="1">
+			<![CDATA[ DECRYPT(F.XMAX) <= #xmax#	 ]]>
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymax" compareValue="1">
+			<![CDATA[ DECRYPT(F.YMAX) <= #ymax#	 ]]>
+		</isGreaterEqual>
+		<isGreaterThan prepend="AND" property="radius" compareValue="0">
+			<![CDATA[ SQRT(POWER((DECRYPT(ymax) + DECRYPT(ymin))/2 - (#ymax# + #ymin#)/2, 2) + POWER((DECRYPT(xmax) + DECRYPT(xmin))/2 - (#xmax# + #xmin#)/2, 2)) <= #radius#	 ]]>
+		</isGreaterThan>
+		
+		<!-- <include refid="Img_ort_policy"/> -->
+		
+		 GROUP BY SUBSTR(A.ZONE_CODE, 1, 4)
+		        , A.ZONE_CODE
+		        , E.ZONE_NAM
+		        , H.GTYP_DST
+		        , SUBSTR(A.MAP5000_NUM, 1, 5)
+		        , H.SECURITY_CDE
+		 ORDER BY SUBSTR(A.ZONE_CODE, 1, 4) DESC
+		        , H.SECURITY_CDE
+		        , H.GTYP_DST
+		        , A.ZONE_CODE DESC
+		        , SUBSTR(A.MAP5000_NUM, 1, 5)
+		        
+	</select>
+	
+	<select id="searchDAO.selectOrtImgDataList" parameterClass="paramVO" resultClass="egovMap">
+	
+		SELECT 'PDT004' AS IMAGE_CDE
+		     , SUBSTR(A.ZONE_CODE, 1, 4) SCENEYEAR
+		     , A.ZONE_CODE
+		     , E.ZONE_NAM
+		     , SUBSTR(A.MAP5000_NUM, 1, 5) MAP_NUM
+		     , SUBSTR(A.MAP5000_NUM, 1, 5)
+		       || DECODE(REGEXP_REPLACE(MAX(H.MAP5000_NAM) OVER(PARTITION BY SUBSTR(A.ZONE_CODE, 1, 4), A.ZONE_CODE, E.ZONE_NAM, H.GTYP_DST, SUBSTR(A.MAP5000_NUM, 1, 5), H.SECURITY_CDE), '[0-9()]', '')
+		               , NULL
+		               , ''
+		               , '(' || REGEXP_REPLACE(MAX(H.MAP5000_NAM) OVER(PARTITION BY SUBSTR(A.ZONE_CODE, 1, 4), A.ZONE_CODE, E.ZONE_NAM, H.GTYP_DST, SUBSTR(A.MAP5000_NUM, 1, 5), H.SECURITY_CDE), '[0-9()]', '') || ')' ) MAP_NAM
+		     , A.MAP5000_NUM
+		     , H.MAP5000_NAM
+		     , TRIM(D.STO_DRV) as STO_DRV
+		     , C.FOLDER_NAM
+		     , B.FILE_NAM
+		     , B.FILE_FORMAT
+		     , B.FILE_SIZE
+		     , NVL(UPPER(B.FILE_EXT), 'X') FILE_EXT
+		     , DECRYPT(F.XMIN) XMIN
+		     , DECRYPT(F.XMAX) XMAX
+		     , DECRYPT(F.YMIN) YMIN
+		     , DECRYPT(F.YMAX) YMAX
+		     <!--F.SCALE-->
+		     , H.GTYP_DST
+		     , H.SECURITY_CDE SECURITY_CD
+		     , (
+		        SELECT CDE_NAM 
+		          FROM CMT_DETAIL_CODE_NIIM 
+		         WHERE FLE_IDN = 'SECURITY_CDE' 
+		           AND CDE_CDE = H.SECURITY_CDE
+		       ) AS SECURITY_CDE
+		     
+		<include refid="Ort_file_path"/>
+		     
+		  FROM ORT_BASEMETA_DTS A
+		     , STO_ORTLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		     , ORT_ORIENTMAP_AS F
+		     , ORT_PRODUCT_DTS H
+		 WHERE A.ZONE_CODE   = B.ZONE_CODE
+		   AND A.MAP5000_NUM = B.MAP5000_NUM
+		   AND A.ZONE_CODE   = E.ZONE_CODE
+		   AND A.ZONE_CODE   = F.ZONE_CODE
+		   AND A.MAP5000_NUM = F.MAP5000_NUM
+		   AND A.ZONE_CODE   = H.ZONE_CODE
+		   AND A.MAP5000_NUM = H.MAP5000_NUM
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN     = D.STO_IDN
+		   AND B.STORAGE_CDE = 'ORT009'
+<!-- 		   AND E.IMAGE_CDE   = 'PDT004' -->
+		   AND F.XMIN IS NOT NULL
+		   AND H.SECURITY_CDE IS NOT NULL
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		<isNotEmpty property="mapNum" prepend="AND">
+			A.MAP5000_NUM LIKE #mapNum# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="admcd" prepend="AND">
+			<isEqual property="tableNm" compareValue="TL_SCCO_CTPRVN">
+				SDE.ST_INTERSECTS(F.SHAPE, (
+					SELECT SHAPE 
+					FROM NGII_MAP.TL_SCCO_CTPRVN 
+					WHERE CTPRVN_CD LIKE #admcd# || '%'
+				)) = 1
+			</isEqual>
+			<isEqual property="tableNm" compareValue="TL_SCCO_SIG">
+				SDE.ST_INTERSECTS(F.SHAPE, (
+					SELECT SHAPE 
+					FROM NGII_MAP.TL_SCCO_SIG 
+					WHERE SIG_CD LIKE #admcd# || '%'
+				)) = 1
+			</isEqual>
+			<isEqual property="tableNm" compareValue="TL_SCCO_EMD">
+				SDE.ST_INTERSECTS(F.SHAPE, (
+					SELECT SHAPE 
+					FROM NGII_MAP.TL_SCCO_EMD 
+					WHERE EMD_CD LIKE #admcd# || '%'
+				)) = 1
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty property="startYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="endYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="geometry" prepend="AND">
+    		AND SDE.ST_INTERSECTS(F.SHAPE, SDE.ST_GEOMETRY(#geometry#, (SELECT DISTINCT SRID FROM SDE.ST_GEOMETRY_COLUMNS WHERE OWNER='NGII_AIR3' AND TABLE_NAME = 'ORT_ORIENTMAP_AS' AND COLUMN_NAME = 'SHAPE'))) = 1
+    	</isNotEmpty>
+		<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+			SDE.ST_INTERSECTS(F.SHAPE, (SELECT SDE.ST_GEOMFROMTEXT('POLYGON  (($xmin$ $ymin$, $xmax$ $ymin$, $xmax$ $ymax$, $xmin$ $ymax$, $xmin$ $ymin$))', ( SELECT DISTINCT SRID FROM SDE.ST_GEOMETRY_COLUMNS WHERE OWNER='NGII_AIR3' AND TABLE_NAME = 'ORT_ORIENTMAP_AS' AND COLUMN_NAME = 'SHAPE')) FROM DUAL)) = 1
+		</isGreaterEqual>
+		<isGreaterThan prepend="AND" property="radius" compareValue="0">
+			SQRT(POWER((SDE.ST_MAXY(F.SHAPE) + SDE.ST_MINY(F.SHAPE))/2 - (#ymax# + #ymin#)/2, 2) + POWER((SDE.ST_MAXX(F.SHAPE) + SDE.ST_MINX(F.SHAPE))/2 - (#xmax# + #xmin#)/2, 2)) &lt;= #radius#
+		</isGreaterThan>
+		<isNotEmpty property="securityCde" prepend="AND">
+			H.SECURITY_CDE = #securityCde#
+		</isNotEmpty>
+		
+		<!-- 
+			2023.11.09
+			바뀐 gtypDst값 주석처리
+		 -->
+		<!-- <isNotEmpty property="gtypDst" prepend="AND">
+			H.GTYP_DST = #gtypDst#
+		</isNotEmpty> -->
+		
+		<isEqual prepend="AND" property="fileExt" compareValue="O">
+			NVL(UPPER(B.FILE_EXT), 'X') = #fileExt#
+		</isEqual>
+		
+		<!-- <include refid="Img_ort_policy"/> -->
+		
+		 ORDER BY A.ZONE_CODE DESC
+		        , A.MAP5000_NUM ASC
+		        
+	</select>
+	
+	
+	<!-- 통합검색(수치표고 검색) -->
+	<select id="searchDAO.selectDemImgList" parameterClass="paramVO" resultClass="egovMap">
+		SELECT 'PDT002' AS IMAGE_CDE,
+		       SUBSTR (A.ZONE_CODE, 1, 4) SCENEYEAR,
+		       A.MAP5000_NUM,
+		       F.MAP5000_NAM,
+		       A.ZONE_CODE,
+		       E.ZONE_NAM,
+		       trim(D.STO_DRV) as STO_DRV,
+		       C.FOLDER_NAM,
+		       B.FILE_NAM,
+		       B.FILE_FORMAT,
+		       B.FILE_SIZE,
+		       NVL(B.FILE_EXT, 0) FILE_EXT,
+		       F.GRID_INT,
+		       (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SECURITY_CDE' AND CDE_CDE = F.SECURITY_CDE) AS SECURITY_CDE
+		FROM   DEM_BASEMETA_DTS A
+		       INNER JOIN STO_DEMLOC_DTS B
+		          ON     A.ZONE_CODE = B.ZONE_CODE
+		             AND A.MAP5000_NUM = B.MAP5000_NUM
+<!-- 		             AND B.STORAGE_CDE = 'DEM004' -->
+		       INNER JOIN CMT_STORAGE_CDE C
+		          ON B.STORAGE_CDE = C.CODE_CDE
+		       INNER JOIN STO_INFO_DTS D
+		          ON B.STO_IDN = D.STO_IDN
+		       INNER JOIN AIR_ZONE_DTS E
+		          ON A.ZONE_CODE = E.ZONE_CODE
+		          AND E.IMAGE_CDE = 'PDT002'
+				<isNotEmpty property="startYear" prepend="AND">
+					<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>	
+				</isNotEmpty>
+				<isNotEmpty property="endYear" prepend="AND">
+					<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>	
+				</isNotEmpty>
+		       INNER JOIN DEM_PRODUCT_DTS F
+		          ON     A.ZONE_CODE = F.ZONE_CODE
+		             AND A.MAP5000_NUM = F.MAP5000_NUM
+			<dynamic prepend="WHERE">
+				<isNotEmpty property="zoneCode" prepend="AND">
+					A.ZONE_CODE = #zoneCode#		
+				</isNotEmpty>
+				<isNotEmpty property="sigunguCode" prepend="AND">
+					A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#,0,2)||'%'
+				</isNotEmpty>
+			</dynamic>
+         	ORDER BY A.ZONE_CODE DESC, A.MAP5000_NUM ASC
+	</select>
+	
+	<select id="searchDAO.selectDemImgFolderList" parameterClass="paramVO" resultClass="egovMap">
+	
+		SELECT 'PDT002' AS IMAGE_CDE
+		     , SUBSTR (A.ZONE_CODE, 1, 4) SCENEYEAR
+		     , A.ZONE_CODE
+		     , E.ZONE_NAM
+		     , F.GRID_INT
+		     , LENGTH(A.MAP5000_NUM) MAP_NUM
+		     , DECODE(LENGTH(A.MAP5000_NUM), 5, '50000도엽', 6, '25000도엽', 7, '10000도엽', 8, '5000도엽') MAP_NAM
+		     , F.SECURITY_CDE SECURITY_CD
+		     , (
+		        SELECT CDE_NAM 
+		          FROM CMT_DETAIL_CODE_NIIM 
+		         WHERE FLE_IDN = 'SECURITY_CDE' 
+		           AND CDE_CDE = F.SECURITY_CDE
+		       ) AS SECURITY_CDE
+		     , COUNT(A.MAP5000_NUM) CHILD_CNT
+		     , SUM(CASE WHEN B.FILE_EXT = 'O' THEN 1 ELSE 0 END) DOWNLOAD_ABLE_CNT
+		  FROM DEM_BASEMETA_DTS A
+		     , STO_DEMLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		     , DEM_PRODUCT_DTS F
+		 WHERE A.ZONE_CODE   = B.ZONE_CODE
+		   AND A.MAP5000_NUM = B.MAP5000_NUM
+		   AND A.ZONE_CODE   = E.ZONE_CODE
+		   AND A.ZONE_CODE   = F.ZONE_CODE
+		   AND A.MAP5000_NUM = F.MAP5000_NUM
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN     = D.STO_IDN
+		   AND LENGTH(A.MAP5000_NUM) IN (5, 6, 7, 8)
+<!-- 		   AND E.IMAGE_CDE   = 'PDT002' -->
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		<isNotEmpty property="sigunguCode" prepend="AND">
+			A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#, 0, 5) || '%'
+		</isNotEmpty>
+		<isNotEmpty property="startYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="endYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>
+		</isNotEmpty>
+		<isGreaterEqual property="xmin" compareValue="1">
+		   AND DECRYPT(A.XMIN) >= #xmin#
+		</isGreaterEqual>
+		<isGreaterEqual property="ymin" compareValue="1">
+		   AND DECRYPT(A.YMIN) >= #ymin#
+		</isGreaterEqual>
+		<isGreaterEqual property="xmax" compareValue="1">
+		   AND DECRYPT(A.XMAX) &lt;= #xmax#
+		</isGreaterEqual>
+		<isGreaterEqual property="ymax" compareValue="1">
+		   AND DECRYPT(A.YMAX) &lt;= #ymax#
+		</isGreaterEqual>
+		<isGreaterThan prepend="AND" property="radius" compareValue="0">
+			<![CDATA[ SQRT(POWER((DECRYPT(ymax) + DECRYPT(ymin))/2 - (#ymax# + #ymin#)/2, 2) + POWER((DECRYPT(xmax) + DECRYPT(xmin))/2 - (#xmax# + #xmin#)/2, 2)) <= #radius#	 ]]>
+		</isGreaterThan>
+		
+		<!--<include refid="Img_dem_policy"/>-->
+		
+		 GROUP BY SUBSTR(A.ZONE_CODE, 1, 4)
+		        , A.ZONE_CODE
+		        , E.ZONE_NAM
+		        , F.GRID_INT
+		        , LENGTH(A.MAP5000_NUM)
+		        , F.SECURITY_CDE
+		 ORDER BY SUBSTR(A.ZONE_CODE, 1, 4)
+		        , F.SECURITY_CDE
+		        , F.GRID_INT
+		        , A.ZONE_CODE DESC
+		        , LENGTH(A.MAP5000_NUM)
+		 
+	</select>
+	
+	<select id="searchDAO.selectDemImgDataList" parameterClass="paramVO" resultClass="egovMap">
+	
+		SELECT 'PDT002' AS IMAGE_CDE
+		     , SUBSTR (A.ZONE_CODE, 1, 4) SCENEYEAR
+		     , A.ZONE_CODE
+		     , E.ZONE_NAM
+		     , LENGTH(A.MAP5000_NUM) MAP_NUM
+		     , DECODE(LENGTH(A.MAP5000_NUM), 5, '50000도엽', 6, '25000도엽', 7, '10000도엽', 8, '5000도엽') MAP_NAM
+		     , A.MAP5000_NUM
+		     , F.MAP5000_NAM
+		     , TRIM(D.STO_DRV) as STO_DRV
+		     , C.FOLDER_NAM
+		     , B.FILE_NAM
+		     , B.FILE_FORMAT
+		     , B.FILE_SIZE
+		     , NVL(UPPER(B.FILE_EXT), 'X') FILE_EXT
+		     , DECRYPT(G.XMIN) XMIN
+		     , DECRYPT(G.XMAX) XMAX
+		     , DECRYPT(G.YMIN) YMIN
+		     , DECRYPT(G.YMAX) YMAX
+		     , F.GRID_INT
+		     , F.SECURITY_CDE SECURITY_CD
+		     , (
+		        SELECT CDE_NAM 
+		          FROM CMT_DETAIL_CODE_NIIM 
+		         WHERE FLE_IDN = 'SECURITY_CDE' 
+		           AND CDE_CDE = F.SECURITY_CDE
+		       ) AS SECURITY_CDE
+		     
+		<include refid="Dem_file_path"/>
+		     
+		  FROM DEM_BASEMETA_DTS A
+		     , STO_DEMLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		     , DEM_PRODUCT_DTS F
+			 , DEM_ORIENTMAP_AS G
+		 WHERE A.ZONE_CODE   = B.ZONE_CODE
+		   AND A.MAP5000_NUM = B.MAP5000_NUM
+		   AND A.ZONE_CODE   = E.ZONE_CODE
+		   AND A.ZONE_CODE   = F.ZONE_CODE
+		   AND A.MAP5000_NUM = F.MAP5000_NUM
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN     = D.STO_IDN
+		   AND A.ZONE_CODE   = G.ZONE_CODE
+		   AND TRIM(A.MAP5000_NUM) = TRIM(G.MAP5000_NUM)
+		   AND LENGTH(A.MAP5000_NUM) IN (5, 6, 7, 8)
+<!--  원본		   AND B.STORAGE_CDE LIKE 'DEM09%' -->
+<!--  테스트-->
+		   AND B.STORAGE_CDE LIKE 'DEM00%'
+<!-- 		   AND E.IMAGE_CDE   = 'PDT002' -->
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		<isNotEmpty property="mapNum" prepend="AND">
+			LENGTH(A.MAP5000_NUM) = #mapNum#
+		</isNotEmpty>
+		<isNotEmpty property="admcd" prepend="AND">
+			<isEqual property="tableNm" compareValue="TL_SCCO_CTPRVN">
+				SDE.ST_INTERSECTS(G.SHAPE, (
+					SELECT SHAPE 
+					FROM NGII_MAP.TL_SCCO_CTPRVN 
+					WHERE CTPRVN_CD LIKE #admcd# || '%'
+				)) = 1
+			</isEqual>
+			<isEqual property="tableNm" compareValue="TL_SCCO_SIG">
+				SDE.ST_INTERSECTS(G.SHAPE, (
+					SELECT SHAPE 
+					FROM NGII_MAP.TL_SCCO_SIG 
+					WHERE SIG_CD LIKE #admcd# || '%'
+				)) = 1
+			</isEqual>
+			<isEqual property="tableNm" compareValue="TL_SCCO_EMD">
+				SDE.ST_INTERSECTS(G.SHAPE, (
+					SELECT SHAPE 
+					FROM NGII_MAP.TL_SCCO_EMD 
+					WHERE EMD_CD LIKE #admcd# || '%'
+				)) = 1
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty property="startYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="endYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="geometry" prepend="AND">
+    		AND SDE.ST_INTERSECTS(G.SHAPE, SDE.ST_GEOMETRY(#geometry#, (SELECT DISTINCT SRID FROM SDE.ST_GEOMETRY_COLUMNS WHERE OWNER='NGII_AIR3' AND TABLE_NAME = 'DEM_ORIENTMAP_AS' AND COLUMN_NAME = 'SHAPE'))) = 1
+    	</isNotEmpty>
+		<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+			SDE.ST_INTERSECTS(G.SHAPE, (SELECT SDE.ST_GEOMFROMTEXT('POLYGON  (($xmin$ $ymin$, $xmax$ $ymin$, $xmax$ $ymax$, $xmin$ $ymax$, $xmin$ $ymin$))', ( SELECT DISTINCT SRID FROM SDE.ST_GEOMETRY_COLUMNS WHERE OWNER='NGII_AIR3' AND TABLE_NAME = 'DEM_ORIENTMAP_AS' AND COLUMN_NAME = 'SHAPE')) FROM DUAL)) = 1
+		</isGreaterEqual>
+		<isGreaterThan prepend="AND" property="radius" compareValue="0">
+			SQRT(POWER((SDE.ST_MAXY(G.SHAPE) + SDE.ST_MINY(G.SHAPE))/2 - (#ymax# + #ymin#)/2, 2) + POWER((SDE.ST_MAXX(G.SHAPE) + SDE.ST_MINX(G.SHAPE))/2 - (#xmax# + #xmin#)/2, 2)) &lt;= #radius#
+		</isGreaterThan>
+		<isNotEmpty property="securityCde" prepend="AND">
+			F.SECURITY_CDE = #securityCde#
+		</isNotEmpty>
+		<isNotEmpty property="gridInt" prepend="AND">
+			F.GRID_INT = #gridInt#
+		</isNotEmpty>
+		
+		<isEqual prepend="AND" property="fileExt" compareValue="O">
+			NVL(UPPER(B.FILE_EXT), 'X') = #fileExt#
+		</isEqual>
+		
+		<!--<include refid="Img_dem_policy"/>-->
+		
+		 ORDER BY A.ZONE_CODE DESC
+		        , A.MAP5000_NUM ASC
+		 
+	</select>
+	
+	
+	<!-- 통합검색(라이다 검색) -->
+	<select id="searchDAO.selectLidImgList" parameterClass="paramVO" resultClass="egovMap">
+		SELECT 'PDT005' AS IMAGE_CDE,
+		       SUBSTR (A.ZONE_CODE, 1, 4) SCENEYEAR,
+		       A.LIDAR_IDN,
+		       A.LIDAR_IDN as MAP5000_NUM,
+		       A.ZONE_CODE,
+		       E.ZONE_NAM,
+		       trim(D.STO_DRV) as STO_DRV,
+		       C.FOLDER_NAM,
+		       B.FILE_NAM,
+		       B.FILE_FORMAT,
+		       B.FILE_SIZE,
+		       NVL(B.FILE_EXT, 0) FILE_EXT,
+		       A.XMIN,
+		       A.XMAX,
+		       A.YMIN,
+		       A.YMAX,
+		       (SELECT CDE_NAM FROM CMT_DETAIL_CODE_NIIM WHERE FLE_IDN = 'SECURITY_CDE' AND CDE_CDE = A.SECURITY_CDE) AS SECURITY_CDE
+		FROM   LID_PRODUCT_DTS A
+		       INNER JOIN STO_LIDLOC_DTS B
+		          ON     A.ZONE_CODE = B.ZONE_CODE
+		          AND A.LIDAR_IDN = B.LIDAR_IDN
+		          AND B.STORAGE_CDE = 'LID001'
+		       INNER JOIN CMT_STORAGE_CDE C
+		          ON B.STORAGE_CDE = C.CODE_CDE
+		       INNER JOIN STO_INFO_DTS D
+		          ON B.STO_IDN = D.STO_IDN
+		       INNER JOIN AIR_ZONE_DTS E
+		          ON A.ZONE_CODE = E.ZONE_CODE
+				<isNotEmpty property="startYear" prepend="AND">
+					<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>	
+				</isNotEmpty>
+				<isNotEmpty property="endYear" prepend="AND">
+					<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>	
+				</isNotEmpty>
+			<dynamic prepend="WHERE">
+				<isNotEmpty property="zoneCode" prepend="AND">
+					A.ZONE_CODE = #zoneCode#		
+				</isNotEmpty>
+				<isNotEmpty property="sigunguCode" prepend="AND">
+					A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#,0,2)||'%'
+				</isNotEmpty>
+				<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+					<![CDATA[ xmin >= #xmin#	 ]]>	
+				</isGreaterEqual>
+				<isGreaterEqual prepend="AND" property="ymin" compareValue="1">
+					<![CDATA[ ymin >= #ymin#	 ]]>			
+				</isGreaterEqual>
+				<isGreaterEqual prepend="AND" property="xmax" compareValue="1">
+					<![CDATA[ xmax <= #xmax#	 ]]>	
+				</isGreaterEqual>
+				<isGreaterEqual prepend="AND" property="ymax" compareValue="1">
+					<![CDATA[ ymax <= #ymax#	 ]]>			
+				</isGreaterEqual>
+			</dynamic>
+			AND A.XMIN IS NOT NULL
+         	ORDER BY A.ZONE_CODE DESC, A.MAP5000_NUM ASC
+	</select>
+	
+	<select id="searchDAO.selectLidImgFolderList" parameterClass="paramVO" resultClass="egovMap">
+	
+		SELECT 'PDT005' AS IMAGE_CDE
+		     , SUBSTR(A.ZONE_CODE, 1, 4) SCENEYEAR
+		     , A.ZONE_CODE
+		     , E.ZONE_NAM
+		     , A.SECURITY_CDE SECURITY_CD
+		     , (
+		        SELECT CDE_NAM 
+		          FROM CMT_DETAIL_CODE_NIIM 
+		         WHERE FLE_IDN = 'SECURITY_CDE' 
+		           AND CDE_CDE = A.SECURITY_CDE
+		       ) AS SECURITY_CDE
+		     , COUNT(A.LIDAR_IDN) CHILD_CNT
+		     , SUM(CASE WHEN B.FILE_EXT = 'O' THEN 1 ELSE 0 END) DOWNLOAD_ABLE_CNT
+		  FROM LID_PRODUCT_DTS A
+		     , STO_LIDLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		 WHERE A.ZONE_CODE   = B.ZONE_CODE
+		   AND A.LIDAR_IDN   = B.LIDAR_IDN
+		   AND A.ZONE_CODE   = E.ZONE_CODE
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN     = D.STO_IDN
+		   AND A.XMIN IS NOT NULL
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#		
+		</isNotEmpty>
+		<isNotEmpty property="sigunguCode" prepend="AND">
+			A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#, 0, 5) || '%'
+		</isNotEmpty>
+		<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+			<![CDATA[ DECRYPT(A.XMIN) >= #xmin#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymin" compareValue="1">
+			<![CDATA[ DECRYPT(A.YMIN) >= #ymin#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="xmax" compareValue="1">
+			<![CDATA[ DECRYPT(A.XMAX) <= #xmax#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymax" compareValue="1">
+			<![CDATA[ DECRYPT(A.YMAX) <= #ymax#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterThan prepend="AND" property="radius" compareValue="0">
+			<![CDATA[ SQRT(POWER((DECRYPT(ymax) + DECRYPT(ymin))/2 - (#ymax# + #ymin#)/2, 2) + POWER((DECRYPT(xmax) + DECRYPT(xmin))/2 - (#xmax# + #xmin#)/2, 2)) <= #radius#	 ]]>
+		</isGreaterThan>
+		<isNotEmpty property="startYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="endYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>
+		</isNotEmpty>
+		
+		<!-- <include refid="Img_lid_policy"/> -->
+		
+		 GROUP BY SUBSTR(A.ZONE_CODE, 1, 4)
+		        , A.ZONE_CODE
+		        , E.ZONE_NAM
+		        , A.SECURITY_CDE
+		 ORDER BY SUBSTR(A.ZONE_CODE, 1, 4) DESC
+		        , A.SECURITY_CDE
+		        , A.ZONE_CODE DESC
+		        
+	</select>
+	
+	<select id="searchDAO.selectLidImgDataList" parameterClass="paramVO" resultClass="egovMap">
+	
+		SELECT 'PDT005' AS IMAGE_CDE
+		     , SUBSTR(A.ZONE_CODE, 1, 4) SCENEYEAR
+		     , A.ZONE_CODE
+		     , E.ZONE_NAM
+		     , A.LIDAR_IDN
+		     , A.MAP5000_NUM
+		     , TRIM(D.STO_DRV) as STO_DRV
+		     , C.FOLDER_NAM
+		     , B.FILE_NAM
+		     , B.FILE_FORMAT
+		     , B.FILE_SIZE
+		     , NVL(UPPER(B.FILE_EXT), 'X') FILE_EXT
+		     , DECRYPT(A.XMIN) XMIN
+		     , DECRYPT(A.XMAX) XMAX
+		     , DECRYPT(A.YMIN) YMIN
+		     , DECRYPT(A.YMAX) YMAX
+		     , A.SECURITY_CDE SECURITY_CD
+		     , (
+		        SELECT CDE_NAM 
+		          FROM CMT_DETAIL_CODE_NIIM 
+		         WHERE FLE_IDN = 'SECURITY_CDE' 
+		           AND CDE_CDE = A.SECURITY_CDE
+		       ) AS SECURITY_CDE
+		     
+		<include refid="Lid_file_path"/>
+		     
+		  FROM LID_PRODUCT_DTS A
+		     , STO_LIDLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		 WHERE A.ZONE_CODE   = B.ZONE_CODE
+		   AND A.LIDAR_IDN   = B.LIDAR_IDN
+		   AND A.ZONE_CODE   = E.ZONE_CODE
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN     = D.STO_IDN
+		   AND A.XMIN IS NOT NULL
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#		
+		</isNotEmpty>
+		<isNotEmpty property="securityCde" prepend="AND">
+			A.SECURITY_CDE = #securityCde#		
+		</isNotEmpty>
+		<isNotEmpty property="sigunguCode" prepend="AND">
+			A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#, 0, 5) || '%'
+		</isNotEmpty>
+		<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+			<![CDATA[ DECRYPT(A.XMIN) >= #xmin#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymin" compareValue="1">
+			<![CDATA[ DECRYPT(A.YMIN) >= #ymin#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="xmax" compareValue="1">
+			<![CDATA[ DECRYPT(A.XMAX) <= #xmax#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymax" compareValue="1">
+			<![CDATA[ DECRYPT(A.YMAX) <= #ymax#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterThan prepend="AND" property="radius" compareValue="0">
+			<![CDATA[ SQRT(POWER((DECRYPT(ymax) + DECRYPT(ymin))/2 - (#ymax# + #ymin#)/2, 2) + POWER((DECRYPT(xmax) + DECRYPT(xmin))/2 - (#xmax# + #xmin#)/2, 2)) <= #radius#	 ]]>
+		</isGreaterThan>
+		<isNotEmpty property="startYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="endYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>
+		</isNotEmpty>
+		
+		<isEqual prepend="AND" property="fileExt" compareValue="O">
+			NVL(UPPER(B.FILE_EXT), 'X') = #fileExt#
+		</isEqual>
+		
+		<!-- <include refid="Img_lid_policy"/> -->
+		
+		 ORDER BY A.ZONE_CODE DESC
+		        , A.MAP5000_NUM
+		        
+	</select>
+	
+	
+	<!-- 통합검색(3차원객체 검색) -->
+	<select id="searchDAO.selectTdsImgList" parameterClass="paramVO" resultClass="egovMap">
+		SELECT 'PDT010' AS IMAGE_CDE,
+		       SUBSTR (A.ZONE_CODE, 1, 4) SCENEYEAR,
+		       A.TDS_IDN,
+		       A.UTL3D_MPN AS MAP5000_NUM,
+		       A.ZONE_CODE,
+		       E.ZONE_NAM,
+		       trim(D.STO_DRV) as STO_DRV,
+		       C.FOLDER_NAM,
+		       B.FILE_NAM,
+		       B.FILE_FORMAT,
+		       B.FILE_SIZE,
+		       NVL(B.FILE_EXT, 0) FILE_EXT,
+		       A.XMIN,
+		       A.XMAX,
+		       A.YMIN,
+		       A.YMAX
+		FROM   TDS_PRODUCT_DTS A
+		       INNER JOIN STO_TDSLOC_DTS B
+		          ON     A.ZONE_CODE = B.ZONE_CODE
+		          AND A.TDS_IDN = B.TDS_IDN
+		          AND B.STORAGE_CDE = 'TDS001'
+		       INNER JOIN CMT_STORAGE_CDE C
+		          ON B.STORAGE_CDE = C.CODE_CDE
+		       INNER JOIN STO_INFO_DTS D
+		          ON B.STO_IDN = D.STO_IDN
+		       INNER JOIN AIR_ZONE_DTS E
+		          ON A.ZONE_CODE = E.ZONE_CODE
+				<isNotEmpty property="startYear" prepend="AND">
+					<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>	
+				</isNotEmpty>
+				<isNotEmpty property="endYear" prepend="AND">
+					<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>	
+				</isNotEmpty>
+			<dynamic prepend="WHERE">
+				<isNotEmpty property="zoneCode" prepend="AND">
+					A.ZONE_CODE = #zoneCode#		
+				</isNotEmpty>
+				<isNotEmpty property="sigunguCode" prepend="AND">
+					A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#,0,2)||'%'
+				</isNotEmpty>
+				<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+					<![CDATA[ xmin >= #xmin#	 ]]>	
+				</isGreaterEqual>
+				<isGreaterEqual prepend="AND" property="ymin" compareValue="1">
+					<![CDATA[ ymin >= #ymin#	 ]]>			
+				</isGreaterEqual>
+				<isGreaterEqual prepend="AND" property="xmax" compareValue="1">
+					<![CDATA[ xmax <= #xmax#	 ]]>	
+				</isGreaterEqual>
+				<isGreaterEqual prepend="AND" property="ymax" compareValue="1">
+					<![CDATA[ ymax <= #ymax#	 ]]>			
+				</isGreaterEqual>
+			</dynamic>
+			AND A.XMIN IS NOT NULL
+         	ORDER BY A.ZONE_CODE DESC, A.UTL3D_MPN ASC
+	</select>
+	
+	<select id="searchDAO.selectTdsImgFolderList" parameterClass="paramVO" resultClass="egovMap">
+	
+		SELECT 'PDT010' AS IMAGE_CDE
+		     , SUBSTR (A.ZONE_CODE, 1, 4) SCENEYEAR
+		     , A.UTL3D_MPN
+		     , A.ZONE_CODE
+		     , E.ZONE_NAM
+		     , COUNT(A.UTL3D_BAD) CHILD_CNT
+		     , SUM(CASE WHEN B.FILE_EXT = 'O' THEN 1 ELSE 0 END) DOWNLOAD_ABLE_CNT
+		  FROM TDS_PRODUCT_DTS A
+		     , STO_TDSLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		 WHERE A.ZONE_CODE = B.ZONE_CODE
+		   AND A.TDS_IDN = B.TDS_IDN
+		   AND B.STORAGE_CDE = 'TDS001'
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN = D.STO_IDN
+		   AND A.ZONE_CODE = E.ZONE_CODE
+		<isNotEmpty property="startYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="endYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>
+		</isNotEmpty>
+				<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+			<![CDATA[ DECRYPT(xmin) >= #xmin#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymin" compareValue="1">
+			<![CDATA[ DECRYPT(ymin) >= #ymin#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="xmax" compareValue="1">
+			<![CDATA[ DECRYPT(xmax) <= #xmax#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymax" compareValue="1">
+			<![CDATA[ DECRYPT(ymax) <= #ymax#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterThan prepend="AND" property="radius" compareValue="0">
+			<![CDATA[ SQRT(POWER((DECRYPT(ymax) + DECRYPT(ymin))/2 - (#ymax# + #ymin#)/2, 2) + POWER((DECRYPT(xmax) + DECRYPT(xmin))/2 - (#xmax# + #xmin#)/2, 2)) <= #radius#	 ]]>
+		</isGreaterThan>
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		<isNotEmpty property="sigunguCode" prepend="AND">
+			A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#, 0, 5) || '%'
+		</isNotEmpty>
+		   AND A.XMIN IS NOT NULL
+		   AND A.UTL3D_MPN IS NOT NULL
+		   AND A.UTL3D_MPN NOT IN ('Number Null')
+		 GROUP BY SUBSTR (A.ZONE_CODE, 1, 4)
+		        , A.ZONE_CODE
+		        , E.ZONE_NAM
+		        , A.UTL3D_MPN
+		 ORDER BY A.ZONE_CODE DESC
+		        , A.UTL3D_MPN ASC
+	
+	</select>
+	
+	<select id="searchDAO.selectTdsImgDataList" parameterClass="paramVO" resultClass="egovMap">
+	
+		SELECT 'PDT010' AS IMAGE_CDE
+		     , SUBSTR(A.ZONE_CODE, 1, 4) SCENEYEAR
+		     , A.ZONE_CODE
+		     , A.TDS_IDN
+		     , A.UTL3D_MPN
+		     , A.UTL3D_BAD
+		     , E.ZONE_NAM
+		     , trim(D.STO_DRV) as STO_DRV
+		     , C.FOLDER_NAM
+		     , B.FILE_NAM
+		     , B.FILE_FORMAT
+		     , B.FILE_SIZE
+		     , NVL(UPPER(B.FILE_EXT), 'X') FILE_EXT
+		     , DECRYPT(A.XMIN) XMIN
+		     , DECRYPT(A.XMAX) XMAX
+		     , DECRYPT(A.YMIN) YMIN
+		     , DECRYPT(A.YMAX) YMAX
+		     
+		<include refid="Tds_file_path"/>
+		     
+		  FROM TDS_PRODUCT_DTS A
+		     , STO_TDSLOC_DTS B
+		     , CMT_STORAGE_CDE C
+		     , STO_INFO_DTS D
+		     , AIR_ZONE_DTS E
+		 WHERE A.ZONE_CODE = B.ZONE_CODE
+		   AND A.TDS_IDN = B.TDS_IDN
+		   AND B.STORAGE_CDE = 'TDS001'
+		   AND B.STORAGE_CDE = C.CODE_CDE
+		   AND B.STO_IDN = D.STO_IDN
+		   AND A.ZONE_CODE = E.ZONE_CODE
+		<isNotEmpty property="startYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY >= #startYear#	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="endYear" prepend="AND">
+			<![CDATA[ E.ZONE_YY <= #endYear#	 ]]>
+		</isNotEmpty>
+				<isGreaterEqual prepend="AND" property="xmin" compareValue="1">
+			<![CDATA[ DECRYPT(xmin) >= #xmin#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymin" compareValue="1">
+			<![CDATA[ DECRYPT(ymin) >= #ymin#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="xmax" compareValue="1">
+			<![CDATA[ DECRYPT(xmax) <= #xmax#	 ]]>	
+		</isGreaterEqual>
+		<isGreaterEqual prepend="AND" property="ymax" compareValue="1">
+			<![CDATA[ DECRYPT(ymax) <= #ymax#	 ]]>			
+		</isGreaterEqual>
+		<isGreaterThan prepend="AND" property="radius" compareValue="0">
+			<![CDATA[ SQRT(POWER((DECRYPT(ymax) + DECRYPT(ymin))/2 - (#ymax# + #ymin#)/2, 2) + POWER((DECRYPT(xmax) + DECRYPT(xmin))/2 - (#xmax# + #xmin#)/2, 2)) <= #radius#	 ]]>
+		</isGreaterThan>
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		<isNotEmpty property="utl3dMpn" prepend="AND">
+			A.UTL3D_MPN = #utl3dMpn#
+		</isNotEmpty>
+		<isNotEmpty property="sigunguCode" prepend="AND">
+			A.SIGUNGU_CDE LIKE SUBSTR(#sigunguCode#, 0, 5) || '%'
+		</isNotEmpty>
+		
+		<isEqual prepend="AND" property="fileExt" compareValue="O">
+			NVL(UPPER(B.FILE_EXT), 'X') = #fileExt#
+		</isEqual>
+		
+		   AND A.XMIN IS NOT NULL
+		   AND A.UTL3D_MPN IS NOT NULL
+		   AND A.UTL3D_MPN NOT IN ('Number Null')
+		 ORDER BY A.ZONE_CODE DESC
+		        , A.UTL3D_MPN
+		        , A.UTL3D_BAD
+	
+	</select>
+	
+	
+	<!-- 최신 항공사진 측량 경계 조회 -->
+	<select id="searchDAO.selectNowestAirZoneAreaGeometry" parameterClass="paramVO" resultClass="egovMap">
+		SELECT 
+		       A.ZONE_CODE,
+		       A.PH_COURSE,
+		       A.PH_NUM,
+		       B.ZONE_NAM,
+		       DECRYPT(A.XMIN) XMIN,
+		       DECRYPT(A.XMAX) XMAX,
+		       DECRYPT(A.YMIN) YMIN,
+		       DECRYPT(A.YMAX) YMAX
+		FROM   META_AIRMAP_IDENT A, AIR_ZONE_DTS B
+		WHERE  A.ZONE_CODE = B.ZONE_CODE
+		<isNotEmpty property="zoneCode" prepend="AND">
+			A.ZONE_CODE = #zoneCode#
+		</isNotEmpty>
+		AND XMIN IS NOT NULL
+        ORDER BY ZONE_NAM DESC
+	</select>
+	
+	<!-- 최신 측량사업지구 검색 -->
+	<select id="searchDAO.selectNowestAirZone" parameterClass="paramVO" resultClass="egovMap">
+	    SELECT 
+	        ZONE_NAM,
+	        ZONE_CODE
+	    FROM AIR_ZONE_DTS
+	    WHERE IMAGE_CDE = 'PDT001'
+	    <!-- AND ZONE_YY = (SELECT MAX(ZONE_YY) FROM AIR_ZONE_DTS) -->
+	    AND ZONE_YY = DECODE(NVL(#keyword#, ''), '', (SELECT MAX(ZONE_YY) FROM AIR_ZONE_DTS), #keyword#)
+	</select>
+	
+	<!-- 통합검색(POI) -->
+	<select id="searchDAO.selectPOIList" resultMap="poiVO">
+			SELECT /* searchDAO.selectPOIList */
+					FMYNM , 
+					XCOORD , 
+					YCOORD 
+			FROM TN_NPOIBASS 
+			<dynamic prepend="WHERE"> 
+				<isNotEmpty property="keyword" prepend="AND">
+					CONTAINS(FMYNM, #keyword#) > 0
+				</isNotEmpty>
+			</dynamic>
+          	ORDER BY FMYNM
+          	
+<!-- 			SELECT -->
+<!-- 			  POITYPE_CD, -->
+<!-- 			  POI_NAM, -->
+<!-- 			  COOR_X, -->
+<!-- 			  COOR_Y, -->
+<!-- 			  SDO_UTIL.To_WKBGEOMETRY(SHAPE) as wkb_geometry -->
+<!-- 			FROM NGII_AIR_POI_PS -->
+<!-- 			<dynamic prepend="WHERE"> -->
+<!-- 				<isNotEmpty property="keyword" prepend="AND"> -->
+<!-- 					POI_NAM LIKE '%'|| #keyword# ||'%' -->
+<!-- 				</isNotEmpty> -->
+<!-- 			</dynamic> -->
+<!--          	ORDER BY POI_NAM -->
+	</select>
+	
+	<!-- 통합검색(지번) -->
+	<select id="searchDAO.selectZipList" parameterClass="paramVO" resultMap="zipCodeVO">
+			
+			SELECT SUBSTR(PNU, 1, 5) SIG_CD
+		     , SUBSTR(PNU, 12, 4) LNBR_MNNM
+		     , SUBSTR(PNU, 16, 4) LNBR_SLNO
+		     , DECODE(SUBSTR(PNU, 11, 1), '2', '(산) ', '') MNTN_YN
+		     , 0 BULD_MNNM
+		     , 0 BULD_SLNO
+		     , '' ZIP
+		     , (
+		        SELECT MAX(DONG.NAME)
+		          FROM UFMAP_S2.N3A_G0110000 DONG
+		         WHERE SUBSTR(DONG.BJCD,1,8) = SUBSTR(T.PNU, 1, 8)
+		       ) DONG_NM
+			,(
+			<![CDATA[
+			SELECT 
+					REPLACE(BJD_NAM, (SELECT BJD_NAM||' ' FROM SMART_CHANGE.BJD_CDE_DTS B  WHERE SUBSTR(A.BJD_CD,1,8)=SUBSTR(B.BJD_CD,1,8) AND SUBSTR(BJD_CD, 9, 2) = '00')) BJD_NAM
+			FROM SMART_CHANGE.BJD_CDE_DTS A
+			WHERE SUBSTR(BJD_CD, 3, 8) <> '00000000'
+			AND SUBSTR(BJD_CD, 6, 5) <> '00000'
+			AND SUBSTR(BJD_CD, 9, 2) <> '00'
+			AND DEL_YN = '존재'
+			AND SUBSTR(BJD_CD,1,10) = SUBSTR(T.PNU, 1,10)
+			]]>
+			) JIBUN
+		     , CEIL(SDE.ST_X(SDE.ST_CENTROID(SHAPE))) X
+			 , CEIL(SDE.ST_Y(SDE.ST_CENTROID(SHAPE))) Y
+		  FROM NGII_MAP.KLIS T
+		 WHERE PNU LIKE #sigunguCode# || #emdCd# || '%'
+			<isNotEmpty property="mntnYn">
+		   AND SUBSTR(PNU, 11, 1) = DECODE(#mntnYn#, '0', '1', '1', '2')
+			</isNotEmpty>
+			<isNotEmpty property="lnbrMnnm">
+		   AND SUBSTR(PNU, 12, 4) = LPAD(#lnbrMnnm#, 4, '0')
+			</isNotEmpty>
+			<isNotEmpty property="lnbrSlno">
+		   AND SUBSTR(PNU, 16, 4) = LPAD(#lnbrSlno#, 4, '0')
+			</isNotEmpty>
+			
+			
+	</select>
+	
+	<!-- 통합검색(새주소) -->
+	<select id="searchDAO.selectJusoList" parameterClass="paramVO" resultMap="jusoVO">
+		SELECT RN
+		     , RN_CD
+		  FROM SMART_NEWADR_ROAD@DL_NGIIDMMS
+			WHERE SIG_CD = #sigunguCode#
+		 GROUP BY SIG_CD, RN, RN_CD
+		 ORDER BY RN
+         	
+	</select>
+	
+	<!-- 통합검색(새주소)-건물번호 검색 -->
+	<select id="searchDAO.selectBuldNoList" parameterClass="paramVO" resultMap="zipCodeVO">
+		SELECT SIG_CD
+		     , LNBR_MNNM
+		     , LNBR_SLNO
+		     , DECODE(MNTN_YN, '1', '(산) ', '') MNTN_YN
+		     , BULD_MNNM
+		     , BULD_SLNO
+		     , '' ZIP
+			 , '' JIBUN
+		     , (
+		        SELECT MAX(DONG.NAME)
+		          FROM UFMAP_S2.N3A_G0110000 DONG
+		         WHERE SUBSTR(DONG.BJCD,1,8) = T.SIG_CD||T.EMD_CD
+		       ) DONG_NM
+		     <!--, SDE.ST_X(SDE.ST_CENTROID(SHAPE)) X
+			 , SDE.ST_Y(SDE.ST_CENTROID(SHAPE)) Y-->
+			 , COD_X X
+             , COD_Y Y
+		  FROM (
+		        SELECT ROW_NUMBER() OVER(PARTITION BY SIG_CD, BULD_MNNM, BULD_SLNO ORDER BY SIG_CD, BULD_MNNM, BULD_SLNO) NUM
+		             , SIG_CD
+		             , EMD_CD
+		             , LNBR_MNNM
+		             , LNBR_SLNO
+		             , MNTN_YN
+		             , BULD_MNNM
+		             , BULD_SLNO
+					 , COD_X
+					, COD_Y
+		             <!--, ZIP
+		             , SHAPE
+		          FROM NEW_ADD_BUILD@DL_NGIIMAP-->
+				  FROM SMART_NEWADR_BULD@DL_NGIIDMMS
+		         WHERE 1=1
+			<isNotEmpty property="sigunguCode">
+		           AND SIG_CD = #sigunguCode#
+			</isNotEmpty>
+			<isNotEmpty property="rnCd">
+		           AND RN_CD = #rnCd#
+			</isNotEmpty>
+			<isNotEmpty property="lnbrMnnm">
+		           AND BULD_MNNM LIKE '%'|| #lnbrMnnm# ||'%'
+			</isNotEmpty>
+			<isNotEmpty property="lnbrSlno">
+		           AND BULD_SLNO LIKE '%'|| #lnbrSlno# ||'%'
+			</isNotEmpty>
+		       ) T
+		   WHERE NUM = 1
+		
+	</select>
+	
+	<!-- 통합검색(항공사진-년도) -->
+	<select id="searchDAO.selectAirImgYear" parameterClass="paramVO" resultClass="egovMap">
+		SELECT distinct META_DATE FROM AIR_BASEMETA_DTS 
+			<dynamic prepend="WHERE">
+				<isNotEmpty property="zoneCode" prepend="AND">
+					ZONE_CODE = #zoneCode#		
+				</isNotEmpty>
+			</dynamic>
+		ORDER BY META_DATE
+	</select>
+	
+	<!-- 통합검색(항공사진-코스) -->
+	<select id="searchDAO.selectAirImgCourse" parameterClass="paramVO" resultClass="egovMap">
+		SELECT distinct PH_COURSE FROM AIR_BASEMETA_DTS  
+			<dynamic prepend="WHERE">
+				<isNotEmpty property="zoneCode" prepend="AND">
+					ZONE_CODE = #zoneCode#		
+				</isNotEmpty>
+				<isNotEmpty property="metaDate" prepend="AND">
+					META_DATE = #metaDate#		
+				</isNotEmpty>
+			</dynamic>
+		ORDER BY PH_COURSE
+	</select>
+	
+	<!-- 신청서 목록 호출 -->	
+	<select id="searchDAO.selectApplicationList" resultClass="egovMap">
+	
+		SELECT A.SUP_IDN
+			 , TO_CHAR(TO_DATE(A.REQ_DATE), 'YYYY-MM-DD') REQ_DATE
+			 , TO_CHAR(TO_DATE(A.SUP_DATE), 'YYYY-MM-DD') SUP_DATE
+			 , A.AP_NAME
+		     , A.AP_POST
+		     , A.AP_DEPARTMENT
+		     , A.AP_POSITION
+		     , decrypt(A.AP_TEL) AP_TEL
+		     , A.MGR_NAME
+		     , A.MGR_POSITION
+		     , decrypt(A.MGR_TEL) MGR_TEL
+		     , A.PURPOSE
+		     , A.SEC_DATA_MNG_PLAN
+		     , A.SUBCONT_NAME
+		     , A.SUBCONT_SR_NAME
+		     , decrypt(A.SUBCONT_SR_TEL) SUBCONT_SR_TEL
+		     , A.SUBCONT_MGR_NAME
+		     , decrypt(A.SUBCONT_MGR_TEL) SUBCONT_MGR_TEL
+		     , A.AGREE_YN
+		     , A.CON_NAME
+		     , A.CON_POSITION
+		  FROM IMG_SUPPLY_APP_NIIM A
+		 WHERE CON_NAME IS NULL
+		   AND SUP_DATE IS NULL
+		   AND CREATE_DT > ADD_MONTHS(SYSDATE, -12)
+		   AND NVL(DEL_YN, 'N') != 'Y'
+		   <!-- 공급시스템 신청내역 제외 -->
+		   AND NOT EXISTS (
+		                   SELECT 1
+		                     FROM USR_IMG_SUPPLY_APP_NIIM
+		                    WHERE SUP_IDN = A.SUP_IDN
+		                  )
+		 ORDER BY SUP_IDN DESC
+	   
+	</select>
+	
+	<!--인덱스 생성 -->
+	<insert id="searchDAO.insertIndex" parameterClass="java.util.Map">
+	<selectKey resultClass="String" keyProperty="markIndexSeq">
+		SELECT SEQ_INDEX.NEXTVAL	
+		FROM DUAL
+	</selectKey>
+		INSERT INTO IMG_SUPPLYINDEX_APP_NIIM
+		(MARK_INDEX, IMAGE_CDE)
+		values
+		(#markIndexSeq#, #imageCde#)
+	</insert>
+	
+		<!-- SupIdn 생성-->
+	<insert id="searchDAO.insertSupIdn" parameterClass="java.util.Map">
+	<selectKey resultClass="String" keyProperty="seqSupIdn">
+		<!-- SELECT SEQ_SUP_IDN.NEXTVAL FROM DUAL -->
+			SELECT TO_CHAR(SYSDATE, 'YYYY') || 
+			       LPAD(TO_CHAR(TO_NUMBER(NVL(MAX(SUBSTR(SUP_IDN, 5, 5)), 0),'XXXXX') + 1, 'FMXXXXX'), '5', '0') AS seqSupIdn
+			  FROM IMG_SUPPLY_APP_NIIM
+			 WHERE SUBSTR(SUP_IDN, 1, 4) = TO_CHAR(SYSDATE, 'YYYY')
+	</selectKey>
+	INSERT INTO IMG_SUPPLY_APP_NIIM
+	  (SUP_IDN,
+	   ORGN_CDE,
+	   GUBUN,
+	   CON_NAME,
+	   REQ_DATE,
+	   DEL_YN)
+	values
+  (#seqSupIdn#,
+   'ORG999',
+   '공공',   
+   #conName#,
+   to_char(sysdate, 'yyyymmdd'),
+   'N')
+	</insert>
+	
+
+	<!-- 50000 도엽 Name -->	
+	<select id="searchDAO.selectIndexMapName" resultClass="egovMap">
+	SELECT NAME AS MAP_NAM, SDE.ST_MINX(SHAPE) XMIN, SDE.ST_MINY(SHAPE) YMIN, SDE.ST_MAXX(SHAPE) XMAX, SDE.ST_MAXY(SHAPE) YMAX 
+	FROM INDEX_ALL_050000@DL_NGIIMAP T
+	WHERE NAME != ' ' 
+	ORDER BY NAME
+	
+	<!--SELECT T.MAP_NAM, T.XMIN, T.YMIN, T.XMAX, T.YMAX 
+	FROM NGII_AIR_I50000_AS T
+	ORDER BY T.MAP_NAM-->
+	</select>
+	
+	<!-- 통합검색(사업지구 년도 검색) -->
+	<select id="searchDAO.selectYearList" parameterClass="paramVO" resultClass="egovMap">
+	SELECT DISTINCT(T.ZONE_YY) ZONE_YY
+	FROM AIR_ZONE_DTS T
+	WHERE T.ZONE_YY IS NOT NULL
+	ORDER BY T.ZONE_YY DESC
+	</select>
+	
+	<!-- 통합검색(수치지형도 제작년도 검색) -->
+	<select id="searchDAO.selectMapYearList" parameterClass="paramVO" resultClass="egovMap">
+	SELECT DISTINCT(SUBSTR(TRIM(PRODUCT_YEAR),1,4)) PRODUCT_YEAR
+	FROM MAP_INFO_TBL@LK_MMS
+	WHERE TRIM(PRODUCT_YEAR) IS NOT NULL
+	ORDER BY PRODUCT_YEAR DESC
+	</select>
+	
+	<!-- 수치지형도 시계열 검색 -->
+	<select id="searchDAO.selectSuchiList" parameterClass="java.util.Map" resultClass="egovMap">
+		SELECT
+		    MAP_SER_NO,
+		    MAP_HISTORY_NO,
+		    MAP_SHT_NO   
+		FROM
+            MAP_INFO_TBL@LK_MMS
+		WHERE
+		    	MAP_SER_NO = #mapSerNo#
+            AND MAP_SHT_NO = #mapShtNo#
+        UNION ALL
+        SELECT
+		    MAP_SER_NO,
+		    MAP_HISTORY_NO,
+		    MAP_SHT_NO
+		FROM
+		    MAP_HISTORY_TBL@LK_MMS
+		WHERE
+		    	MAP_SER_NO = #mapSerNo#
+            AND MAP_SHT_NO = #mapShtNo#
+	</select>
+	
+	
+	
+	<!-- 항공사진 제공 -->
+	<insert id="searchDAO.insertAirSupplyItem" parameterClass="java.util.Map">
+		<selectKey resultClass="String" keyProperty="seqAirItemID">
+			SELECT SEQ_AIR_ITEM_ID.NEXTVAL FROM DUAL
+		</selectKey>
+		
+		INSERT 
+		  INTO AIR_SUPPLYITEM_APP_NIIM
+		  (
+		       SUP_IDN
+		     , IMAGE_CDE
+		     , ITEM_ID
+		     , ZONE_CODE
+		     , PH_COURSE
+		     , PH_NUM
+		     , MARK_INDEX
+		  )
+		 VALUES
+		  (
+		       #supIdn#
+		     , #imageCde#
+		     , #seqAirItemID#
+		     , #zoneCode#
+		     , #phCourse#
+		     , #phNum#
+		     , #markIndex#
+		  )
+		  
+	</insert>
+	
+	<!-- DEM 제공 -->
+	<insert id="searchDAO.insertDemSupplyItem" parameterClass="java.util.Map">
+		<selectKey resultClass="String" keyProperty="seqDemItemID">
+			SELECT SEQ_DEM_ITEM_ID.NEXTVAL FROM DUAL
+		</selectKey>
+		
+		INSERT 
+		  INTO DEM_SUPPLYITEM_APP_NIIM
+		  (
+		       SUP_IDN
+		     , IMAGE_CDE
+		     , ITEM_ID
+		     , ZONE_CODE
+		     , MAP5000_NUM
+		     , GRID_INT
+		  )
+		 VALUES
+		  (
+		       #supIdn#
+		     , #imageCde#
+		     , #seqDemItemID#
+		     , #zoneCode#
+		     , #map5000Num#
+		     , #gridInt#
+		  )
+		  
+	</insert>	
+	
+	<!-- 정사영상 제공 -->
+	<insert id="searchDAO.insertOrtSupplyItem" parameterClass="java.util.Map">
+		<selectKey resultClass="String" keyProperty="seqOrtItemID">
+			SELECT SEQ_ORT_ITEM_ID.NEXTVAL FROM DUAL
+		</selectKey>
+		
+		INSERT 
+		  INTO ORT_SUPPLYITEM_APP_NIIM
+		  (
+		       SUP_IDN
+		     , IMAGE_CDE
+		     , ITEM_ID
+		     , ZONE_CODE
+		     , MAP5000_NUM
+		     , GTYP_DST
+		     , MARK_INDEX
+		  )
+		 VALUES
+		  (
+		       #supIdn#
+		     , #imageCde#
+		     , #seqOrtItemID#
+		     , #zoneCode#
+		     , #map5000Num#
+		     , #gtypDst#
+		     , #markIndex#
+		  )
+		  
+	</insert>
+	
+	<!-- 라이다 제공 -->
+	<insert id="searchDAO.insertLidSupplyItem" parameterClass="java.util.Map">
+		<selectKey resultClass="String" keyProperty="seqLidItemID">
+			SELECT SEQ_LID_ITEM_ID.NEXTVAL FROM DUAL
+		</selectKey>
+		
+		INSERT 
+		  INTO LID_SUPPLYITEM_APP_NIIM
+		  (
+		       SUP_IDN
+		     , IMAGE_CDE
+		     , ITEM_ID
+		     , ZONE_CODE
+		     , LIDAR_IDN
+		  )
+		 VALUES
+		  (
+		       #supIdn#
+		     , #imageCde#
+		     , #seqLidItemID#
+		     , #zoneCode#
+		     , #lidarIdn#
+		  )
+		  
+	</insert>	
+	
+	<!-- NIR 제공 -->
+	<insert id="searchDAO.insertNirSupplyItem" parameterClass="java.util.Map">
+		<selectKey resultClass="String" keyProperty="seqNirItemID">
+			SELECT SEQ_NIR_ITEM_ID.NEXTVAL FROM DUAL
+		</selectKey>
+		
+		INSERT 
+		  INTO NIR_SUPPLYITEM_APP
+		  (
+		       SUP_IDN
+		     , IMAGE_CDE
+		     , ITEM_ID
+		     , ZONE_CODE
+		     , PH_COURSE
+		     , PH_NUM
+		     , MARK_INDEX
+		  )
+		 VALUES
+		  (
+		       #supIdn#
+		     , #imageCde#
+		     , #seqNirItemID#
+		     , #zoneCode#
+		     , #phCourse#
+		     , #phNum#
+		     , #markIndex#
+		  )
+		  
+	</insert>
+	
+	<!-- 3차원 제공 -->
+	<insert id="searchDAO.insertTdsSupplyItem" parameterClass="java.util.Map">
+		<selectKey resultClass="String" keyProperty="seqTdsItemID">
+			SELECT SEQ_TDS_ITEM_ID.NEXTVAL FROM DUAL
+		</selectKey>
+		
+		INSERT 
+		  INTO TDS_SUPPLYITEM_APP_NIIM
+		  (
+		       SUP_IDN
+		     , IMAGE_CDE
+		     , ITEM_ID
+		     , ZONE_CODE
+		     , TDS_IDN
+		     , MARK_INDEX
+		  )
+		 VALUES
+		  (
+		       #supIdn#
+		     , #imageCde#
+		     , #seqTdsItemID#
+		     , #zoneCode#
+		     , #tdsIdn#
+		     , #markIndex_2#
+		  )
+		  
+	</insert>
+
+	
+</sqlMap>

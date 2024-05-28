@@ -1,0 +1,48 @@
+@charset "utf-8";
+
+/*** 팝업글 공통 ***/	 
+.popInner {width:800px;height:800px; min-height:auto; min-width:auto;}
+.popInner #popup {width:100%; max-width:480px;}
+.popInner #popup > div {padding:20px; box-sizing:border-box;}
+.popInner #popup p.system span:first-child {font-weight:600;}
+.popInner #popup p.system span:last-child {font-weight:400;}
+.popInner #popup .popTit {font-weight:600; letter-spacing:-0.05em; font-size: 24px;font-weight: 600;margin-top: 8px; margin-bottom: 24px;}
+.popInner #popup div.contents p {line-height:28px; font-weight:400; color:#555; box-sizing:border-box;}
+.popInner #popup div.bottom {height:43px; line-height:43px; position:relative; padding:0px; border-top:0px;}
+.popInner #popup div.bottom span {display:inline-block; vertical-align:middle;}
+.popInner #popup div.bottom span.checkbox + span {font-weight:600; color:#999999; margin-left:6px; font-size:13px; height:43px; line-height:43px;} 
+.popInner #popup div.bottom button {display:block; cursor:pointer; width:110px; height:43px; font-size:16px; font-weight:600; text-align:center; color:#fff; background-color:#2a8095; position:absolute; top:0; right:0; border:0;}
+
+
+/* 일반형1 */
+.popInner #popup.general_type1 > div {height:640px; background:url("/niis/images/popup/bg_popup_general_01.jpg") no-repeat; padding:30px 20px 20px 20px;}
+.popInner #popup.general_type1 p.system {font-size:18px; color:#2b6795;}
+.popInner #popup.general_type1 .popTit {font-size:24px; font-weight:600; color:#425668; margin-top:8px; margin-bottom:24px;}
+.popInner #popup.general_type1 div.contents {border-radius:10px; background-color:#fff; border:solid 1px #bedbef; padding:16px; min-height:422px; margin-bottom:10px;}
+
+/* 일반형2 */
+.popInner #popup.general_type2 {height:640px; background:url("/niis/images/popup/bg_popup_general_02.jpg") no-repeat;}
+.popInner #popup.general_type2 p.system {font-size:18px; color:#567a98; text-align:center;}
+.popInner #popup.general_type2 .popTit {font-size:24px; font-weight:600; color:#4b5967; padding-bottom:20px; border-bottom:solid 1px #a7c8d0; margin-top:8px; margin-bottom:24px; text-align:center;}
+.popInner #popup.general_type2 div.contents {background-color:#fff; border:solid 1px #bedbef; padding:16px; min-height:600px; box-shadow:3px 8px 0 rgba(0, 0, 0, 0.11); box-sizing:border-box;}
+.popInner #popup.general_type2 div.contents .popTit + p {height:412px;}
+
+/* 안내형 */
+.popInner #popup.announcement_type {height:400px; background:url("/niis/images/popup/bg_popup_announcement.jpg") no-repeat;}
+.popInner #popup.announcement_type p.system {font-size:14px; color:#2b6795; text-align:right; padding:10px 0; border-bottom:solid 1px #a7c8d0;}
+.popInner #popup.announcement_type .popTit {font-size:36px; font-weight:600; color:#47729a; padding-top:30px; padding-bottom:30px; text-align:center; margin:0 auto; word-break:break-all; width:300px;}
+.popInner #popup.announcement_type div.contents {min-height:110px; box-sizing:border-box; overflow:hidden; margin-bottom:20px;}
+.popInner #popup.announcement_type div.contents .popTit + p {height:412px;}
+
+/* 긴급형 */
+.popInner #popup.emergency_type > div {padding:0; background-color:#39474b;}
+.popInner #popup.emergency_type p.system {font-size:16px; color:#59d5e0; padding:0 0 10px 0;}
+.popInner #popup.emergency_type .popTit {height:120px; background:#f2532a url("/niis/images/popup/bg_popup_emergency.png") 10px -7px no-repeat; padding-left:120px; box-sizing:border-box; padding-top:32px;}
+.popInner #popup.emergency_type .popTit > span {font-size:21px; font-weight:600; color:#fff;}
+.popInner #popup.emergency_type div.contents {min-height:392px; padding:25px 20px 20px 20px;}
+.popInner #popup.emergency_type div.contents p {font-size:14px; color:#ececec;}
+.popInner #popup.emergency_type div.bottom {padding:20px;}
+.popInner #popup.emergency_type div.bottom button {top:20px; right:20px;}
+
+.popInner #popup.imagePop div.bottom {padding:10px 0;}
+.popInner #popup.imagePop div.bottom button {top:10px;right:35px;}
