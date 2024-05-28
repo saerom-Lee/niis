@@ -5,7 +5,8 @@
 	var disSrchParam = "";
 	var regAllParam = "";
 	var selectedBoard = "";
-	
+	var dwnState = false;  //전역 변수 추가 - 헬리오센
+ 	
 	$(document).ready(function(){
 		
 		$("#mainDiv .scroll").each(function(){
@@ -31,6 +32,20 @@
 			});
 			initCheckbox();
 		});
+		
+		//새로고침시 알럿창 추가 - 헬리오센 (37 ~ 48)
+		window.addEventListener('keydown', function(event) {
+		    // F5 키를 감지
+		    if (event.key === 'F5') {
+		        if (dwnState) {
+		            // 알림 창을 띄움
+		            alert("새로고침 시 다운로드가 중지 됩니다.");
+		            // 기본 새로고침 동작을 방지
+		            event.preventDefault();
+		        }
+		    }
+		});
+
 	});
 	
 	/******************************************* 코드조회 시작 *******************************************/
@@ -215,6 +230,12 @@
 			params.push(insertParam);
 		});
 		
+		//로딩바  추가 - 헬리오센
+		showProgress();
+		
+		//전역변수 상태값 변경 - 헬리오센
+		dwnState = true
+		
 		var _formdata = new FormData();	
 		_formdata.append('jsonData',JSON.stringify(params));
 		$.ajax({
@@ -225,9 +246,15 @@
 			cache: false,
 			data: _formdata,
 			success : function(result) {
+				
+				console.log("disasterFileDwn - file move")
+				console.log(result)
+				
 				var path = 'path=' + result.zipFileName;
 				var name = '&name=' + result.outFileName;
 				location.href = '<c:url value="/disaster/disasterFileDown.do?"/>' + encodeURI(path , "UTF-8") + encodeURI(name , "UTF-8");
+				
+				
 			},
 			error: function(e){
 				alert("영상정보 다운로드에 실패했습니다.\n다시 시도하세요.");
@@ -236,6 +263,12 @@
 			complete : function() {
 			}
 		});
+		
+		//로딩바  추가 - 헬리오센
+		hideProgress();
+		
+		//전역변수 상태값 변경 - 헬리오센
+		dwnState = false
 	}
 
 	function appListInit() {
@@ -313,6 +346,7 @@
 	</div>
 	<div class="paging">
 		<ul>
+		
 		</ul>
 	</div>
 <!-- 	<div class="bottom"> -->
@@ -363,6 +397,7 @@
 		<h3 class="article depth1">재난 자료 목록 <span id="listCnt2"></span></h3>
 		<p class="attention">페이지 내에서 체크하신 영상 목록이 다운로드됩니다</p>
 		<p class="attention">SHP파일 영상은 미리보기가 지원하지 않습니다.</p>
+		<p class="attention">PS 영상 다운로드 시 시간이 오래 걸릴 수 있습니다.</p>  <!-- 문구 추가 - 헬리오센 -->
 		<div class="thead">
 			<table>
 				<colgroup>
