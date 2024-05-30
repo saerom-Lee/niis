@@ -230,9 +230,6 @@
 			params.push(insertParam);
 		});
 		
-		//로딩바  추가 - 헬리오센
-		showProgress();
-		
 		//전역변수 상태값 변경 - 헬리오센
 		dwnState = true
 		
@@ -247,13 +244,9 @@
 			data: _formdata,
 			success : function(result) {
 				
-				console.log("disasterFileDwn - file move")
-				console.log(result)
-				
 				var path = 'path=' + result.zipFileName;
 				var name = '&name=' + result.outFileName;
 				location.href = '<c:url value="/disaster/disasterFileDown.do?"/>' + encodeURI(path , "UTF-8") + encodeURI(name , "UTF-8");
-				
 				
 			},
 			error: function(e){
@@ -261,14 +254,12 @@
 			    return;
 			},
 			complete : function() {
+
+				//전역변수 상태값 변경 - 헬리오센
+				dwnState = false
 			}
 		});
-		
-		//로딩바  추가 - 헬리오센
-		hideProgress();
-		
-		//전역변수 상태값 변경 - 헬리오센
-		dwnState = false
+
 	}
 
 	function appListInit() {
@@ -398,6 +389,7 @@
 		<p class="attention">페이지 내에서 체크하신 영상 목록이 다운로드됩니다</p>
 		<p class="attention">SHP파일 영상은 미리보기가 지원하지 않습니다.</p>
 		<p class="attention">PS 영상 다운로드 시 시간이 오래 걸릴 수 있습니다.</p>  <!-- 문구 추가 - 헬리오센 -->
+		<p class="attention">다운로드 중 화면을 나갈 시 다운로드가 중단됩니다.</p>  <!-- 문구 추가 - 헬리오센 -->
 		<div class="thead">
 			<table>
 				<colgroup>

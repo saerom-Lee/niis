@@ -44,17 +44,8 @@ $(document).ready(function($){
     	if(url != null && url != "" && url != "undefined"){
 	    	//if(false){
 	    	if(url.indexOf("/search/") == -1 && url.indexOf("/rest/") == -1 && url.indexOf("/main/") == -1){
-	    		//console.log("LoadOnUrl["+settings.url+"]");
-	    		
-	    		//원본
-	    		//showProgress();
-	    		
-	    		//수정 - 헬리오센(53 ~ 56)
-	    		console.log(url)
-	    		if(url.indexOf("disasterFileDwn") == - 1){
-	    			showProgress();
-	    		}
-	    		
+	    	
+	    		showProgress();
 	        }
 	    	
 	    	
@@ -99,17 +90,9 @@ $(document).ready(function($){
     	
     })
     .ajaxSuccess(function(e, jqxhr, settings, data){
-    	//console.log("ajaxSuccess");
-    	//원본
-    	//hideProgress();
-    	
-    	//추가 - 헬리오센 (107 ~ 112)
+
     	var url = settings.url;
-    	console.log(url)
-    	
-    	if(url.indexOf("disasterFileDwn") == - 1){
-    		hideProgress();
-		}
+    	hideProgress();
     	
     	if(null != data && null != data.RETURN_CD){
 	    	if(data.RETURN_CD == 501){

@@ -29,7 +29,12 @@ function getMainApply(){
 	getMainApplyAjax();
 	
 	clearInterval(applyTime);
-	applyTime = setInterval(getMainApplyAjax, 1000*60*7);
+	
+	//원본
+	//applyTime = setInterval(getMainApplyAjax, 1000*60*7);
+	
+	//헬리오센 수정 - 타임아웃 30분으로 제한
+	applyTime = setInterval(getMainApplyAjax, 1000*60*30);
 }
 function getMainApplyAjax(){
 	ajaxCall("/main/getMainApply.do", "", "mainApply");
@@ -42,7 +47,12 @@ function getMainNotice(){
 	getMainNoticeAjax();
 	
 	clearInterval(noticeTime);
-	noticeTime = setInterval(getMainNoticeAjax, 1000*60*10);
+	
+	//원본
+	//noticeTime = setInterval(getMainNoticeAjax, 1000*60*10);
+	
+	//헬리오센 수정 - 타임아웃 30분으로 제한
+	noticeTime = setInterval(getMainNoticeAjax, 1000*60*30);
 }
 function getMainNoticeAjax(){
 	ajaxCall("/main/getMainNotice.do", "", "mainNotice");
